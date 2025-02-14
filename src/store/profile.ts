@@ -1,6 +1,12 @@
 import type { StoreGet, StoreSet } from "../store";
 import axios from "../utils/axiosConfig";
 
+export enum UserRole {
+  ADMIN = 'admin',
+  STAFF = 'staff',
+  CLIENT = 'client'
+}
+
 export interface User {
   role: string;
   token: string;
@@ -13,6 +19,7 @@ export interface UserProfile {
   email: string;
   phone: string;
   address: string;
+  role: UserRole;
 }
 export interface ProfileState {
   user: User | undefined;

@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  InputAdornment,
   Menu,
   MenuItem,
   TextField,
@@ -15,8 +14,6 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useFormik } from "formik";
@@ -79,11 +76,11 @@ const Header: React.FC = () => {
     <>
       <nav className="header">
         <div className="branch-wrap" onClick={() => navigate("/")}>
-          <img src="/beauty-logo.svg" alt="" />
-          <h4>Beauty-SC</h4>
+          <img src="/logo192.png" alt="" />
+          <h4>Web Name</h4>
         </div>
 
-        <div className="searchbar-wrap">
+        {/* <div className="searchbar-wrap">
           <TextField
             color="info"
             size="small"
@@ -101,7 +98,7 @@ const Header: React.FC = () => {
               },
             }}
           />
-        </div>
+        </div> */}
 
         <div className="action-group-wrap">
           {(role === "ROLE_VOLUNTEER" || role === "ROLE_ADMIN") && (
@@ -181,15 +178,6 @@ const Header: React.FC = () => {
               </MenuItem>
             )}
           </Menu>
-          <Button
-            style={{ background: "#222222" }}
-            color="primary"
-            variant="contained"
-            startIcon={<DriveFileRenameOutlineOutlinedIcon />}
-            onClick={() => navigate("/create-post")}
-          >
-            Đăng tin
-          </Button>
         </div>
       </nav>
 

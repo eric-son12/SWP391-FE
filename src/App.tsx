@@ -34,16 +34,17 @@ function App() {
       element: <Login />,
     },
     {
-      path: "admin/dashboard",
+      path: "dashboard",
       element: (
         <ProtectedRoute
           isAllowed={
-            isAuthenticated &&
-            (role === "ROLE_VOLUNTEER" || role === "ROLE_ADMIN")
+            // isAuthenticated &&
+            // (role === "ROLE_VOLUNTEER" || role === "ROLE_ADMIN")
+            true
           }
-          redirectPath="/"
+          redirectPath="/login"
         >
-          <p></p>
+          <Home />
           {/* <Dashboard /> */}
         </ProtectedRoute>
       ),

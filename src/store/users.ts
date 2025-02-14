@@ -3,6 +3,7 @@ import axios from "../utils/axiosConfig";
 import { UserProfile } from "./profile";
 
 export interface UsersState {
+  user: UserProfile | undefined;
   users: UserProfile[] | undefined;
 }
 
@@ -31,6 +32,7 @@ export interface UsersActions {
 }
 
 export const initialUsers: UsersState = {
+  user: undefined,
   users: undefined,
 };
 

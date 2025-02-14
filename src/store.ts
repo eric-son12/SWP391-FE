@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { devtools } from "zustand/middleware";
 import { Draft } from "immer";
 import { initialLoading, LoadingState } from "./store/loading";
 import {
@@ -34,14 +35,18 @@ export type Store = State & Actions;
 export type StoreGet = () => Store;
 export type StoreSet = (f: (state: Draft<State>) => void) => void;
 
-export const useStore = create<Store, [["zustand/immer", never]]>(
-  immer((set, get) => ({
-    profile: initialProfile,
-    ...profileActions(set, get),
-    users: initialUsers,
-    ...usersActions(set, get),
-    notification: initialNotification,
-    ...notificationActions(set, get),
-    loading: initialLoading,
-  }))
+export const useStore = create<Store>()(
+  devtools(
+    immer((set, get) => ({
+      profile: initialProfile,
+      ...profileActions(set, get),
+      users: initialUsers,
+      ...usersActions(set, get),
+      notification: initialNotification,
+      ...notificationActions(set, get),
+      loading: initialLoading,
+    })),
+    { name: "Zustand Store" }
+  )
 );
+
