@@ -36,7 +36,7 @@ const SidebarContainer = styled(Box)({
 const Sidebar: React.FC<SidebarProps> = ({ onSelect, role = "client" }) => {
   const menuItems: Record<"client" | "staff" | "admin", MenuItem[]> = {
     client: [
-      { icon: <Person />, label: "Hồ sơ bệnh nhân", key: "patient-profile" },
+      { icon: <Person />, label: "Hồ sơ bệnh nhân", key: "profile" },
       { icon: <Feedback />, label: "Phản ứng sau tiêm", key: "post-vaccine-reactions" },
       { icon: <Event />, label: "Lịch tiêm chủng", key: "vaccination-schedule" },
       { icon: <History />, label: "Lịch sử tiêm chủng", key: "vaccination-history" },
