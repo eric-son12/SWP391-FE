@@ -157,12 +157,12 @@ const VaccineManagement: React.FC = () => {
       </Paper>
 
       {/* Dialog form create/update */}
-      {/* <VaccineForm
+      <VaccineForm
         open={openForm}
         defaultValues={editingVaccine}
         onClose={() => setOpenForm(false)}
         onSubmit={handleSubmitForm}
-      /> */}
+      />
     </Container>
   );
 };

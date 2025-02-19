@@ -79,7 +79,7 @@ const VaccineForm: React.FC<VaccineFormProps> = ({
             type="date"
             fullWidth
             margin="normal"
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ inputLabel: { shrink: true } }}
             {...register("dateOfManufacture")}
           />
 
@@ -87,6 +87,7 @@ const VaccineForm: React.FC<VaccineFormProps> = ({
             label="Hạn sử dụng"
             fullWidth
             margin="normal"
+            placeholder="24 tháng"
             {...register("vaccineExpiryDate")}
           />
 

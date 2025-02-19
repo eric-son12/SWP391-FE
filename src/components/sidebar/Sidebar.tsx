@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelect, role = "customer" }) => {
             onClick={() => onSelect(item.key)}
           >
             {item.icon}
-            <Typography>{item.label}</Typography>
+            <Typography sx={{ fontSize: '14px'}}>{item.label}</Typography>
           </Box>
         ))}
       </Box>
