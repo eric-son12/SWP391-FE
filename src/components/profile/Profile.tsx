@@ -1,23 +1,20 @@
-// UserProfile.tsx
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Typography,
   Avatar,
   Container,
-  Card,
   Divider,
   TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2"
 import { Email, Lock } from '@mui/icons-material';
-import { useStore } from "../../store";
 
 interface ParentInfo {
   id: string;
   username: string;
   fullName: string;
-  role: "PARENT";
+  role: "CUSTOMER";
 }
 
 interface UserProfile {
@@ -26,7 +23,7 @@ interface UserProfile {
   fullName: string;
   dob: string;
   gender: string;
-  role: "CHILD" | "PARENT" | "STAFF" | "ADMIN";
+  role: "CHILD" | "CUSTOMER" | "STAFF" | "ADMIN";
   parent?: ParentInfo;
   email: string;
   avatar: string;
@@ -75,7 +72,7 @@ const UserProfileLayout: React.FC = () => {
           <Grid sx={{ p: 3 }}>
             <Grid container spacing={3}>
               <Grid size={12} sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar src={user.avatar || 'https://hwchamber.co.uk/testimonial-layout-test/avatar-placeholder/'} sx={{ width: 100, height: 100 }}>
+                <Avatar src={user.avatar || 'https://placehold.co/100'} sx={{ width: 100, height: 100 }}>
                 </Avatar>
                 <Box>
                   <Typography variant="h4">{user.fullname}</Typography>

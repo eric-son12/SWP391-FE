@@ -45,7 +45,6 @@ function App() {
           redirectPath="/login"
         >
           <Home />
-          {/* <Dashboard /> */}
         </ProtectedRoute>
       ),
     },

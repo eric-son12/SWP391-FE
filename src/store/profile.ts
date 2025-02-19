@@ -4,7 +4,7 @@ import axios from "../utils/axiosConfig";
 export enum UserRole {
   ADMIN = 'admin',
   STAFF = 'staff',
-  CLIENT = 'client'
+  CUSTOMER = 'customer'
 }
 
 export interface User {
