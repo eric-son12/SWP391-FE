@@ -1,6 +1,6 @@
+import { UserProfile } from "../models/user";
 import type { StoreGet, StoreSet } from "../store";
 import axios from "../utils/axiosConfig";
-import { UserProfile } from "./profile";
 
 export interface UsersState {
   user: UserProfile | undefined;

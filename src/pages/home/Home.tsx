@@ -1,20 +1,30 @@
-import React, { Suspense, useState } from "react";
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
-import Sidebar from "../../components/sidebar/Sidebar";
+import React, { useState } from "react";
+import { Box, Typography } from "@mui/material";
+import { styled } from "@mui/system";
 
-import { useStore } from "../../store";
-import { UserRole } from "../../store/profile";
+import { UserRole } from "../../models/user";
+import { menuItemsByRole } from "../../config/menuConfig";
 
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import Sidebar from "../../components/sidebar/Sidebar";
 import UserProfileLayout from "../../components/profile/Profile";
 import VaccineManagement from "../../components/vaccine/VaccineManagement";
 
-const DashboardLayout: React.FC = () => {
-  // const user = useStore((state) => state.users?.user);
-  // const role = user?.role || 'customer';
+const MainScreen = styled(Box)({
+  flexGrow: 1, 
+  padding: "1rem", 
+  background: "#fff", 
+  margin: "1rem 1rem 1rem 0", 
+  borderRadius: "1rem" 
+});
 
-  const [activeScreen, setActiveScreen] = useState<string>("profile");
+const DashboardLayout: React.FC = () => {
+  const role: UserRole = UserRole.CUSTOMER;
+
+  const defaultScreen = menuItemsByRole[role][0].key;
+
+  const [activeScreen, setActiveScreen] = useState<string>(defaultScreen);
 
   const handleSelect = (key: string) => {
     setActiveScreen(key);
@@ -24,10 +34,10 @@ const DashboardLayout: React.FC = () => {
     switch (activeScreen) {
       case "profile":
         return <UserProfileLayout />;
-      case "product-list": 
-        return < VaccineManagement />
+      case "product-list":
+        return <VaccineManagement />;
       default:
-        return <Typography variant="h4">{activeScreen.replace("-", " ")}</Typography>;
+        return <Typography variant="h4">{activeScreen}</Typography>;
     }
   };
 
@@ -36,14 +46,10 @@ const DashboardLayout: React.FC = () => {
       <Header />
 
       <Box sx={{ display: "flex" }}>
-        <Sidebar onSelect={handleSelect} role={"admin"} />
-        <Box sx={{ flexGrow: 1, padding: 3, backgroundColor: "#fff" }}>
-          <Container maxWidth="lg">
-            <Suspense fallback={<CircularProgress />}>
-              {renderContent()}
-            </Suspense>
-          </Container>
-        </Box>
+        <Sidebar onSelect={handleSelect} role={role} />
+        <MainScreen>
+          {renderContent()}
+        </MainScreen>
       </Box>
 
       <Footer />

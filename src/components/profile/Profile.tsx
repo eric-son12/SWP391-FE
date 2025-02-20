@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2"
 import { Email, Lock } from '@mui/icons-material';
+import { format } from 'date-fns'
 
 interface ParentInfo {
   id: string;
@@ -68,7 +69,7 @@ const UserProfileLayout: React.FC = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <Box sx={{ flexGrow: 1, padding: 3}}>
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
           <Grid sx={{ p: 3 }}>
             <Grid container spacing={3}>
               <Grid size={12} sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -76,7 +77,7 @@ const UserProfileLayout: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h4">{user.fullname}</Typography>
-                  <Typography color="text.secondary">ID: {user.userId}</Typography>
+                  <Typography color="text.secondary">@{user.username}</Typography>
                 </Box>
               </Grid>
 
@@ -85,19 +86,16 @@ const UserProfileLayout: React.FC = () => {
                 <Divider sx={{ mb: 2 }} />
                 <Grid container spacing={2}>
                   <Grid columns={{ xs: 12, md: 6 }}>
-                    <TextField fullWidth label="Username" value={user.username} InputProps={{ readOnly: true }} />
+                    <TextField fullWidth label="Full Name" value={user.fullname} inputProps={{ readOnly: true }} />
                   </Grid>
                   <Grid columns={{ xs: 12, md: 6 }}>
-                    <TextField fullWidth label="Full Name" value={user.fullname} InputProps={{ readOnly: true }} />
+                    <TextField fullWidth label="Date of Birth" value={format(user.birthDate, "d/M/yyyy")} inputProps={{ readOnly: true }} />
                   </Grid>
                   <Grid columns={{ xs: 12, md: 6 }}>
-                    <TextField fullWidth label="Date of Birth" value={user.birthDate} InputProps={{ readOnly: true }} />
+                    <TextField fullWidth label="Gender" value={user.gender} inputProps={{ readOnly: true }} />
                   </Grid>
                   <Grid columns={{ xs: 12, md: 6 }}>
-                    <TextField fullWidth label="Gender" value={user.gender} InputProps={{ readOnly: true }} />
-                  </Grid>
-                  <Grid columns={{ xs: 12, md: 6 }}>
-                    <TextField fullWidth label="Role" value={user.role} InputProps={{ readOnly: true }} />
+                    <TextField fullWidth label="Role" value={user.role} inputProps={{ readOnly: true }} />
                   </Grid>
                 </Grid>
               </Grid>
@@ -108,10 +106,10 @@ const UserProfileLayout: React.FC = () => {
                   <Divider sx={{ mb: 2 }} />
                   <Grid container spacing={2}>
                     <Grid columns={{ xs: 12, md: 6 }}>
-                      <TextField fullWidth label="Parent Name" value={user.parent.fullname} InputProps={{ readOnly: true }} />
+                      <TextField fullWidth label="Parent Name" value={user.parent.fullname} inputProps={{ readOnly: true }} />
                     </Grid>
                     <Grid columns={{ xs: 12, md: 6 }}>
-                      <TextField fullWidth label="Parent ID" value={user.parent.userId} InputProps={{ readOnly: true }} />
+                      <TextField fullWidth label="Parent ID" value={user.parent.userId} inputProps={{ readOnly: true }} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -126,7 +124,7 @@ const UserProfileLayout: React.FC = () => {
                       fullWidth
                       label="Email"
                       value={user.email}
-                      InputProps={{
+                      inputProps={{
                         readOnly: true,
                         startAdornment: <Email style={{ marginRight: 8 }} />,
                       }}
@@ -138,7 +136,7 @@ const UserProfileLayout: React.FC = () => {
                       type="password"
                       label="Password"
                       value="********"
-                      InputProps={{
+                      inputProps={{
                         readOnly: true,
                         startAdornment: <Lock style={{ marginRight: 8 }} />,
                       }}

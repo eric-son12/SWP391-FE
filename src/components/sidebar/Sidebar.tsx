@@ -1,28 +1,12 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import {
-  Person,
-  Event,
-  History,
-  Feedback,
-  Inventory,
-  People,
-  Dashboard,
-  MedicalServices,
-  AssignmentInd,
-} from "@mui/icons-material";
-import { UserRole } from "../../store/profile";
+import { UserRole } from "../../models/user";
+import { MenuItem, menuItemsByRole } from "../../config/menuConfig";
 
 interface SidebarProps {
   onSelect: (key: string) => void;
-  role?: "customer" | "staff" | "admin";
-}
-
-interface MenuItem {
-  icon: JSX.Element;
-  label: string;
-  key: string;
+  role?: UserRole;
 }
 
 const SidebarContainer = styled(Box)({
@@ -32,47 +16,63 @@ const SidebarContainer = styled(Box)({
   borderRight: "1px solid #ddd",
   height: "100vh",
   padding: 16,
+  margin: "1rem",
+  borderRadius: "1rem",
 });
 
-const Sidebar: React.FC<SidebarProps> = ({ onSelect, role = "customer" }) => {
-  const menuItems: Record<UserRole, MenuItem[]> = {
-    customer: [
-      { icon: <Person />, label: "Hồ sơ bệnh nhân", key: "profile", },
-      { icon: <Feedback />, label: "Phản ứng sau tiêm", key: "post-vaccine-reactions", },
-      { icon: <Event />,label: "Lịch tiêm chủng",key: "vaccination-schedule",},
-      { icon: <History />, label: "Lịch sử tiêm chủng", key: "vaccination-history", },
-    ],
-    staff: [
-      { icon: <AssignmentInd />, label: "Cập nhật hồ sơ bệnh nhân", key: "update-patient-profile", },
-      { icon: <Event />, label: "Quản lý lịch booking", key: "manage-bookings", },
-      { icon: <Feedback />, label: "Quản lý feedback", key: "manage-feedback", },
-      { icon: <MedicalServices />, label: "Quản lý dịch vụ tiêm chủng", key: "manage-services", },
-      { icon: <Person />, label: "Quản lý hồ sơ khách hàng", key: "manage-client-records", },
-    ],
-    admin: [
-      { icon: <Dashboard />, label: "Dashboard", key: "dashboard", },
-      { icon: <People />, label: "Quản lý staff", key: "manage-staff", },
-      { icon: <Inventory />, label: "Danh sách sản phẩm", key: "product-list", },
-      { icon: <People />, label: "Danh sách khách hàng", key: "client-list", },
-      { icon: <Feedback />, label: "Danh sách feedback, rating", key: "feedback-list", },
-    ],
-  };
+const SubMenuItemContainer = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  gap: 2,
+  cursor: "pointer",
+  paddingLeft: 32,
+  paddingTop: 4,
+  paddingBottom: 4,
+});
 
-  const selectedMenu = menuItems[role];
+const Sidebar = ({ onSelect, role = UserRole.CUSTOMER }: SidebarProps) => {
+  const menuItems = menuItemsByRole[role];
+
+  const renderSubMenuItem = (subItem: MenuItem) => (
+    <SubMenuItemContainer
+      key={subItem.key}
+      onClick={() => onSelect(subItem.key)}
+    >
+      {subItem.icon}
+      <Typography sx={{ fontSize: 14 }}>{subItem.label}</Typography>
+    </SubMenuItemContainer>
+  );
+
+  const renderMenuItem = (item: MenuItem) => {
+    return (
+      <Box key={item.key}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            cursor: "pointer",
+            p: 1,
+          }}
+          onClick={() => onSelect(item.key)}
+        >
+          {item.icon}
+          <Typography sx={{ fontSize: 14 }}>{item.label}</Typography>
+        </Box>
+
+        {item.subItems && item.subItems.length > 0 && (
+          <Box sx={{ marginLeft: 2 }}>
+            {item.subItems.map((subItem) => renderSubMenuItem(subItem))}
+          </Box>
+        )}
+      </Box>
+    );
+  };
 
   return (
     <SidebarContainer>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {selectedMenu.map((item) => (
-          <Box
-            key={item.key}
-            sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer", p: 1 }}
-            onClick={() => onSelect(item.key)}
-          >
-            {item.icon}
-            <Typography sx={{ fontSize: '14px'}}>{item.label}</Typography>
-          </Box>
-        ))}
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+        {menuItems.map((item: MenuItem) => renderMenuItem(item))}
       </Box>
     </SidebarContainer>
   );

@@ -17,6 +17,7 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { Vaccine } from "../../models/vaccine";
 import VaccineForm from "./VaccineForm";
+import { Validate } from "../../utils/validate";
 
 const initialVaccines: Vaccine[] = [
   {
@@ -96,7 +97,7 @@ const VaccineManagement: React.FC = () => {
   const currentData = vaccines.slice(startIndex, endIndex);
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <div>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography variant="h4">Quản lý Vaccine</Typography>
         <Button variant="contained" onClick={handleCreateNew}>
@@ -109,7 +110,7 @@ const VaccineManagement: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Tên Vaccine</TableCell>
+              <TableCell>Vaccine</TableCell>
               <TableCell>Giá (VNĐ)</TableCell>
               <TableCell>Hạn sử dụng</TableCell>
               <TableCell align="center">Actions</TableCell>
@@ -120,7 +121,7 @@ const VaccineManagement: React.FC = () => {
               <TableRow key={v.id}>
                 <TableCell>{v.id}</TableCell>
                 <TableCell>{v.vaccineName}</TableCell>
-                <TableCell>{v.price}</TableCell>
+                <TableCell>{Validate.formatPrice(v.price)}</TableCell>
                 <TableCell>{v.vaccineExpiryDate}</TableCell>
                 <TableCell align="center">
                   <Tooltip title="Edit">
@@ -163,7 +164,7 @@ const VaccineManagement: React.FC = () => {
         onClose={() => setOpenForm(false)}
         onSubmit={handleSubmitForm}
       />
-    </Container>
+    </div>
   );
 };
 
