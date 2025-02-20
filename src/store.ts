@@ -38,6 +38,8 @@ export type StoreSet = (f: (state: Draft<State>) => void) => void;
 export const useStore = create<Store>()(
   devtools(
     immer((set, get) => ({
+      auth: initialProfile,
+      ...profileActions(set, get),
       profile: initialProfile,
       ...profileActions(set, get),
       users: initialUsers,

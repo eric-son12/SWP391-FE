@@ -10,6 +10,7 @@ import Footer from "../../components/footer/Footer";
 import Sidebar from "../../components/sidebar/Sidebar";
 import UserProfileLayout from "../../components/profile/Profile";
 import VaccineManagement from "../../components/vaccine/VaccineManagement";
+import UsersManagement from "../../components/user/UsersManagement";
 
 const MainScreen = styled(Box)({
   flexGrow: 1, 
@@ -22,7 +23,7 @@ const MainScreen = styled(Box)({
 const DashboardLayout: React.FC = () => {
   const role: UserRole = UserRole.CUSTOMER;
 
-  const defaultScreen = menuItemsByRole[role][0].key;
+  const defaultScreen = menuItemsByRole[role][0].subItems ? menuItemsByRole[role][0].subItems[0].key : menuItemsByRole[role][0].key;
 
   const [activeScreen, setActiveScreen] = useState<string>(defaultScreen);
 
@@ -33,9 +34,12 @@ const DashboardLayout: React.FC = () => {
   const renderContent = () => {
     switch (activeScreen) {
       case "profile":
+      case "personal-profile":
         return <UserProfileLayout />;
       case "product-list":
         return <VaccineManagement />;
+      case "manage-client": 
+        return <UsersManagement />      
       default:
         return <Typography variant="h4">{activeScreen}</Typography>;
     }

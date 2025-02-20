@@ -11,6 +11,7 @@ export interface User {
 }
 
 export interface UserProfile {
+  id?: number | string;
   username: string;
   fullName: string;
   email: string;

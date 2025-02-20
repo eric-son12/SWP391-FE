@@ -4,7 +4,7 @@ import axios from "../utils/axiosConfig";
 
 export interface UsersState {
   user: UserProfile | undefined;
-  users: UserProfile[] | undefined;
+  users: UserProfile[];
 }
 
 export interface LetterVolunteer {
@@ -33,7 +33,7 @@ export interface UsersActions {
 
 export const initialUsers: UsersState = {
   user: undefined,
-  users: undefined,
+  users: [],
 };
 
 export function usersActions(set: StoreSet, get: StoreGet): UsersActions {

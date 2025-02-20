@@ -14,7 +14,7 @@ import {
 import { UserRole } from "../models/user";
 
 export interface SubMenuItem {
-  icon: JSX.Element;
+  // icon: JSX.Element;
   label: string;
   key: string;
 }
@@ -34,12 +34,10 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       key: "profile",
       subItems: [
         {
-          icon: <Person />,
           label: "Hồ sơ cá nhân",
           key: "personal-profile"
         },
         {
-          icon: <EscalatorWarning />,
           label: "Hồ sơ trẻ con",
           key: "child-profile"
         }
@@ -85,7 +83,7 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
     {
       icon: <Person />,
       label: "Quản lý hồ sơ khách hàng",
-      key: "manage-client-records",
+      key: "manage-client",
     },
   ],
   admin: [
@@ -98,13 +96,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       icon: <People />,
       label: "Quản lý staff",
       key: "manage-staff",
-      // subItems: [ 
-      //   { 
-      //     icon: <SomeIcon/>, 
-      //     label: 'Thêm staff', 
-      //     key: 'create-staff' 
-      //   }, 
-      // ]
     },
     {
       icon: <Inventory />,

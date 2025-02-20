@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { UserRole } from "../../models/user";
-import { MenuItem, menuItemsByRole } from "../../config/menuConfig";
+import { MenuItem, menuItemsByRole, SubMenuItem } from "../../config/menuConfig";
 
 interface SidebarProps {
   onSelect: (key: string) => void;
@@ -33,12 +33,11 @@ const SubMenuItemContainer = styled(Box)({
 const Sidebar = ({ onSelect, role = UserRole.CUSTOMER }: SidebarProps) => {
   const menuItems = menuItemsByRole[role];
 
-  const renderSubMenuItem = (subItem: MenuItem) => (
+  const renderSubMenuItem = (subItem: SubMenuItem) => (
     <SubMenuItemContainer
       key={subItem.key}
       onClick={() => onSelect(subItem.key)}
     >
-      {subItem.icon}
       <Typography sx={{ fontSize: 14 }}>{subItem.label}</Typography>
     </SubMenuItemContainer>
   );
