@@ -30,60 +30,65 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   customer: [
     {
       icon: <Person />,
-      label: "Hồ sơ bệnh nhân",
+      label: "Patient Profile",
       key: "profile",
       subItems: [
         {
-          label: "Hồ sơ cá nhân",
+          label: "Personal Profile",
           key: "personal-profile"
         },
         {
-          label: "Hồ sơ trẻ con",
+          label: "Child Profile",
           key: "child-profile"
         }
       ]
     },
     {
       icon: <Feedback />,
-      label: "Phản ứng sau tiêm",
+      label: "Post-Vaccine Reactions",
       key: "post-vaccine-reactions",
     },
     {
       icon: <Event />,
-      label: "Lịch tiêm chủng",
+      label: "Vaccination Schedule",
       key: "vaccination-schedule",
     },
     {
       icon: <History />,
-      label: "Lịch sử tiêm chủng",
+      label: "Vaccination History",
       key: "vaccination-history",
     },
   ],
   staff: [
     {
       icon: <AssignmentInd />,
-      label: "Cập nhật hồ sơ bệnh nhân",
-      key: "update-patient-profile",
+      label: "Patient Management",
+      key: "patient-management",
+      subItems: [
+        {
+          label: "Patient - Parent",
+          key: "patient-parent"
+        },
+        {
+          label: "Patient - Children",
+          key: "patient-children"
+        }
+      ]
     },
     {
       icon: <Event />,
-      label: "Quản lý lịch booking",
+      label: "Manage Bookings",
       key: "manage-bookings",
     },
     {
       icon: <Feedback />,
-      label: "Quản lý feedback",
+      label: "Manage Feedback",
       key: "manage-feedback",
     },
     {
       icon: <MedicalServices />,
-      label: "Quản lý dịch vụ",
+      label: "Manage Services",
       key: "manage-services",
-    },
-    {
-      icon: <Person />,
-      label: "Quản lý hồ sơ khách hàng",
-      key: "manage-client",
     },
   ],
   admin: [
@@ -94,22 +99,22 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
     },
     {
       icon: <People />,
-      label: "Quản lý staff",
+      label: "Manage Staff",
       key: "manage-staff",
     },
     {
       icon: <Inventory />,
-      label: "Danh sách sản phẩm",
+      label: "Product List",
       key: "product-list",
     },
     {
       icon: <People />,
-      label: "Danh sách khách hàng",
+      label: "Client List",
       key: "client-list",
     },
     {
       icon: <Feedback />,
-      label: "Danh sách feedback, rating",
+      label: "Feedback & Ratings",
       key: "feedback-list",
     },
   ],

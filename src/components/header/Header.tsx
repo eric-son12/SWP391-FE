@@ -101,10 +101,10 @@ const Header: React.FC = () => {
         </div> */}
 
         <div className="action-group-wrap">
-          {(role === "ROLE_VOLUNTEER" || role === "ROLE_ADMIN") && (
+          {(role === "staff" || role === "admin") && (
             <IconButton
               style={{ color: "white", marginRight: "8px" }}
-              onClick={() => navigate("/admin/dashboard")}
+              onClick={() => navigate("/dashboard")}
             >
               <AdminPanelSettingsIcon />
             </IconButton>
@@ -145,17 +145,10 @@ const Header: React.FC = () => {
                 <MenuItem
                   onClick={() => {
                     handleCloseMenu();
-                    navigate("/profile");
+                    navigate("/dashboard");
                   }}
                 >
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    setOpen(true);
-                  }}
-                >
-                  Change password
+                  Dashboard
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -180,83 +173,6 @@ const Header: React.FC = () => {
           </Menu>
         </div>
       </nav>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Change Password</DialogTitle>
-        <DialogContent>
-          <form
-            onSubmit={formik.handleSubmit}
-            style={{ maxWidth: "400px", margin: "0 auto" }}
-          >
-            <TextField
-              fullWidth
-              id="oldPassword"
-              name="oldPassword"
-              label="Old Password"
-              type="password"
-              value={formik.values.oldPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.oldPassword && Boolean(formik.errors.oldPassword)
-              }
-              helperText={
-                formik.touched.oldPassword && formik.errors.oldPassword
-              }
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              id="newPassword"
-              name="newPassword"
-              label="New Password"
-              type="password"
-              value={formik.values.newPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.newPassword && Boolean(formik.errors.newPassword)
-              }
-              helperText={
-                formik.touched.newPassword && formik.errors.newPassword
-              }
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Confirm Password"
-              type="password"
-              value={formik.values.confirmPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.confirmPassword &&
-                Boolean(formik.errors.confirmPassword)
-              }
-              helperText={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-              }
-              margin="normal"
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              fullWidth
-              type="submit"
-              style={{ marginTop: "16px" }}
-            >
-              Change Password
-            </Button>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="info">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

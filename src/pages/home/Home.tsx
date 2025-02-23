@@ -8,9 +8,9 @@ import { menuItemsByRole } from "../../config/menuConfig";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Sidebar from "../../components/sidebar/Sidebar";
-import UserProfileLayout from "../../components/profile/Profile";
+import { ChildProfile, UserProfilePage } from "../../components/profile";
+import UpdatePatientProfile from "../../components/management/UsersManagement";
 import VaccineManagement from "../../components/vaccine/VaccineManagement";
-import UsersManagement from "../../components/user/UsersManagement";
 
 const MainScreen = styled(Box)({
   flexGrow: 1, 
@@ -21,7 +21,7 @@ const MainScreen = styled(Box)({
 });
 
 const DashboardLayout: React.FC = () => {
-  const role: UserRole = UserRole.CUSTOMER;
+  const role: UserRole = UserRole.STAFF;
 
   const defaultScreen = menuItemsByRole[role][0].subItems ? menuItemsByRole[role][0].subItems[0].key : menuItemsByRole[role][0].key;
 
@@ -35,11 +35,17 @@ const DashboardLayout: React.FC = () => {
     switch (activeScreen) {
       case "profile":
       case "personal-profile":
-        return <UserProfileLayout />;
+        return <UserProfilePage />;
+      case "child-profile": 
+        return <ChildProfile />;
+
+      // Staff
+      case "patient-management":
+        return <UpdatePatientProfile />;
+
+      // admin
       case "product-list":
         return <VaccineManagement />;
-      case "manage-client": 
-        return <UsersManagement />      
       default:
         return <Typography variant="h4">{activeScreen}</Typography>;
     }

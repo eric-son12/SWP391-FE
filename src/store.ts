@@ -10,12 +10,6 @@ import {
   ProfileState,
 } from "./store/profile";
 import {
-  initialUsers,
-  usersActions,
-  UsersActions,
-  UsersState,
-} from "./store/users";
-import {
   initialNotification,
   NotificationActions,
   notificationActions,
@@ -26,10 +20,9 @@ export interface State {
   loading: LoadingState;
   notification: NotificationState;
   profile: ProfileState;
-  users: UsersState;
 }
 
-export type Actions = ProfileActions & UsersActions & NotificationActions;
+export type Actions = ProfileActions & NotificationActions;
 
 export type Store = State & Actions;
 export type StoreGet = () => Store;
@@ -38,12 +31,8 @@ export type StoreSet = (f: (state: Draft<State>) => void) => void;
 export const useStore = create<Store>()(
   devtools(
     immer((set, get) => ({
-      auth: initialProfile,
-      ...profileActions(set, get),
       profile: initialProfile,
       ...profileActions(set, get),
-      users: initialUsers,
-      ...usersActions(set, get),
       notification: initialNotification,
       ...notificationActions(set, get),
       loading: initialLoading,

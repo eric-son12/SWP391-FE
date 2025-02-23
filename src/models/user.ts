@@ -11,11 +11,21 @@ export interface User {
 }
 
 export interface UserProfile {
+  avatar?: string;
   id?: number | string;
   username: string;
   fullName: string;
   email: string;
   phone: string;
   address: string;
+  dob: string;
   role: UserRole;
+  gender: string;
+}
+
+export interface ChildProfile {
+  id?: string;
+  fullName: string;
+  dob: string;
+  gender: string;
 }
