@@ -12,7 +12,7 @@ export interface User {
 
 export interface UserProfile {
   avatar?: string;
-  id?: number | string;
+  id: number | string;
   username: string;
   fullName: string;
   email: string;

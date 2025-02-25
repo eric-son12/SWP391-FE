@@ -1,206 +1,179 @@
-import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridPaginationModel, GridRenderCellParams } from '@mui/x-data-grid';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Controller, useForm } from 'react-hook-form';
-import dayjs from 'dayjs';
-import { useStore } from '../../store';
-import { UserProfile } from '../../models/user';
+"use client"
 
-const UpdatePatientProfile: React.FC = () => {
-  const { allUsers } = useStore((state) => state.profile);
-  const fetchAllUsers = useStore((state) => state.fetchAllUsers);
-  const updateUser = useStore((state) => state.updateProfile);
-  const deleteUser = useStore((state) => state.deleteUser);
+import type React from "react"
+import { useState } from "react"
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  InputAdornment,
+} from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
+import SearchIcon from "@mui/icons-material/Search"
 
-  const [openModal, setOpenModal] = useState(false);
-  const [modalMode, setModalMode] = useState<'view' | 'edit'>('view');
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+interface User {
+  id: number
+  username: string
+  fullName: string
+  email: string
+  role: string
+}
 
-  const { control, handleSubmit, reset } = useForm<UserProfile>();
+const initialUsers: User[] = [
+  { id: 1, username: "john_doe", fullName: "John Doe", email: "john@example.com", role: "Admin" },
+  { id: 2, username: "jane_smith", fullName: "Jane Smith", email: "jane@example.com", role: "User" },
+  { id: 3, username: "bob_johnson", fullName: "Bob Johnson", email: "bob@example.com", role: "User" },
+]
 
-  useEffect(() => {
-    fetchAllUsers();
-  }, [fetchAllUsers]);
+const UserManagement: React.FC = () => {
+  const [users, setUsers] = useState<User[]>(initialUsers)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [dialogMode, setDialogMode] = useState<"add" | "edit">("add")
+  const [searchTerm, setSearchTerm] = useState("")
 
-  const handleOpenModal = (user: UserProfile, mode: 'view' | 'edit') => {
-    setSelectedUser(user);
-    setModalMode(mode);
-    reset(user);
-    setOpenModal(true);
-  };
+  const handleOpenDialog = (mode: "add" | "edit", user?: User) => {
+    setDialogMode(mode)
+    setCurrentUser(user || { id: 0, username: "", fullName: "", email: "", role: "" })
+    setDialogOpen(true)
+  }
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedUser(null);
-  };
+  const handleCloseDialog = () => {
+    setDialogOpen(false)
+    setCurrentUser(null)
+  }
 
-  const onSubmit = (data: UserProfile) => {
-    updateUser(data).then(() => {
-      handleCloseModal();
-      fetchAllUsers();
-    });
-  };
-
-  const handleDeleteUser = (id: number | string) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      deleteUser(String(id)).then(() => {
-        fetchAllUsers();
-      });
+  const handleSaveUser = () => {
+    if (currentUser) {
+      if (dialogMode === "add") {
+        setUsers([...users, { ...currentUser, id: users.length + 1 }])
+      } else {
+        setUsers(users.map((u) => (u.id === currentUser.id ? currentUser : u)))
+      }
     }
-  };
+    handleCloseDialog()
+  }
 
-  const columns: GridColDef[] = [
-    {
-      field: "avatar",
-      headerName: "Avatar",
-      width: 100,
-      renderCell: (params: GridRenderCellParams<any>) => (
-        <img
-          src={params.value || "https://placehold.co/50"}
-          alt="avatar"
-          style={{ width: 50, height: 50, borderRadius: "50%" }}
-        />
-      ),
-    },
-    { field: "username", headerName: "Username", width: 150 },
-    { field: "fullName", headerName: "Full Name", width: 200 },
-    { field: "birthDate", headerName: "DOB", width: 130 },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 220,
-      renderCell: (params: GridRenderCellParams<any>) => (
-        <>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleOpenModal(params.row, "view")}
-            style={{ marginRight: 8 }}
-          >
-            View
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleOpenModal(params.row, "edit")}
-            style={{ marginRight: 8 }}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            color="error"
-            onClick={() => handleDeleteUser(params.row.id)}
-          >
-            Delete
-          </Button>
-        </>
-      ),
-    },
-  ];
+  const handleDeleteUser = (id: number) => {
+    setUsers(users.filter((u) => u.id !== id))
+  }
 
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    pageSize: 25,
-    page: 0,
-  });
-  
+  const filteredUsers = users.filter(
+    (user) =>
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
+
   return (
-    <div className="update-patient-container">
-      <h2>Patient Management</h2>
-      <Paper sx={{ height: 600, width: '100%' }}>
-        <DataGrid
-          rows={allUsers}
-          columns={columns}
-          getRowId={(row) => row.id}
-          checkboxSelection
-          paginationModel={paginationModel}
-          onPaginationModelChange={(model) => setPaginationModel(model)}
-          pageSizeOptions={[25, 50, 100]}
-          sx={{ border: 0 }}
+    <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        User Management
+      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3, gap: 4 }}>
+        <TextField
+          variant="outlined"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              )
+            }
+          }}
+          sx={{ flex: 1 }}
         />
-      </Paper>
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <div className="update-patient-modal">
-          <h3>{modalMode === 'edit' ? "Edit User" : "View User"}</h3>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-group">
-              <TextField
-                label="Full Name"
-                variant="outlined"
-                {...control.register("fullName")}
-                slotProps={{
-                  input: {
-                    readOnly: modalMode === 'view'
-                  }
-                }}
-                fullWidth
-              />
-            </div>
-            <div className="form-group">
-              <TextField
-                label="Username"
-                variant="outlined"
-                {...control.register("username")}
-                slotProps={{
-                  input: {
-                    readOnly: true
-                  }
-                }}
-                fullWidth
-              />
-            </div>
-            <div className="form-group">
-              <Controller
-                name="dob"
-                control={control}
-                render={({ field }) => {
-                  const dateValue = field.value
-                    ? dayjs(field.value)
-                    : null;
+        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleOpenDialog("add")}>
+          Add User
+        </Button>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Username</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredUsers.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.fullName}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>
+                  <IconButton color="primary" onClick={() => handleOpenDialog("edit", user)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton color="error" onClick={() => handleDeleteUser(user.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-                  return (
-                    <DatePicker
-                      label="Date of Birth"
-                      value={dateValue}
-                      onChange={(newValue) => {
-                        field.onChange(
-                          newValue ? newValue.format("YYYY-MM-DD") : ""
-                        );
-                      }}
-                      readOnly={modalMode === "view"}
-                      slotProps={{
-                        textField: { fullWidth: true },
-                      }}
-                    />
-                  );
-                }}
-              />
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>{dialogMode === "add" ? "Add User" : "Edit User"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Username"
+            type="text"
+            fullWidth
+            value={currentUser?.username || ""}
+            onChange={(e) => setCurrentUser({ ...currentUser!, username: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Email"
+            type="email"
+            fullWidth
+            value={currentUser?.email || ""}
+            onChange={(e) => setCurrentUser({ ...currentUser!, email: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Role"
+            type="text"
+            fullWidth
+            value={currentUser?.role || ""}
+            onChange={(e) => setCurrentUser({ ...currentUser!, role: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleSaveUser} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  )
+}
 
-            </div>
-            {modalMode === 'edit' && (
-              <div className="form-group">
-                <Button type="submit" variant="contained" fullWidth>
-                  Save
-                </Button>
-              </div>
-            )}
-          </form>
-          {modalMode === 'view' && (
-            <div className="form-group">
-              <Button variant="outlined" onClick={handleCloseModal} fullWidth>
-                Close
-              </Button>
-            </div>
-          )}
-        </div>
-      </Modal>
-    </div>
-  );
-};
+export default UserManagement
 
-export default UpdatePatientProfile;

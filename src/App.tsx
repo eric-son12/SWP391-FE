@@ -55,8 +55,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RouterProvider router={router} />
-      <Loading />
+        <RouterProvider router={router} />
+        <Loading />
       </LocalizationProvider>
     </ThemeProvider>
   );

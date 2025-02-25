@@ -1,20 +1,20 @@
+import { UserRole } from "../models/user";
 import {
   Person,
   Event,
   History,
   Feedback,
-  Inventory,
-  People,
   Dashboard,
-  MedicalServices,
-  AssignmentInd,
-  ExpandMore,
-  EscalatorWarning
+  ChildCare,
+  Vaccines,
+  ManageAccounts,
+  Group, 
+  Badge,
+  People
 } from "@mui/icons-material";
-import { UserRole } from "../models/user";
 
 export interface SubMenuItem {
-  // icon: JSX.Element;
+  icon: JSX.Element;
   label: string;
   key: string;
 }
@@ -30,17 +30,11 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   customer: [
     {
       icon: <Person />,
-      label: "Patient Profile",
+      label: "Patient",
       key: "profile",
       subItems: [
-        {
-          label: "Personal Profile",
-          key: "personal-profile"
-        },
-        {
-          label: "Child Profile",
-          key: "child-profile"
-        }
+        { label: "Parents", icon: <Person />, key: "parent" },
+        { label: "Children", icon: <ChildCare />, key: "children" },
       ]
     },
     {
@@ -61,61 +55,30 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   ],
   staff: [
     {
-      icon: <AssignmentInd />,
-      label: "Patient Management",
-      key: "patient-management",
+      label: "Patients",
+      icon: <People />,
+      key: "patients",
       subItems: [
-        {
-          label: "Patient - Parent",
-          key: "patient-parent"
-        },
-        {
-          label: "Patient - Children",
-          key: "patient-children"
-        }
-      ]
+        { label: "Parents", icon: <Person />, key: "parent" },
+        { label: "Children", icon: <ChildCare />, key: "children" },
+      ],
     },
-    {
-      icon: <Event />,
-      label: "Manage Bookings",
-      key: "manage-bookings",
-    },
-    {
-      icon: <Feedback />,
-      label: "Manage Feedback",
-      key: "manage-feedback",
-    },
-    {
-      icon: <MedicalServices />,
-      label: "Manage Services",
-      key: "manage-services",
-    },
+    { label: "Bookings", icon: <Event />, key: "bookings" },
+    { label: "Feedback", icon: <Feedback />, key: "feedback" },
+
   ],
   admin: [
+    { label: "Dashboard", icon: <Dashboard />, key: "dashboard" },
     {
-      icon: <Dashboard />,
-      label: "Dashboard",
-      key: "dashboard",
+      label: "Management",
+      icon: <ManageAccounts />,
+      key: "management",
+      subItems: [
+        { label: "Users", icon: <Group />, key: "users-management" },
+        { label: "Staff", icon: <Badge />, key: "staff-management" },
+      ],
     },
-    {
-      icon: <People />,
-      label: "Manage Staff",
-      key: "manage-staff",
-    },
-    {
-      icon: <Inventory />,
-      label: "Product List",
-      key: "product-list",
-    },
-    {
-      icon: <People />,
-      label: "Client List",
-      key: "client-list",
-    },
-    {
-      icon: <Feedback />,
-      label: "Feedback & Ratings",
-      key: "feedback-list",
-    },
+    { label: "Vaccines", icon: <Vaccines />, key: "vaccines" },
+    { label: "Feedback", icon: <Feedback />, key: "feedback" },
   ],
 };
