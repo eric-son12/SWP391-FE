@@ -9,8 +9,13 @@ body {
 }
 
 :root {
-  --color-primary: #fe8282;
-  --color-secondary: #eb3f5e;
+  --color-primary: #078DEE;
+  --color-primary-light: #68CDF9;
+  --color-primary-lighter: #CCF4FE;
+  --color-primary-dark: #0351AB;
+  --color-primary-darker: #012972;
+  
+  --color-secondary: #8E33FF;
 
   /* Customine variables themes */
   --variant-textColor: #fe8282 !important;

@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  InputAdornment,
   Menu,
   MenuItem,
   TextField,
@@ -15,8 +14,6 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useFormik } from "formik";
@@ -79,11 +76,11 @@ const Header: React.FC = () => {
     <>
       <nav className="header">
         <div className="branch-wrap" onClick={() => navigate("/")}>
-          <img src="/beauty-logo.svg" alt="" />
-          <h4>Beauty-SC</h4>
+          <img src="/logo192.png" alt="" />
+          <h4>Web Name</h4>
         </div>
 
-        <div className="searchbar-wrap">
+        {/* <div className="searchbar-wrap">
           <TextField
             color="info"
             size="small"
@@ -101,13 +98,13 @@ const Header: React.FC = () => {
               },
             }}
           />
-        </div>
+        </div> */}
 
         <div className="action-group-wrap">
-          {(role === "ROLE_VOLUNTEER" || role === "ROLE_ADMIN") && (
+          {(role === "staff" || role === "admin") && (
             <IconButton
               style={{ color: "white", marginRight: "8px" }}
-              onClick={() => navigate("/admin/dashboard")}
+              onClick={() => navigate("/dashboard")}
             >
               <AdminPanelSettingsIcon />
             </IconButton>
@@ -148,17 +145,10 @@ const Header: React.FC = () => {
                 <MenuItem
                   onClick={() => {
                     handleCloseMenu();
-                    navigate("/profile");
+                    navigate("/dashboard");
                   }}
                 >
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    setOpen(true);
-                  }}
-                >
-                  Change password
+                  Dashboard
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -181,94 +171,8 @@ const Header: React.FC = () => {
               </MenuItem>
             )}
           </Menu>
-          <Button
-            style={{ background: "#222222" }}
-            color="primary"
-            variant="contained"
-            startIcon={<DriveFileRenameOutlineOutlinedIcon />}
-            onClick={() => navigate("/create-post")}
-          >
-            Đăng tin
-          </Button>
         </div>
       </nav>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Change Password</DialogTitle>
-        <DialogContent>
-          <form
-            onSubmit={formik.handleSubmit}
-            style={{ maxWidth: "400px", margin: "0 auto" }}
-          >
-            <TextField
-              fullWidth
-              id="oldPassword"
-              name="oldPassword"
-              label="Old Password"
-              type="password"
-              value={formik.values.oldPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.oldPassword && Boolean(formik.errors.oldPassword)
-              }
-              helperText={
-                formik.touched.oldPassword && formik.errors.oldPassword
-              }
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              id="newPassword"
-              name="newPassword"
-              label="New Password"
-              type="password"
-              value={formik.values.newPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.newPassword && Boolean(formik.errors.newPassword)
-              }
-              helperText={
-                formik.touched.newPassword && formik.errors.newPassword
-              }
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Confirm Password"
-              type="password"
-              value={formik.values.confirmPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.confirmPassword &&
-                Boolean(formik.errors.confirmPassword)
-              }
-              helperText={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-              }
-              margin="normal"
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              fullWidth
-              type="submit"
-              style={{ marginTop: "16px" }}
-            >
-              Change Password
-            </Button>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="info">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

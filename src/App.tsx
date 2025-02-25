@@ -8,12 +8,15 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
+import AuthPage from "./pages/auth/AuthPage";
 
 import "./App.css";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Loading from "./components/loading/Loading";
 import { useStore } from "./store";
 import { useMemo } from "react";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
   const user = useStore((store) => store.profile.user);
@@ -27,24 +30,23 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Login />,
+      element: <AuthPage />,
     },
     {
       path: "login",
       element: <Login />,
     },
     {
-      path: "admin/dashboard",
+      path: "dashboard",
       element: (
         <ProtectedRoute
-          isAllowed={
-            isAuthenticated &&
-            (role === "ROLE_VOLUNTEER" || role === "ROLE_ADMIN")
+          isAllowed={ 
+            // isAuthenticated
+            true
           }
-          redirectPath="/"
+          redirectPath="/login"
         >
-          <p></p>
-          {/* <Dashboard /> */}
+          <Home />
         </ProtectedRoute>
       ),
     },
@@ -52,8 +54,10 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-      <Loading />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <RouterProvider router={router} />
+        <Loading />
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }
