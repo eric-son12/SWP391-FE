@@ -1,19 +1,19 @@
-import { ChildProfile, User, UserProfile } from "../models/user";
+import { ChildProfile, Patient, User, UserProfile, UserRole } from "../models/user";
 import type { StoreGet, StoreSet } from "../store";
 import axios from "../utils/axiosConfig";
 
 export interface ProfileState {
   user: User | undefined;
   myInfo: UserProfile | undefined;
-  children: ChildProfile[];
-  allUsers: UserProfile[];
+  children: Patient[];
+  allUsers: Patient[];
   userProfile: UserProfile | undefined;
   error: string | undefined;
 }
 
 export interface ProfileActions {
-  fetchAllUsers: () => Promise<void>;
-  fetchMyInfo: () => Promise<void>;
+  fetchAllUsers: () => Promise<Patient[]>;
+  fetchMyChildren: () => Promise<Patient[]>;
   registerUser: (payload: {
     username: string;
     email: string;
@@ -28,9 +28,16 @@ export interface ProfileActions {
   deleteUser: (userId: string) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
-  fetchAllChildren: () => Promise<void>;
-  createChild: (parentId: string, childRequest: { fullName: string; dob: string; gender: string }) => Promise<void>;
-  updateMyChild: (childId: string, childRequest: { fullName: string; dob: string; gender: string }) => Promise<void>;
+  createChild: (parentId: string, childRequest: {
+    fullName: string;
+    dob: string;
+    gender: string;
+  }) => Promise<void>;
+  updateMyChild: (childId: string, childRequest: {
+    fullName: string;
+    dob: string;
+    gender: string;
+  }) => Promise<void>;
 }
 
 export const initialProfile: ProfileState = {
@@ -49,35 +56,12 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
         state.loading.isLoading = true;
       });
       try {
-        const resp = await axios.get(`/users`);
+        const resp = await axios.get("/staff/parents");
+        const data: Patient[] = resp.data || [];
         set((state) => {
-          state.profile.allUsers = resp.data || [];
+          state.profile.allUsers = data;
         });
-      } catch (error: any) {
-        set((state) => {
-          const msg = error?.response?.data?.message || error?.message;
-          state.notification.data.push({
-            status: "ERROR",
-            content: msg,
-          });
-        });
-      } finally {
-        set((state) => {
-          state.loading.isLoading = false;
-        });
-      }
-    },
-
-    fetchMyInfo: async () => {
-      set((state) => {
-        state.loading.isLoading = true;
-      });
-      try {
-        const resp = await axios.get(`/users/myInfo`);
-        const info = resp.data?.result || resp.data;
-        set((state) => {
-          state.profile.myInfo = info;
-        });
+        return data;
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -86,12 +70,42 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             content: msg,
           });
         });
+        return [];
       } finally {
         set((state) => {
           state.loading.isLoading = false;
         });
       }
     },
+
+    fetchMyChildren: async () => {
+      set((state) => {
+        state.loading.isLoading = true;
+      });
+      try {
+        const resp = await axios.get("/staff/children");
+        const data: Patient[] = resp.data || [];
+        set((state) => {
+          state.profile.children = data;
+        });
+        return data;
+      } catch (error: any) {
+        const msg = error?.response?.data?.message || error?.message;
+        set((state) => {
+          state.notification.data.push({
+            status: "ERROR",
+            content: msg,
+          });
+        });
+        return [];
+      } finally {
+        set((state) => {
+          state.loading.isLoading = false;
+        });
+      }
+    },
+
+    // ... other actions remain unchanged
 
     registerUser: async (payload) => {
       set((state) => {
@@ -265,16 +279,19 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
     },
 
     deleteUser: async (userId: string) => {
-      set((state: any) => { state.loading.isLoading = true; });
+      set((state: any) => {
+        state.loading.isLoading = true;
+      });
       try {
         await axios.delete(`/users/delete/${userId}`);
-        get().fetchAllUsers();
       } catch (error: any) {
         set((state: any) => {
           state.profile.error = error.response?.data?.message || error.message;
         });
       } finally {
-        set((state: any) => { state.loading.isLoading = false; });
+        set((state: any) => {
+          state.loading.isLoading = false;
+        });
       }
     },
 
@@ -342,50 +359,16 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
       }
     },
 
-    fetchAllChildren: async () => {
-      set((state) => {
-        state.loading.isLoading = true;
-      });
-      try {
-        const response = await axios.get("/staff/children");
-        set((state) => {
-          state.profile.children = response.data || [];
-        });
-      } catch (error: any) {
-        const msg = error?.response?.data?.message || error?.message;
-        set((state) => {
-          state.notification.data.push({
-            status: "ERROR",
-            content: msg,
-          });
-        });
-      } finally {
-        set((state) => {
-          state.loading.isLoading = false;
-        });
-      }
-    },
-
     createChild: async (parentId: string, childRequest) => {
       set((state) => {
         state.loading.isLoading = true;
       });
       try {
         await axios.post(`/staff/children/create/${parentId}`, childRequest);
-        get().fetchAllChildren();
-        set((state) => {
-          state.notification.data.push({
-            status: "SUCCESS",
-            content: "Child profile created successfully",
-          });
-        });
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
-          state.notification.data.push({
-            status: "ERROR",
-            content: msg,
-          });
+          state.notification.data.push({ status: "ERROR", content: msg });
         });
       } finally {
         set((state) => {
@@ -400,20 +383,10 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
       });
       try {
         await axios.put(`/staff/children/${childId}/update`, childRequest);
-        get().fetchAllChildren();
-        set((state) => {
-          state.notification.data.push({
-            status: "SUCCESS",
-            content: "Child profile updated successfully",
-          });
-        });
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
-          state.notification.data.push({
-            status: "ERROR",
-            content: msg,
-          });
+          state.notification.data.push({ status: "ERROR", content: msg });
         });
       } finally {
         set((state) => {

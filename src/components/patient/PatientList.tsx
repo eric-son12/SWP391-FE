@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import {
   Box,
   Typography,
@@ -21,11 +21,38 @@ import SearchIcon from "@mui/icons-material/Search"
 import AddIcon from "@mui/icons-material/Add"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
-import axios from "../../utils/axiosConfig"
 import PatientDialog from "./PatientDialog"
-import { Feedback, VaccinationHistory } from "../../models/vaccine"
-import { Patient } from "../../models/user"
-import { sampleParent, sampleChild, sampleParentNoChildren } from "./dummyData";
+import { useStore } from "../../store"
+import { useShallow } from 'zustand/react/shallow'
+
+export interface Patient {
+  id: number
+  username: string
+  fullName: string
+  dateOfBirth: string
+  phone: string
+  role: "customer" | "child"
+  avatar: string
+  vaccineStatus: string
+  parent?: Patient
+  children?: Patient[]
+}
+
+interface VaccinationHistory {
+  id: number
+  patientId: number
+  vaccineName: string
+  date: string
+}
+
+interface Feedback {
+  id: number
+  patientId: number
+  date: string
+  comment: string
+  rating: number
+}
+
 interface PatientListProps {
   patientType: "parent" | "child"
 }
@@ -42,14 +69,14 @@ const initialFeedback: Feedback[] = [
 ]
 
 const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
-  // const [patients, setPatients] = useState<Patient[]>([])
-  const [patients, setPatients] = useState<Patient[]>([
-    sampleParent,
-    sampleChild,
-    sampleParentNoChildren,
-  ])
-  const [vaccinationHistory] = useState<VaccinationHistory[]>(initialVaccinationHistory)
-  const [feedback] = useState<Feedback[]>(initialFeedback)
+  const { fetchAllUsers, fetchMyChildren } = useStore(
+    useShallow((state) => ({
+      fetchAllUsers: state.fetchAllUsers,
+      fetchMyChildren: state.fetchMyChildren,
+    }))
+  )
+
+  const [patients, setPatients] = useState<Patient[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [page, setPage] = useState(1)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -58,30 +85,36 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
 
   const patientsPerPage = 5
 
-  useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const endpoint = patientType === "parent" ? "/staff/parents" : "/staff/children"
-        const response = await axios.get(endpoint)
-        setPatients(response.data || [])
-      } catch (error: any) {
-        console.error("Error fetching patients:", error)
+  const fetchPatientsData = useCallback(async () => {
+    try {
+      let data: Patient[] = []
+      if (patientType === "parent") {
+        data = await fetchAllUsers()
+      } else {
+        data = await fetchMyChildren()
       }
+      setPatients(data || [])
+    } catch (error) {
+      console.error("Error fetching patients:", error)
     }
-    fetchPatients()
-  }, [patientType])
+  }, [patientType, fetchAllUsers, fetchMyChildren])
+
+  useEffect(() => {
+    fetchPatientsData()
+  }, [patientType, fetchPatientsData])
 
   const filteredPatients = patients.filter((patient) => {
     const matchesSearch =
       patient.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       patient.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       patient.phone.includes(searchTerm)
-    const matchesType =
-      patientType === "parent" ? patient.role === "customer" : patient.role === "child"
-    return matchesSearch && matchesType
+    return matchesSearch
   })
 
-  const paginatedPatients = filteredPatients.slice((page - 1) * patientsPerPage, page * patientsPerPage)
+  const paginatedPatients = filteredPatients.slice(
+    (page - 1) * patientsPerPage,
+    page * patientsPerPage
+  )
 
   const handleOpenDialog = (mode: "add" | "edit" | "delete", patient?: Patient) => {
     setDialogMode(mode)
@@ -95,18 +128,14 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
   }
 
   const onSubmit = (data: Patient) => {
-    if (dialogMode === "add") {
-      setPatients([...patients, { ...data }])
-    } else if (dialogMode === "edit") {
-      setPatients(patients.map((p) => (p.id === currentPatient?.id ? { ...data, id: p.id } : p)))
-    }
+    console.log("Submitted data:", data)
+    fetchPatientsData()
     handleCloseDialog()
   }
 
   const handleDeletePatient = () => {
-    if (currentPatient) {
-      setPatients(patients.filter((p) => p.id !== currentPatient.id))
-    }
+    console.log("Deleting patient:", currentPatient)
+    fetchPatientsData()
     handleCloseDialog()
   }
 
@@ -115,7 +144,7 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
       <Typography variant="h4" component="h2" gutterBottom>
         {patientType === "parent" ? "Parent List" : "Children List"}
       </Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3, gap: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
         <TextField
           variant="outlined"
           placeholder="Search patients..."
@@ -130,9 +159,14 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
               )
             }
           }}
-          sx={{ flex: 1 }}
+          sx={{ width: "70%" }}
         />
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleOpenDialog("add")}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => handleOpenDialog("add")}
+        >
           Add {patientType === "parent" ? "Parent" : "Child"}
         </Button>
       </Box>
@@ -141,7 +175,6 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
           <TableHead>
             <TableRow>
               <TableCell>Avatar</TableCell>
-              <TableCell>Username</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>Date of Birth</TableCell>
               <TableCell>Phone</TableCell>
@@ -155,7 +188,6 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
                 <TableCell>
                   <Avatar src={patient.avatar} alt={patient.fullName} />
                 </TableCell>
-                <TableCell>{patient.username}</TableCell>
                 <TableCell>{patient.fullName}</TableCell>
                 <TableCell>{patient.dateOfBirth}</TableCell>
                 <TableCell>{patient.phone}</TableCell>
