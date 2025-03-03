@@ -192,14 +192,14 @@ const BookingList: React.FC = () => {
                 type="date"
                 value={currentBooking?.date || ""}
                 onChange={(e) => setCurrentBooking({ ...currentBooking!, date: e.target.value })}
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: { shrink: true } }}
               />
               <TextField
                 label="Time"
                 type="time"
                 value={currentBooking?.time || ""}
                 onChange={(e) => setCurrentBooking({ ...currentBooking!, time: e.target.value })}
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: { shrink: true } }}
               />
               <FormControl>
                 <InputLabel>Status</InputLabel>

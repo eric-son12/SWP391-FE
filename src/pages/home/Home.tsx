@@ -26,7 +26,7 @@ const MainScreen = styled(Box)({
 });
 
 const DashboardLayout: React.FC = () => {
-  const role: UserRole = UserRole.ADMIN;
+  const role: UserRole = UserRole.STAFF;
 
   const defaultScreen = menuItemsByRole[role][0].subItems ? menuItemsByRole[role][0].subItems[0].key : menuItemsByRole[role][0].key;
 
@@ -46,8 +46,10 @@ const DashboardLayout: React.FC = () => {
     switch (activeScreen) {
       case "dashboard":
         return <Dashboard />;
-      case "patients":
-        return <PatientList />;
+      case "parent":
+        return <PatientList patientType={"parent"} />;
+      case "children":
+        return <PatientList patientType={"child"} />;
       case "bookings":
         return <BookingList />;
       case "vaccines":
@@ -58,6 +60,18 @@ const DashboardLayout: React.FC = () => {
         return <UserManagement />;
       case "staff-management":
         return <StaffManagement />;
+      // case "roles-management":
+      //   return <RolesManagement />;
+      // case "daily-orders":
+      //   return <DailyOrdersReport />;
+      // case "top-vaccine":
+      //   return <TopVaccineReport />;
+      // case "revenue":
+      //   return <RevenueReport />;
+      // case "vaccinated-age":
+      //   return <VaccinatedAgeStats />;
+      // case "notifications":
+      //   return <NotificationsPage />;
     }
   };
 

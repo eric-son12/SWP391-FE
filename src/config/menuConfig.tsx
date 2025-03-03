@@ -8,9 +8,13 @@ import {
   ChildCare,
   Vaccines,
   ManageAccounts,
-  Group, 
+  Group,
   Badge,
-  People
+  People,
+  PostAdd,
+  Category,
+  Notifications,
+  Assessment,
 } from "@mui/icons-material";
 
 export interface SubMenuItem {
@@ -27,33 +31,13 @@ export interface MenuItem {
 }
 
 export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
-  customer: [
-    {
-      icon: <Person />,
-      label: "Patient",
-      key: "profile",
-      subItems: [
-        { label: "Parents", icon: <Person />, key: "parent" },
-        { label: "Children", icon: <ChildCare />, key: "children" },
-      ]
-    },
-    {
-      icon: <Feedback />,
-      label: "Post-Vaccine Reactions",
-      key: "post-vaccine-reactions",
-    },
-    {
-      icon: <Event />,
-      label: "Vaccination Schedule",
-      key: "vaccination-schedule",
-    },
-    {
-      icon: <History />,
-      label: "Vaccination History",
-      key: "vaccination-history",
-    },
-  ],
+  customer: [],
   staff: [
+    {
+      label: "Dashboard",
+      icon: <Dashboard />,
+      key: "dashboard",
+    },
     {
       label: "Patients",
       icon: <People />,
@@ -63,12 +47,55 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
         { label: "Children", icon: <ChildCare />, key: "children" },
       ],
     },
-    { label: "Bookings", icon: <Event />, key: "bookings" },
-    { label: "Feedback", icon: <Feedback />, key: "feedback" },
-
+    {
+      label: "Bookings",
+      icon: <Event />,
+      key: "bookings",
+    },
+    {
+      label: "Product Management",
+      icon: <Vaccines />,
+      key: "product-management",
+      subItems: [
+        { label: "Add Product", icon: <Vaccines />, key: "add-product" },
+        { label: "List Products", icon: <Vaccines />, key: "list-products" },
+      ],
+    },
+    {
+      label: "Category Management",
+      icon: <Category />,
+      key: "category-management",
+      subItems: [
+        { label: "Create Category", icon: <Category />, key: "create-category" },
+        { label: "List Categories", icon: <Category />, key: "list-categories" },
+      ],
+    },
+    {
+      label: "Post Management",
+      icon: <PostAdd />,
+      key: "post-management",
+      subItems: [
+        { label: "Add Post", icon: <PostAdd />, key: "add-post" },
+        { label: "List Posts", icon: <PostAdd />, key: "list-posts" },
+      ],
+    },
+    {
+      label: "Feedback",
+      icon: <Feedback />,
+      key: "feedback",
+    },
+    {
+      label: "Notifications",
+      icon: <Notifications />,
+      key: "notifications",
+    },
   ],
   admin: [
-    { label: "Dashboard", icon: <Dashboard />, key: "dashboard" },
+    {
+      label: "Dashboard",
+      icon: <Dashboard />,
+      key: "dashboard",
+    },
     {
       label: "Management",
       icon: <ManageAccounts />,
@@ -76,9 +103,34 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       subItems: [
         { label: "Users", icon: <Group />, key: "users-management" },
         { label: "Staff", icon: <Badge />, key: "staff-management" },
+        { label: "Roles & Permissions", icon: <ManageAccounts />, key: "roles-management" },
       ],
     },
-    { label: "Vaccines", icon: <Vaccines />, key: "vaccines" },
-    { label: "Feedback", icon: <Feedback />, key: "feedback" },
+    {
+      label: "Vaccines",
+      icon: <Vaccines />,
+      key: "vaccines",
+    },
+    {
+      label: "Feedback",
+      icon: <Feedback />,
+      key: "feedback",
+    },
+    {
+      label: "Reports",
+      icon: <Assessment />,
+      key: "reports",
+      subItems: [
+        { label: "Daily Orders", icon: <History />, key: "daily-orders" },
+        { label: "Top Vaccine", icon: <Vaccines />, key: "top-vaccine" },
+        { label: "Revenue", icon: <History />, key: "revenue" },
+        { label: "Vaccinated Age", icon: <ChildCare />, key: "vaccinated-age" },
+      ],
+    },
+    {
+      label: "Notifications",
+      icon: <Notifications />,
+      key: "notifications",
+    },
   ],
 };

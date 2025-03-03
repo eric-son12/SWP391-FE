@@ -15,14 +15,16 @@ import {
   notificationActions,
   NotificationState,
 } from "./store/notification";
+import { initialVaccine, VaccineActions, vaccineActions, VaccineState } from "./store/vaccine";
 
 export interface State {
   loading: LoadingState;
   notification: NotificationState;
   profile: ProfileState;
+  vaccine: VaccineState;
 }
 
-export type Actions = ProfileActions & NotificationActions;
+export type Actions = ProfileActions & NotificationActions & VaccineActions;
 
 export type Store = State & Actions;
 export type StoreGet = () => Store;
@@ -33,6 +35,8 @@ export const useStore = create<Store>()(
     immer((set, get) => ({
       profile: initialProfile,
       ...profileActions(set, get),
+      vaccine: initialVaccine,
+      ...vaccineActions(set, get),
       notification: initialNotification,
       ...notificationActions(set, get),
       loading: initialLoading,
@@ -40,4 +44,3 @@ export const useStore = create<Store>()(
     { name: "Zustand Store" }
   )
 );
-

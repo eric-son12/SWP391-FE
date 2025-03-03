@@ -1,4 +1,4 @@
-import { ChildProfile, User, UserProfile, UserRole } from "../models/user";
+import { ChildProfile, User, UserProfile } from "../models/user";
 import type { StoreGet, StoreSet } from "../store";
 import axios from "../utils/axiosConfig";
 
@@ -28,17 +28,9 @@ export interface ProfileActions {
   deleteUser: (userId: string) => Promise<void>;
   logout: () => Promise<void>;
   changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
-  fetchMyChildren: () => Promise<void>;
-  createChild: (childRequest: {
-    fullName: string;
-    dob: string;
-    gender: string;
-  }) => Promise<void>;
-  updateMyChild: (childRequest: {
-    fullName: string;
-    dob: string;
-    gender: string;
-  }) => Promise<void>;
+  fetchAllChildren: () => Promise<void>;
+  createChild: (parentId: string, childRequest: { fullName: string; dob: string; gender: string }) => Promise<void>;
+  updateMyChild: (childId: string, childRequest: { fullName: string; dob: string; gender: string }) => Promise<void>;
 }
 
 export const initialProfile: ProfileState = {
@@ -46,7 +38,6 @@ export const initialProfile: ProfileState = {
   userProfile: undefined,
   children: [],
   error: undefined,
-
   allUsers: [],
   myInfo: undefined,
 };
@@ -250,7 +241,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
       });
       try {
         const response = await axios.post(`/users/profile/update`, data);
-        const profile = response.data?.data || undefined; 
+        const profile = response.data?.data || undefined;
         set((state) => {
           state.profile.userProfile = profile;
           state.notification.data.push({
@@ -274,7 +265,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
     },
 
     deleteUser: async (userId: string) => {
-      set((state: any) => { state.loading = true; });
+      set((state: any) => { state.loading.isLoading = true; });
       try {
         await axios.delete(`/users/delete/${userId}`);
         get().fetchAllUsers();
@@ -283,7 +274,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
           state.profile.error = error.response?.data?.message || error.message;
         });
       } finally {
-        set((state: any) => { state.loading = false; });
+        set((state: any) => { state.loading.isLoading = false; });
       }
     },
 
@@ -351,12 +342,12 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
       }
     },
 
-    fetchMyChildren: async () => {
+    fetchAllChildren: async () => {
       set((state) => {
         state.loading.isLoading = true;
       });
       try {
-        const response = await axios.get("/users/my-children");
+        const response = await axios.get("/staff/children");
         set((state) => {
           state.profile.children = response.data || [];
         });
@@ -375,13 +366,13 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
       }
     },
 
-    createChild: async (childRequest) => {
+    createChild: async (parentId: string, childRequest) => {
       set((state) => {
         state.loading.isLoading = true;
       });
       try {
-        await axios.post("/users/child/create", childRequest);
-        get().fetchMyChildren();
+        await axios.post(`/staff/children/create/${parentId}`, childRequest);
+        get().fetchAllChildren();
         set((state) => {
           state.notification.data.push({
             status: "SUCCESS",
@@ -403,13 +394,13 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
       }
     },
 
-    updateMyChild: async (childRequest) => {
+    updateMyChild: async (childId: string, childRequest) => {
       set((state) => {
         state.loading.isLoading = true;
       });
       try {
-        await axios.put("/users/update-my-children", childRequest);
-        get().fetchMyChildren();
+        await axios.put(`/staff/children/${childId}/update`, childRequest);
+        get().fetchAllChildren();
         set((state) => {
           state.notification.data.push({
             status: "SUCCESS",

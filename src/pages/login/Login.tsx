@@ -39,7 +39,8 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (user) {
       const { role } = user;
-      role === "ROLE_USER" ? navigate("/") : navigate("/admin/dashboard");
+      // role === "ROLE_USER" ? navigate("/") : 
+      navigate("/dashboard");
     }
   }, [user]);
 

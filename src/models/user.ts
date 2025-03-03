@@ -1,13 +1,14 @@
 export enum UserRole {
   ADMIN = 'admin',
   STAFF = 'staff',
-  CUSTOMER = 'customer'
+  CUSTOMER = 'customer',
 }
 
 export interface User {
-  role: string;
-  token: string;
+  id: number | string;
   username: string;
+  token: string;
+  role: UserRole;
 }
 
 export interface UserProfile {
@@ -28,4 +29,17 @@ export interface ChildProfile {
   fullName: string;
   dob: string;
   gender: string;
+}
+
+export interface Patient {
+  id: number
+  username: string
+  fullName: string
+  dateOfBirth: string
+  phone: string
+  role: "customer" | "child"
+  avatar: string
+  vaccineStatus: string
+  parent?: Patient
+  children?: Patient[]
 }

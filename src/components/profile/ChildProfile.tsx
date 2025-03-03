@@ -20,7 +20,7 @@ interface ChildFormInputs {
 
 const ChildProfile = () => {
   const {children} = useStore((state) => state.profile);
-  const fetchMyChildren = useStore((state) => state.fetchMyChildren);
+  const fetchAllChildren = useStore((state) => state.fetchAllChildren);
   const createChild = useStore((state) => state.createChild);
   const updateMyChild = useStore((state) => state.updateMyChild);
   const [open, setOpen] = useState(false);
@@ -28,8 +28,8 @@ const ChildProfile = () => {
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<ChildFormInputs>();
 
   useEffect(() => {
-    fetchMyChildren();
-  }, [fetchMyChildren]);
+    fetchAllChildren();
+  }, [fetchAllChildren]);
 
   const handleOpen = () => {
     setEditChild(null);
@@ -45,9 +45,9 @@ const ChildProfile = () => {
 
   const onSubmit = (data: ChildFormInputs) => {
     if (editChild) {
-      updateMyChild(data);
+      // updateMyChild();
     } else {
-      createChild(data);
+      // createChild(data);
     }
     handleClose();
   };
