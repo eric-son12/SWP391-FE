@@ -9,9 +9,10 @@ interface SidebarItemProps {
   text: string;
   icon: JSX.Element;
   onClick: () => void;
+  subIcon?: JSX.Element;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ open, text, icon, onClick }) => {
+const SidebarItem: React.FC<SidebarItemProps> = ({ open, text, icon, onClick, subIcon }) => {
   return (
     <Tooltip title={open ? "" : text} placement="right" arrow>
       <ListItem
@@ -38,7 +39,13 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ open, text, icon, onClick }) 
           sx={{ 
             opacity: open ? 1 : 0, 
             display: open ? "flex" : "none"  
-          }} />
+          }} 
+        />
+        {subIcon && open && (
+          <div style={{ marginLeft: "auto" }}>
+            {subIcon}
+          </div>
+        )}
       </ListItem>
     </Tooltip>
   );

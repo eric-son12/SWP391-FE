@@ -151,9 +151,9 @@ const Header: React.FC = () => {
                   Dashboard
                 </MenuItem>
                 <MenuItem
-                  onClick={() => {
+                  onClick={async () => {
                     handleCloseMenu();
-                    logout();
+                    await logout();
                     navigate("/");
                   }}
                 >

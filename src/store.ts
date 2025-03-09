@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import { Draft } from "immer";
 import { initialLoading, LoadingState } from "./store/loading";
 import {
@@ -24,23 +24,28 @@ export interface State {
   vaccine: VaccineState;
 }
 
-export type Actions = ProfileActions & NotificationActions & VaccineActions;
+export type StoreSet = {
+  <U>(f: (state: Draft<State>) => U, replace?: false, action?: string): void;
+  <U>(f: (state: Draft<State>) => U, replace: true, action?: string): void;
+};
 
+export type Actions = ProfileActions & NotificationActions & VaccineActions;
 export type Store = State & Actions;
 export type StoreGet = () => Store;
-export type StoreSet = (f: (state: Draft<State>) => void) => void;
 
 export const useStore = create<Store>()(
   devtools(
-    immer((set, get) => ({
-      profile: initialProfile,
-      ...profileActions(set, get),
-      vaccine: initialVaccine,
-      ...vaccineActions(set, get),
-      notification: initialNotification,
-      ...notificationActions(set, get),
-      loading: initialLoading,
-    })),
-    { name: "Zustand Store" }
+    persist(
+      immer((set, get) => ({
+        profile: initialProfile,
+        ...profileActions(set, get),
+        vaccine: initialVaccine,
+        ...vaccineActions(set, get),
+        notification: initialNotification,
+        ...notificationActions(set, get),
+        loading: initialLoading,
+      })),
+      { name: "zustand-store"}
+    )
   )
 );

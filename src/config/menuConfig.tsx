@@ -32,7 +32,7 @@ export interface MenuItem {
 
 export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   customer: [],
-  staff: [
+  ROLE_STAFF: [
     {
       label: "Dashboard",
       icon: <Dashboard />,
@@ -90,7 +90,7 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       key: "notifications",
     },
   ],
-  admin: [
+  ROLE_ADMIN: [
     {
       label: "Dashboard",
       icon: <Dashboard />,

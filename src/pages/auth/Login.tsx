@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useStore} from '../../store';
@@ -18,9 +19,14 @@ interface LoginProps {
 const Login = ({ onSwitch }: LoginProps) => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
   const login = useStore((state) => state.login);
+  const navigate = useNavigate();
 
-  const onSubmit = (data: LoginFormInputs) => {
-    login(data.username, data.password);
+  const onSubmit = async (data: LoginFormInputs) => {
+    await login(data.username, data.password);
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate('/dashboard');
+    }
   };
 
   return (

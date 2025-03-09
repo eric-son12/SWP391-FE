@@ -69,10 +69,10 @@ const initialFeedback: Feedback[] = [
 ]
 
 const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
-  const { fetchAllUsers, fetchMyChildren } = useStore(
+  const { fetchAllUsers, fetchAllChildren } = useStore(
     useShallow((state) => ({
       fetchAllUsers: state.fetchAllUsers,
-      fetchMyChildren: state.fetchMyChildren,
+      fetchAllChildren: state.fetchAllChildren,
     }))
   )
 
@@ -91,13 +91,13 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
       if (patientType === "parent") {
         data = await fetchAllUsers()
       } else {
-        data = await fetchMyChildren()
+        data = await fetchAllChildren()
       }
       setPatients(data || [])
     } catch (error) {
       console.error("Error fetching patients:", error)
     }
-  }, [patientType, fetchAllUsers, fetchMyChildren])
+  }, [patientType, fetchAllUsers, fetchAllChildren])
 
   useEffect(() => {
     fetchPatientsData()

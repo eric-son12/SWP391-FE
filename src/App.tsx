@@ -1,62 +1,50 @@
-import {
-  HashRouter as Router,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import React, { useMemo } from "react";
+import { BrowserRouter, useRoutes, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
-
 import theme from "./theme";
 import Home from "./pages/home/Home";
-import Login from "./pages/login/Login";
 import AuthPage from "./pages/auth/AuthPage";
-
 import "./App.css";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Loading from "./components/loading/Loading";
 import { useStore } from "./store";
-import { useMemo } from "react";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-function App() {
+const AppRoutes = () => {
   const user = useStore((store) => store.profile.user);
+  const role = useMemo(() => user?.role, [user]);
+  const isAuthenticated = !!user?.token;
 
-  const role = useMemo(() => {
-    return user?.role || localStorage.getItem("role");
-  }, [user]);
-
-  const isAuthenticated = !!localStorage.getItem("token");
-
-  const router = createBrowserRouter([
+  const routes = [
     {
       path: "/",
-      element: <AuthPage />,
+      element: isAuthenticated ? <Navigate to="/dashboard" /> : <AuthPage />,
     },
     {
-      path: "login",
-      element: <Login />,
-    },
-    {
-      path: "dashboard",
+      path: "/dashboard",
       element: (
         <ProtectedRoute
-          isAllowed={ 
-            // isAuthenticated
-            true
-          }
-          redirectPath="/login"
+          isAllowed={isAuthenticated && (role === "ROLE_STAFF" || role === "ROLE_ADMIN")}
+          redirectPath="/"
         >
           <Home />
         </ProtectedRoute>
       ),
     },
-  ]);
+  ];
 
+  return useRoutes(routes);
+};
+
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <RouterProvider router={router} />
-        <Loading />
+        <BrowserRouter>
+          <AppRoutes />
+          <Loading />
+        </BrowserRouter>
       </LocalizationProvider>
     </ThemeProvider>
   );

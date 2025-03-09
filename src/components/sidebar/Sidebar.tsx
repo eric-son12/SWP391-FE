@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Drawer, List, Collapse, IconButton, Box, styled } from "@mui/material";
+import { Drawer, List, Collapse, IconButton, Box, styled, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -20,7 +20,7 @@ const BoxCustom = styled(Box)({
   flexDirection: "column",
   overflow: "hidden",
   background: "#fff"
-})
+});
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -76,35 +76,41 @@ const Sidebar = ({ onSelect, role = UserRole.CUSTOMER, open, onToggle }: Sidebar
       <BoxCustom>
         <DrawerHeader
           title="Menu"
-          sx={{ 
-            justifyContent: open ? "flex-end" : "center",
-          }}
+          sx={{ justifyContent: open ? "space-between" : "center" }}
         >
+          {open && (
+            <Box sx={{ ml: 2, display: "flex", alignItems: "start", cursor: "default" }}>
+              Menu
+            </Box>
+          )}
           <IconButton onClick={onToggle}>
             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
-        <List sx={{ flexGrow: 1 }}>
+        <List sx={{ flexGrow: 1, overflow: "auto" }}>
           {menuItems.map((item) => (
             <React.Fragment key={item.key}>
               <SidebarItem
                 open={open}
                 text={item.label}
                 icon={item.icon}
+                subIcon={
+                  item.subItems
+                    ? menuOpen[item.key]
+                      ? <ExpandLess />
+                      : <ExpandMore />
+                    : undefined
+                }
                 onClick={() => {
                   if (item.subItems) {
                     toggleMenu(item.key);
                   } else {
-                    onSelect(item.key)
+                    onSelect(item.key);
                   }
                 }}
               />
               {item.subItems && (
-                <Collapse
-                  in={open && menuOpen[item.key]}
-                  timeout="auto"
-                  unmountOnExit
-                >
+                <Collapse in={open && menuOpen[item.key]} timeout="auto" unmountOnExit>
                   {item.subItems.map((subItem) => (
                     <SidebarSubItem
                       key={subItem.key}

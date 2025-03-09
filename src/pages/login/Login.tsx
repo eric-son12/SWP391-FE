@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import { useStore } from "../../store";
 
 import "./Login.scss";
+import { UserRole } from "../../models/user";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -28,19 +29,14 @@ const Login: React.FC = () => {
     }),
     onSubmit: async (values) => {
       const { username, password } = values;
-      if (username === "admin" && password === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        onLogin(username, password);
-      }
+      onLogin(username, password);
     },
   });
 
   useEffect(() => {
     if (user) {
       const { role } = user;
-      // role === "ROLE_USER" ? navigate("/") : 
-      navigate("/dashboard");
+      role === UserRole.ADMIN || UserRole.STAFF && navigate("/dashboard");
     }
   }, [user]);
 

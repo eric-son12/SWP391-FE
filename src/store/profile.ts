@@ -1,6 +1,7 @@
 import { ChildProfile, Patient, User, UserProfile, UserRole } from "../models/user";
 import type { StoreGet, StoreSet } from "../store";
 import axios from "../utils/axiosConfig";
+import { parseJWT } from "../utils/validate";
 
 export interface ProfileState {
   user: User | undefined;
@@ -13,7 +14,7 @@ export interface ProfileState {
 
 export interface ProfileActions {
   fetchAllUsers: () => Promise<Patient[]>;
-  fetchMyChildren: () => Promise<Patient[]>;
+  fetchAllChildren: () => Promise<Patient[]>;
   registerUser: (payload: {
     username: string;
     email: string;
@@ -54,13 +55,13 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
     fetchAllUsers: async () => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
-        const resp = await axios.get("/staff/parents");
+        const resp = await axios.get("/manage/parents");
         const data: Patient[] = resp.data || [];
         set((state) => {
           state.profile.allUsers = data;
-        });
+        }, false, "fetchAllUsers: success");
         return data;
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
@@ -69,25 +70,25 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "fetchAllUsers: error");
         return [];
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
-    fetchMyChildren: async () => {
+    fetchAllChildren: async () => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
-        const resp = await axios.get("/staff/children");
+        const resp = await axios.get("/manage/children");
         const data: Patient[] = resp.data || [];
         set((state) => {
           state.profile.children = data;
-        });
+        }, false, "fetchAllChildren: success");
         return data;
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
@@ -96,21 +97,19 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "fetchAllChildren: error");
         return [];
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
-
-    // ... other actions remain unchanged
 
     registerUser: async (payload) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         await axios.post(`/users/createUser`, payload);
         set((state) => {
@@ -118,7 +117,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "SUCCESS",
             content: "Tạo tài khoản thành công! Vui lòng kiểm tra email để xác thực.",
           });
-        });
+        }, false, "registerUser: success");
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -126,18 +125,18 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "registerUser: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     verifyUser: async (email, code) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         const body = { email, code };
         await axios.post(`/users/verify`, body);
@@ -146,7 +145,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "SUCCESS",
             content: "Xác thực email thành công!",
           });
-        });
+        }, false, "verifyUser: success");
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -154,18 +153,18 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "verifyUser: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     resendVerification: async (email) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         await axios.post(`/users/resend`, { email });
         set((state) => {
@@ -173,7 +172,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "SUCCESS",
             content: "Mã xác thực mới đã được gửi!",
           });
-        });
+        }, false, "resendVerification: success");
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -181,34 +180,40 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "resendVerification: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     login: async (username: string, password: string) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
-        const response = await axios.post(`/auth/loginToken`, { username, password });
-        const token = response.data?.token;
-        const role = response.data?.role;
-        const user = response.data;
+        const response = await axios.post(`/auth/login`, { username, password });
+        const result = response.data?.result;
+        const token = result?.token;
         if (token) {
           localStorage.setItem("token", token);
+          const parsedToken = parseJWT(token);
+          const role = parsedToken.scope || "";
           localStorage.setItem("role", role);
+          set((state) => {
+            state.profile.user = {
+              ...parsedToken,
+              token,
+              username,
+              role,
+            };
+            state.notification.data.push({
+              content: "Login success!",
+              status: "SUCCESS",
+            });
+          }, false, "login: success");
         }
-        set((state) => {
-          state.profile.user = user;
-          state.notification.data.push({
-            content: "Login success!",
-            status: "SUCCESS",
-          });
-        });
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -216,24 +221,24 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "login: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     fetchProfile: async () => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         const response = await axios.post(`/users/profile`);
         const profile = response.data?.data || undefined;
         set((state) => {
           state.profile.userProfile = profile;
-        });
+        }, false, "fetchProfile: success");
       } catch (error: any) {
         const message = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -241,18 +246,18 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: message,
           });
-        });
+        }, false, "fetchProfile: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     updateProfile: async (data) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         const response = await axios.post(`/users/profile/update`, data);
         const profile = response.data?.data || undefined;
@@ -262,7 +267,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "SUCCESS",
             content: "Update profile successfully",
           });
-        });
+        }, false, "updateProfile: success");
       } catch (error: any) {
         const message = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -270,67 +275,63 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: message,
           });
-        });
+        }, false, "updateProfile: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     deleteUser: async (userId: string) => {
-      set((state: any) => {
+      set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         await axios.delete(`/users/delete/${userId}`);
       } catch (error: any) {
-        set((state: any) => {
+        set((state) => {
           state.profile.error = error.response?.data?.message || error.message;
-        });
+        }, false, "deleteUser: error");
       } finally {
-        set((state: any) => {
+        set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     logout: async () => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "logout: start");
       try {
-        const response = await axios.post(`/logout`);
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
         set((state) => {
-          if (response.data.code === "LOGOUT_SUCCESS") {
-            localStorage.removeItem("token");
-            localStorage.removeItem("role");
-            state.profile.user = undefined;
-          }
+          state.profile.user = undefined;
           state.notification.data.push({
-            content: response.data.message,
+            content: "Logout success!",
             status: "SUCCESS",
           });
-        });
+        }, false, "logout: success");
       } catch (error: any) {
-        const msg = error?.response?.data?.message || error?.message;
         set((state) => {
           state.notification.data.push({
             status: "ERROR",
-            content: msg,
+            content: error?.message || "Logout failed",
           });
-        });
+        }, false, "logout: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "logout: end");
       }
     },
 
     changePassword: async (oldPassword: string, newPassword: string) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         const body = {
           oldPassword,
@@ -343,7 +344,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "SUCCESS",
             content: "Change password successfully",
           });
-        });
+        }, false, "changePassword: success");
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
@@ -351,47 +352,47 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
             status: "ERROR",
             content: msg,
           });
-        });
+        }, false, "changePassword: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     createChild: async (parentId: string, childRequest) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         await axios.post(`/staff/children/create/${parentId}`, childRequest);
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
           state.notification.data.push({ status: "ERROR", content: msg });
-        });
+        }, false, "createChild: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
 
     updateMyChild: async (childId: string, childRequest) => {
       set((state) => {
         state.loading.isLoading = true;
-      });
+      }, false, "loading: start");
       try {
         await axios.put(`/staff/children/${childId}/update`, childRequest);
       } catch (error: any) {
         const msg = error?.response?.data?.message || error?.message;
         set((state) => {
           state.notification.data.push({ status: "ERROR", content: msg });
-        });
+        }, false, "updateMyChild: error");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
-        });
+        }, false, "loading: end");
       }
     },
   };

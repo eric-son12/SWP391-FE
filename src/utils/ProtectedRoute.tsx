@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({
   children,
   isAllowed,
-  redirectPath = "/login",
+  redirectPath = "/",
 }: ProtectedRouteProps) => {
   if (!isAllowed) {
     return <Navigate to={redirectPath} />;

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
 import { styled } from "@mui/system";
-
 import { UserRole } from "../../models/user";
 import { menuItemsByRole } from "../../config/menuConfig";
 
@@ -15,30 +14,47 @@ import Dashboard from "../../components/dashboard/Dashboard";
 import VaccineList from "../../components/vaccine/VaccineList";
 import PatientList from "../../components/patient/PatientList";
 import StaffManagement from "../../components/management/StaffManagement";
+import { useStore } from "../../store";
+import { useNavigate } from "react-router-dom";
 
 const MainScreen = styled(Box)({
-  flexGrow: 1, 
-  padding: "1rem", 
-  background: "#fff", 
-  margin: "1rem 1rem 1rem 0", 
+  flexGrow: 1,
+  padding: "1rem",
+  background: "#fff",
+  margin: "1rem 1rem 1rem 0",
   borderRadius: "1rem",
-  minHeight: "100%"
+  height: "auto",
+  overflow: "auto",
 });
 
 const DashboardLayout: React.FC = () => {
-  const role: UserRole = UserRole.STAFF;
+  const navigate = useNavigate();
+  const user = useStore((state) => state.profile.user);
 
-  const defaultScreen = menuItemsByRole[role][0].subItems ? menuItemsByRole[role][0].subItems[0].key : menuItemsByRole[role][0].key;
-
-  const [activeScreen, setActiveScreen] = useState<string>(defaultScreen);
+  const [activeScreen, setActiveScreen] = useState<string>("");
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    } else {
+      const role: UserRole = user.role;
+      const defaultScreen = menuItemsByRole[role][0].key;
+      setActiveScreen(defaultScreen);
+    }
+  }, [user, navigate]);
+
+  if (!user) {
+    return null;
+  }
+
+  const role: UserRole = user.role;
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   const handleSelect = (key: string) => {
-    console.log("key: ", key);
     setActiveScreen(key);
   };
 
@@ -72,6 +88,8 @@ const DashboardLayout: React.FC = () => {
       //   return <VaccinatedAgeStats />;
       // case "notifications":
       //   return <NotificationsPage />;
+      default:
+        return <Dashboard />;
     }
   };
 
@@ -80,10 +98,13 @@ const DashboardLayout: React.FC = () => {
       <Header />
 
       <Box sx={{ display: "flex", height: "calc(100vh - 74px)" }}>
-        <Sidebar open={sidebarOpen} onToggle={toggleSidebar} onSelect={handleSelect} role={role}/>
-        <MainScreen>
-          {renderCurrentPage()}
-        </MainScreen>
+        <Sidebar
+          open={sidebarOpen}
+          onToggle={toggleSidebar}
+          onSelect={handleSelect}
+          role={role}
+        />
+        <MainScreen>{renderCurrentPage()}</MainScreen>
       </Box>
 
       {/* <Footer /> */}
