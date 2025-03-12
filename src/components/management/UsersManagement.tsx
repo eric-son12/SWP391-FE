@@ -1,7 +1,4 @@
-"use client"
-
-import type React from "react"
-import { useState } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -20,64 +17,64 @@ import {
   DialogActions,
   IconButton,
   InputAdornment,
-} from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
-import EditIcon from "@mui/icons-material/Edit"
-import DeleteIcon from "@mui/icons-material/Delete"
-import SearchIcon from "@mui/icons-material/Search"
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SearchIcon from "@mui/icons-material/Search";
+import { useStore } from "../../store";
+import { Patient } from "../../models/user";
 
-interface User {
-  id: number
-  username: string
-  fullName: string
-  email: string
-  role: string
-}
+const UsersManagement: React.FC = () => {
+  const [users, setUsers] = useState<Patient[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<Patient | null>(null);
+  const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
+  const [searchTerm, setSearchTerm] = useState("");
 
-const initialUsers: User[] = [
-  { id: 1, username: "john_doe", fullName: "John Doe", email: "john@example.com", role: "Admin" },
-  { id: 2, username: "jane_smith", fullName: "Jane Smith", email: "jane@example.com", role: "User" },
-  { id: 3, username: "bob_johnson", fullName: "Bob Johnson", email: "bob@example.com", role: "User" },
-]
+  const fetchAllUsers = useStore((state) => state.fetchAllUsers);
 
-const UserManagement: React.FC = () => {
-  const [users, setUsers] = useState<User[]>(initialUsers)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [dialogMode, setDialogMode] = useState<"add" | "edit">("add")
-  const [searchTerm, setSearchTerm] = useState("")
+  useEffect(() => {
+    fetchAllUsers().then((data) => {
+      const mappedUsers: Patient[] = data.map((p) => ({
+        ...p,
+        email: (p as any).email || "",
+      }));
+      setUsers(mappedUsers);
+    });
+  }, [fetchAllUsers]);
 
-  const handleOpenDialog = (mode: "add" | "edit", user?: User) => {
-    setDialogMode(mode)
-    setCurrentUser(user || { id: 0, username: "", fullName: "", email: "", role: "" })
-    setDialogOpen(true)
-  }
+  const handleOpenDialog = (mode: "add" | "edit", user?: Patient) => {
+    setDialogMode(mode);
+    setCurrentUser(user || null);
+    setDialogOpen(true);
+  };
 
   const handleCloseDialog = () => {
-    setDialogOpen(false)
-    setCurrentUser(null)
-  }
+    setDialogOpen(false);
+    setCurrentUser(null);
+  };
 
   const handleSaveUser = () => {
     if (currentUser) {
       if (dialogMode === "add") {
-        setUsers([...users, { ...currentUser, id: users.length + 1 }])
+        setUsers([...users, { ...currentUser, id: users.length + 1 }]);
       } else {
-        setUsers(users.map((u) => (u.id === currentUser.id ? currentUser : u)))
+        setUsers(users.map((u) => (u.id === currentUser.id ? currentUser : u)));
       }
     }
-    handleCloseDialog()
-  }
+    handleCloseDialog();
+  };
 
   const handleDeleteUser = (id: number) => {
-    setUsers(users.filter((u) => u.id !== id))
-  }
+    setUsers(users.filter((u) => u.id !== id));
+  };
 
   const filteredUsers = users.filter(
     (user) =>
       user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
@@ -110,6 +107,7 @@ const UserManagement: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Username</TableCell>
+              <TableCell>Full name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
               <TableCell>Actions</TableCell>
@@ -118,6 +116,7 @@ const UserManagement: React.FC = () => {
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
+                <TableCell>{user.username}</TableCell>
                 <TableCell>{user.fullName}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
@@ -161,7 +160,6 @@ const UserManagement: React.FC = () => {
             type="text"
             fullWidth
             value={currentUser?.role || ""}
-            onChange={(e) => setCurrentUser({ ...currentUser!, role: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
@@ -172,8 +170,7 @@ const UserManagement: React.FC = () => {
         </DialogActions>
       </Dialog>
     </Box>
-  )
-}
+  );
+};
 
-export default UserManagement
-
+export default UsersManagement;

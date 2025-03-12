@@ -62,10 +62,10 @@ const DashboardLayout: React.FC = () => {
     switch (activeScreen) {
       case "dashboard":
         return <Dashboard />;
-      case "parent":
-        return <PatientList patientType={"parent"} />;
+      case UserRole.CUSTOMER:
+        return <PatientList patientType={UserRole.CUSTOMER} />;
       case "children":
-        return <PatientList patientType={"child"} />;
+        return <PatientList patientType={UserRole.CHILD} />;
       case "bookings":
         return <BookingList />;
       case "vaccines":

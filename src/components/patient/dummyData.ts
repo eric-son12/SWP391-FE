@@ -1,4 +1,4 @@
-import { Patient } from "../../models/user";
+import { Patient, UserRole } from "../../models/user";
 
 export const sampleParent: Patient = {
   id: 1,
@@ -6,7 +6,8 @@ export const sampleParent: Patient = {
   fullName: "John Doe",
   dateOfBirth: "1980-05-15",
   phone: "123-456-7890",
-  role: "customer",
+  email: undefined,
+  role: UserRole.CUSTOMER,
   avatar: "/placeholder.svg",
   vaccineStatus: "Fully Vaccinated",
   children: [
@@ -16,9 +17,10 @@ export const sampleParent: Patient = {
       fullName: "Child Doe",
       dateOfBirth: "2015-03-10",
       phone: "",
-      role: "child",
+      role: UserRole.CHILD,
       avatar: "/placeholder.svg",
       vaccineStatus: "Partially Vaccinated",
+      email: undefined
     },
   ],
 };
@@ -29,18 +31,20 @@ export const sampleChild: Patient = {
   fullName: "Child Doe",
   dateOfBirth: "2015-03-10",
   phone: "",
-  role: "child",
+  role: UserRole.CHILD,
   avatar: "/placeholder.svg",
   vaccineStatus: "Partially Vaccinated",
+  email: undefined,
   parent: {
     id: 1,
     username: "johndoe",
     fullName: "John Doe",
     dateOfBirth: "1980-05-15",
     phone: "123-456-7890",
-    role: "customer",
+    role: UserRole.CUSTOMER,
     avatar: "/placeholder.svg",
     vaccineStatus: "Fully Vaccinated",
+    email: undefined
   },
 };
 
@@ -50,8 +54,9 @@ export const sampleParentNoChildren: Patient = {
   fullName: "Mary Jane",
   dateOfBirth: "1985-10-10",
   phone: "111-222-3333",
-  role: "customer",
+  role: UserRole.CUSTOMER,
   avatar: "/placeholder.svg",
   vaccineStatus: "Fully Vaccinated",
   children: [],
+  email: undefined
 };

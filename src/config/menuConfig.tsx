@@ -31,7 +31,8 @@ export interface MenuItem {
 }
 
 export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
-  customer: [],
+  ROLE_CHILD: [],
+  ROLE_CUSTOMER: [],
   ROLE_STAFF: [
     {
       label: "Dashboard",
@@ -43,7 +44,7 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       icon: <People />,
       key: "patients",
       subItems: [
-        { label: "Parents", icon: <Person />, key: "parent" },
+        { label: "Parents", icon: <Person />, key: UserRole.CUSTOMER },
         { label: "Children", icon: <ChildCare />, key: "children" },
       ],
     },

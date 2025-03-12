@@ -25,14 +25,14 @@ import {
   OutlinedInput,
 } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
-import { Patient } from "../../models/user"
+import { Patient, UserRole } from "../../models/user"
 import { Feedback, VaccinationHistory } from "../../models/vaccine"
 
 interface PatientDialogProps {
   open: boolean
   mode: "add" | "edit" | "delete"
   patient: Patient | null
-  patientType: "parent" | "child"
+  patientType: UserRole.CUSTOMER | UserRole.CHILD
   vaccinationHistory: VaccinationHistory[]
   feedback: Feedback[]
   onClose: () => void
@@ -62,7 +62,7 @@ const PatientDialog: React.FC<PatientDialogProps> = ({
         fullName: "",
         dateOfBirth: "",
         phone: "",
-        role: patientType === "parent" ? "customer" : "child",
+        role: patientType === UserRole.CUSTOMER ? UserRole.CUSTOMER : UserRole.CHILD,
         avatar: "/placeholder.svg",
         vaccineStatus: "Not Vaccinated",
       }
@@ -74,7 +74,7 @@ const PatientDialog: React.FC<PatientDialogProps> = ({
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         {mode === "add"
-          ? `Add ${patientType === "parent" ? "Parent" : "Child"}`
+          ? `Add ${patientType === UserRole.CUSTOMER ? "Parent" : "Child"}`
           : mode === "edit"
           ? "Edit Patient"
           : "Delete Patient"}
@@ -134,7 +134,7 @@ const PatientDialog: React.FC<PatientDialogProps> = ({
                 <Controller
                   name="role"
                   control={control}
-                  defaultValue={patientType === "parent" ? "customer" : "child"}
+                  defaultValue={patientType === UserRole.CUSTOMER ? UserRole.CUSTOMER : UserRole.CHILD}
                   render={({ field }) => (
                     <FormControl>
                       <InputLabel>Role</InputLabel>
@@ -142,8 +142,8 @@ const PatientDialog: React.FC<PatientDialogProps> = ({
                         {...field}
                         input={<OutlinedInput label="Role" />}
                       >
-                        {patientType === "parent" ? (
-                          <MenuItem value="customer">Parent</MenuItem>
+                        {patientType === UserRole.CUSTOMER ? (
+                          <MenuItem value="parent">Parent</MenuItem>
                         ) : (
                           <MenuItem value="child">Child</MenuItem>
                         )}
@@ -173,7 +173,7 @@ const PatientDialog: React.FC<PatientDialogProps> = ({
             </Box>
 
             {/* Section 2: Relationship Details */}
-            {patient?.role === "customer" ? (
+            {patient?.role === UserRole.CUSTOMER ? (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="h6">Children</Typography>
                 <TableContainer component={Paper}>
@@ -197,7 +197,7 @@ const PatientDialog: React.FC<PatientDialogProps> = ({
                   </Table>
                 </TableContainer>
               </Box>
-            ) : patient?.role === "child" && patient.parent ? (
+            ) : patient?.role === UserRole.CHILD && patient.parent ? (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="h6">Parent</Typography>
                 <TableContainer component={Paper}>

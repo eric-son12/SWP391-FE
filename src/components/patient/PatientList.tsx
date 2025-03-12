@@ -24,37 +24,11 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import PatientDialog from "./PatientDialog"
 import { useStore } from "../../store"
 import { useShallow } from 'zustand/react/shallow'
-
-export interface Patient {
-  id: number
-  username: string
-  fullName: string
-  dateOfBirth: string
-  phone: string
-  role: "customer" | "child"
-  avatar: string
-  vaccineStatus: string
-  parent?: Patient
-  children?: Patient[]
-}
-
-interface VaccinationHistory {
-  id: number
-  patientId: number
-  vaccineName: string
-  date: string
-}
-
-interface Feedback {
-  id: number
-  patientId: number
-  date: string
-  comment: string
-  rating: number
-}
+import { Feedback, VaccinationHistory } from "../../models/vaccine"
+import { Patient, UserRole } from "../../models/user"
 
 interface PatientListProps {
-  patientType: "parent" | "child"
+  patientType: UserRole.CUSTOMER | UserRole.CHILD
 }
 
 const initialVaccinationHistory: VaccinationHistory[] = [
@@ -88,7 +62,7 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
   const fetchPatientsData = useCallback(async () => {
     try {
       let data: Patient[] = []
-      if (patientType === "parent") {
+      if (patientType === UserRole.CUSTOMER) {
         data = await fetchAllUsers()
       } else {
         data = await fetchAllChildren()
@@ -142,7 +116,7 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Typography variant="h4" component="h2" gutterBottom>
-        {patientType === "parent" ? "Parent List" : "Children List"}
+        {patientType === UserRole.CUSTOMER ? "Parent List" : "Children List"}
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
         <TextField
@@ -167,7 +141,7 @@ const PatientList: React.FC<PatientListProps> = ({ patientType }) => {
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog("add")}
         >
-          Add {patientType === "parent" ? "Parent" : "Child"}
+          Add {patientType === UserRole.CUSTOMER ? "Parent" : "Child"}
         </Button>
       </Box>
       <TableContainer component={Paper}>
