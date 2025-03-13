@@ -1,4 +1,3 @@
-// src/components/modals/OrderDetail.tsx
 "use client"
 import { Mail, Phone, User, CreditCard, Clock } from "lucide-react"
 import {
@@ -12,6 +11,9 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import type { Order } from "@/types/order"
+import { useEffect, useState } from "react"
+import axios from "@/utils/axiosConfig"
+import { toast } from "@/hooks/use-toast"
 
 interface OrderDetailsModalProps {
   order: Order | null
@@ -19,7 +21,32 @@ interface OrderDetailsModalProps {
 }
 
 export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
+  
   if (!order) return null
+  const [orderDetail, setOrderDetail] = useState<Order>()
+
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const token = localStorage.getItem("token")
+        const response = await axios.get(`/order/order/${order.orderId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data: Order = response.data.result
+        setOrderDetail(data)
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load orders",
+          variant: "destructive",
+        })
+      }
+    }
+
+    loadOrders()
+  }, [toast])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -30,19 +57,19 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
   }
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("vn-VN", {
       style: "currency",
-      currency: "USD",
+      currency: "vnd",
     }).format(price)
   }
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
-      case "completed":
+      case "success":
         return <Badge className="bg-green-100 text-green-800">Completed</Badge>
       case "pending":
         return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
-      case "processing":
+      case "in progress":
         return <Badge className="bg-blue-100 text-blue-800">Processing</Badge>
       case "cancelled":
         return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
@@ -53,7 +80,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{`Order Details - ${order.orderId}`}</DialogTitle>
           <DialogDescription>
@@ -104,8 +131,8 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {order.orderDetails.map((item) => (
-                    <TableRow key={item.id}>
+                  {orderDetail && orderDetail.orderDetails.map((item) => (
+                    <TableRow key={item.orderId}>
                       <TableCell className="font-medium">{item.productName}</TableCell>
                       <TableCell>{item.quantity}</TableCell>
                       <TableCell>{formatPrice(item.price)}</TableCell>
@@ -121,21 +148,21 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Customer Information</h3>
-            {order.orderDetails.length > 0 && (
+            {orderDetail && orderDetail.orderDetails.length > 0 && (
               <div className="space-y-2 rounded-md border p-3">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-gray-500" />
                   <span className="text-sm">
-                    {order.orderDetails[0].firstName} {order.orderDetails[0].lastName}
+                    {orderDetail.orderDetails[0].firstName} {orderDetail.orderDetails[0].lastName}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">{order.orderDetails[0].email}</span>
+                  <span className="text-sm">{orderDetail.orderDetails[0].email}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">{order.orderDetails[0].mobileNo}</span>
+                  <span className="text-sm">{orderDetail.orderDetails[0].mobileNo}</span>
                 </div>
               </div>
             )}

@@ -1,6 +1,6 @@
 export enum RoleUser {
   ADMIN = "ROLE_ADMIN",
-  STAFF = "ROLE_STAFF",
+  STAFF = "ROLE_ROLE_STAFF",
   CUSTOMER = "ROLE_CUSTOMER",
   CHILD = "ROLE_CHILD",
 }

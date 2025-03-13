@@ -10,7 +10,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Vaccine } from "@/types/vaccine";
+import type { Category } from "@/types/category";
+import { useCategories } from "@/hooks/useCategories";
 
 interface VaccineModalProps {
   onClose: () => void;
@@ -19,10 +22,14 @@ interface VaccineModalProps {
 
 export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
   const { createVaccine, updateVaccine } = useStore();
+  const { categories, loading } = useCategories();
+
   const isUpdateMode = Boolean(vaccine);
 
   const [title, setTitle] = useState(vaccine?.title || "");
-  const [categoryId, setCategoryId] = useState<number | null>(vaccine?.category.id || null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
+    vaccine && vaccine.id ? vaccine.id.toString() : ""
+  );
   const [price, setPrice] = useState<number>(vaccine?.price || 0);
   const [stock, setStock] = useState<number>(vaccine?.stock || 0);
   const [description, setDescription] = useState(vaccine?.description || "");
@@ -33,7 +40,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
   const [targetGroup, setTargetGroup] = useState(vaccine?.targetGroup || "");
   const [schedule, setSchedule] = useState(vaccine?.schedule || "");
   const [sideEffects, setSideEffects] = useState(vaccine?.sideEffects || "");
-
   const [isActive, setIsActive] = useState<boolean>(vaccine?.isActive ?? true);
   const [available, setAvailable] = useState<boolean>(vaccine?.available ?? true);
 
@@ -41,8 +47,8 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
-    if (categoryId !== null) {
-      formData.append("categoryId", categoryId.toString());
+    if (selectedCategoryId) {
+      formData.append("categoryId", selectedCategoryId);
     }
     formData.append("price", price.toString());
     formData.append("stock", stock.toString());
@@ -64,7 +70,7 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
       }
       onClose();
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting vaccine form:", error);
     }
   };
 
@@ -88,12 +94,19 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
               </div>
               <div>
-                <label className="block text-sm font-medium">Category ID</label>
-                <Input
-                  type="number"
-                  value={categoryId !== null ? categoryId : ""}
-                  onChange={(e) => setCategoryId(e.target.value ? parseInt(e.target.value) : null)}
-                />
+                <label className="block text-sm font-medium">Category *</label>
+                <Select value={selectedCategoryId} onValueChange={(value) => setSelectedCategoryId(value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category: Category) => (
+                      <SelectItem key={category.id} value={category.id.toString()}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-sm font-medium">Price *</label>
@@ -160,8 +173,19 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 <label className="block text-sm font-medium">Side Effects *</label>
                 <Input value={sideEffects} onChange={(e) => setSideEffects(e.target.value)} required />
               </div>
-              {/* Bottom section: Active & Available */}
+              {/* Bottom Section: Boolean fields */}
               <div className="flex flex-col space-y-2 mt-4">
+                {/* <div>
+                  <label className="block text-sm font-medium">Active *</label>
+                  <select
+                    className="w-full rounded-md border border-gray-300 p-2"
+                    value={isActive ? "true" : "false"}
+                    onChange={(e) => setIsActive(e.target.value === "true")}
+                  >
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                  </select>
+                </div> */}
                 <div>
                   <label className="block text-sm font-medium">Available *</label>
                   <select

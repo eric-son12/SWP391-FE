@@ -24,7 +24,12 @@ export default function OrdersPage() {
   useEffect(() => {
     const loadOrders = async () => {
       try {
-        const response = await axios.get("/order/all-orders")
+        const token = localStorage.getItem("token")
+        const response = await axios.get("/order/all-orders", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         const data: Order[] = response.data.result || []
         setOrders(data)
       } catch (error) {
@@ -50,11 +55,11 @@ export default function OrdersPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
-      case "completed":
+      case "success":
         return <Badge className="bg-green-100 text-green-800">Completed</Badge>
       case "pending":
         return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
-      case "processing":
+      case "in progress":
         return <Badge className="bg-blue-100 text-blue-800">Processing</Badge>
       case "cancelled":
         return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
@@ -93,9 +98,9 @@ export default function OrdersPage() {
       header: "Total",
       cell: ({ row }) => {
         const price = row.getValue("totalPrice") as number
-        return new Intl.NumberFormat("en-US", {
+        return new Intl.NumberFormat("vn-VN", {
           style: "currency",
-          currency: "USD",
+          currency: "vnd",
         }).format(price)
       },
     },
@@ -153,9 +158,9 @@ export default function OrdersPage() {
             <div className="flex items-center">
               <CreditCard className="mr-2 h-5 w-5 text-green-600" />
               <div className="text-2xl font-bold">
-                {new Intl.NumberFormat("en-US", {
+                {new Intl.NumberFormat("vn-VN", {
                   style: "currency",
-                  currency: "USD",
+                  currency: "vnd",
                 }).format(totalRevenue)}
               </div>
             </div>

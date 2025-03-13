@@ -150,7 +150,7 @@ export function Sidebar() {
       <div className="flex h-16 items-center justify-between px-4">
         {!sidebarCollapsed && 
           <div className="text-xl font-bold text-blue-600">
-            <Image src={"/images/logo.webp"} alt={"VNVC logo"} width={240} height={48}/>  
+            <Image src={"/images/logo.webp"} alt={"VNVC logo"} width={240} height={48} priority/>  
           </div>}
         <Button variant="ghost" size="icon" onClick={toggleSidebar} className={cn("ml-auto")}>
           {sidebarCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}

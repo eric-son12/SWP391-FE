@@ -15,15 +15,15 @@ import {
   notificationActions,
   NotificationState,
 } from "@/store/notification";
-import { initialVaccine, vaccineActions, VaccineActions, VaccineState } from "@/store/vaccine";
 import { initialManagement, managementActions, ManagementActions, ManagementState } from "./store/management";
+import { initialProduct, ProductActions, productActions, ProductState } from "./store/product";
 
 export interface State {
   loading: LoadingState;
   notification: NotificationState;
   profile: ProfileState;
-  vaccine: VaccineState;
-  management: ManagementState
+  management: ManagementState;
+  product: ProductState;
 }
 
 export type StoreSet = {
@@ -31,7 +31,7 @@ export type StoreSet = {
   <U>(f: (state: Draft<State>) => U, replace: true, action?: string): void;
 };
 
-export type Actions = ProfileActions & NotificationActions & VaccineActions & ManagementActions;
+export type Actions = ProfileActions & NotificationActions & ManagementActions & ProductActions;
 export type Store = State & Actions;
 export type StoreGet = () => Store;
 
@@ -41,12 +41,12 @@ export const useStore = create<Store>()(
       immer((set, get) => ({
         profile: initialProfile,
         ...profileActions(set, get),
-        vaccine: initialVaccine,
-        ...vaccineActions(set, get),
         notification: initialNotification,
         ...notificationActions(set, get),
         management: initialManagement,
         ...managementActions(set, get),
+        product: initialProduct,
+        ...productActions(set, get),
         loading: initialLoading,
       })),
       { name: "zustand-store"}

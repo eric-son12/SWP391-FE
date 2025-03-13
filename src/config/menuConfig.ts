@@ -1,5 +1,20 @@
 import { UserRole } from "@/types/menu";
-import { LayoutDashboard, Users, CalendarDays, Baby, Syringe, ListChecks, Layers, BadgeCheck, FolderPlus, Bell, FileText, History, TrendingUp, MessageSquare } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  CalendarDays,
+  Baby,
+  Syringe,
+  ListChecks,
+  Layers,
+  BadgeCheck,
+  FolderPlus,
+  Bell,
+  FileText,
+  History,
+  TrendingUp,
+  MessageSquare
+} from "lucide-react";
 
 export interface SubMenuItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -17,9 +32,11 @@ export interface MenuItem {
   onClick?: () => void;
 }
 
-export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
+export const menuItemsByRole: Record<UserRole,
+  MenuItem[]> = {
+  ROLE_CHILD: [],
   ROLE_CUSTOMER: [],
-  ROLE_STAFF: [
+  ROLE_ROLE_STAFF: [
     {
       label: "Dashboard",
       icon: LayoutDashboard,
@@ -31,54 +48,56 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       icon: Users,
       key: "patients",
       subItems: [
-        { label: "Parents", icon: Users, key: "parents" },
-        { label: "Children", icon: Baby, key: "children" },
+        {
+          label: "Parents",
+          icon: Users,
+          key: "parents",
+          path: "/parents"
+        },
+        {
+          label: "Children",
+          icon: Baby,
+          key: "children",
+          path: "/children"
+        },
       ],
     },
     {
       label: "Bookings",
       icon: CalendarDays,
       key: "bookings",
-      path: "/bookings",
+      path: "/orders",
     },
     {
-      label: "Product Management",
-      icon: Syringe,
-      key: "product-management",
-      subItems: [
-        { label: "Add Product", icon: Syringe, key: "add-product" },
-        { label: "List Products", icon: ListChecks, key: "list-products" },
-      ],
-    },
-    {
-      label: "Category Management",
+      label: "Products",
       icon: Layers,
       key: "category-management",
       subItems: [
-        { label: "Create Category", icon: FolderPlus, key: "create-category" },
-        { label: "List Categories", icon: ListChecks, key: "list-categories" },
+        {
+          label: "Categories",
+          icon: ListChecks,
+          key: "categories",
+          path: "/categories"
+        },
+        {
+          label: "Vaccines",
+          icon: Syringe,
+          key: "vaccines",
+          path: "/vaccines",
+        },
       ],
     },
     {
       label: "Post Management",
       icon: FileText,
       key: "post-management",
-      subItems: [
-        { label: "Add Post", icon: FolderPlus, key: "add-post" },
-        { label: "List Posts", icon: ListChecks, key: "list-posts" },
-      ],
+      path: "/posts",
     },
     {
       label: "Feedback",
       icon: MessageSquare,
       key: "feedback",
       path: "/feedback",
-    },
-    {
-      label: "Notifications",
-      icon: Bell,
-      key: "notifications",
-      path: "/notifications",
     },
   ],
   ROLE_ADMIN: [
@@ -93,16 +112,44 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       icon: BadgeCheck,
       key: "management",
       subItems: [
-        { label: "Users", icon: Users, key: "users-management", path: "/users-management" },
-        { label: "Staff", icon: BadgeCheck, key: "staff-management", path: "/staff-management" },
-        { label: "Roles & Permissions", icon: BadgeCheck, key: "roles-management", path: "/roles-management" },
+        {
+          label: "Users",
+          icon: Users,
+          key: "users-management",
+          path: "/users-management"
+        },
+        {
+          label: "Staff",
+          icon: BadgeCheck,
+          key: "staff-management",
+          path: "/staff-management"
+        },
+        {
+          label: "Roles & Permissions",
+          icon: BadgeCheck,
+          key: "roles-management",
+          path: "/roles-management"
+        },
       ],
     },
     {
-      label: "Vaccines",
-      icon: Syringe,
-      key: "vaccines",
-      path: "/vaccines",
+      label: "Products",
+      icon: Layers,
+      key: "category-management",
+      subItems: [
+        {
+          label: "Categories",
+          icon: ListChecks,
+          key: "categories",
+          path: "/categories"
+        },
+        {
+          label: "Vaccines",
+          icon: Syringe,
+          key: "vaccines",
+          path: "/vaccines",
+        },
+      ],
     },
     {
       label: "Feedback",
@@ -115,10 +162,18 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
     //   icon: FileText,
     //   key: "reports",
     //   subItems: [
-    //     { label: "Daily Orders", icon: History, key: "daily-orders" },
-    //     { label: "Top Vaccine", icon: Syringe, key: "top-vaccine" },
-    //     { label: "Revenue", icon: TrendingUp, key: "revenue" },
-    //     { label: "Vaccinated Age", icon: Baby, key: "vaccinated-age" },
+    //     { label: "Daily Orders", 
+    // icon: History, 
+    // key: "daily-orders" },
+    //     { label: "Top Vaccine", 
+    // icon: Syringe, 
+    // key: "top-vaccine" },
+    //     { label: "Revenue", 
+    // icon: TrendingUp, 
+    // key: "revenue" },
+    //     { label: "Vaccinated Age", 
+    // icon: Baby, 
+    // key: "vaccinated-age" },
     //   ],
     // },
     // {

@@ -1,7 +1,6 @@
 "use client"
 import { useState } from "react"
 import { Syringe, Calendar, Clock } from "lucide-react"
-import { useStore } from "@/store"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -14,12 +13,7 @@ interface VaccinePreviewProps {
 }
 
 export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
-  const { openModal } = useStore()
   const [showFullDescription, setShowFullDescription] = useState(false)
-
-  const handleEdit = () => {
-    openModal("editVaccine")
-  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -37,7 +31,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
   }
 
   return (
-    <PreviewCard title={vaccine.title} onClose={onClose} onEdit={handleEdit}>
+    <PreviewCard title={vaccine.title} onClose={onClose}>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Badge variant="outline" className="px-3 py-1">
