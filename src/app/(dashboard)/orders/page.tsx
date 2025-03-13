@@ -1,0 +1,207 @@
+"use client"
+
+import { useState, useEffect, useMemo } from "react"
+import type { ColumnDef } from "@tanstack/react-table"
+import { Eye, ShoppingCart, CreditCard, Calendar } from "lucide-react"
+import { useStore } from "@/store"
+import { DataTable } from "@/components/ui/data-table"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge"
+import type { Order } from "@/types/order"
+import { OrderDetailsModal } from "@/components/modals/OrderDetail"
+import axios from "@/utils/axiosConfig"
+
+export default function OrdersPage() {
+  const { toast } = useToast()
+
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [searchText, setSearchText] = useState("")
+
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const response = await axios.get("/order/all-orders")
+        const data: Order[] = response.data.result || []
+        setOrders(data)
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load orders",
+          variant: "destructive",
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadOrders()
+  }, [toast])
+
+  const handleViewOrder = (orderId: number) => {
+    const order = orders.find((o) => o.orderId === orderId)
+    if (order) {
+      setSelectedOrder(order)
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "completed":
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>
+      case "pending":
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+      case "processing":
+        return <Badge className="bg-blue-100 text-blue-800">Processing</Badge>
+      case "cancelled":
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">{status}</Badge>
+    }
+  }
+
+  const columns: ColumnDef<Order>[] = [
+    {
+      accessorKey: "orderId",
+      header: "Order ID",
+    },
+    {
+      accessorKey: "orderDate",
+      header: "Order Date",
+      cell: ({ row }) => {
+        const date = row.getValue("orderDate") as string
+        return new Date(date).toLocaleDateString()
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string
+        return getStatusBadge(status)
+      },
+    },
+    {
+      accessorKey: "paymentType",
+      header: "Payment Method",
+    },
+    {
+      accessorKey: "totalPrice",
+      header: "Total",
+      cell: ({ row }) => {
+        const price = row.getValue("totalPrice") as number
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(price)
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const orderId = row.getValue("orderId") as number
+
+        return (
+          <Button variant="outline" size="sm" onClick={() => handleViewOrder(orderId)}>
+            <Eye className="mr-2 h-4 w-4" />
+            View
+          </Button>
+        )
+      },
+    },
+  ]
+
+  const totalOrders = orders.length
+  const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0)
+  const pendingOrders = orders.filter((order) => order.status.toLowerCase() === "pending").length
+
+  const filteredOrder = useMemo(() => {
+    return orders.filter((o) => {
+      const matchesSearch = o.orderId.toString().includes(searchText);
+      return matchesSearch;
+    });
+  }, [orders, searchText]);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Orders Management</h1>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <ShoppingCart className="mr-2 h-5 w-5 text-blue-600" />
+              <div className="text-2xl font-bold">{totalOrders}</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <CreditCard className="mr-2 h-5 w-5 text-green-600" />
+              <div className="text-2xl font-bold">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(totalRevenue)}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <Calendar className="mr-2 h-5 w-5 text-yellow-600" />
+              <div className="text-2xl font-bold">{pendingOrders}</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>All Orders</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex h-40 items-center justify-center">
+              <p>Loading orders...</p>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredOrder}
+              searchColumn="orderId"
+              searchPlaceholder="Search by order ID..."
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      {selectedOrder && (
+        <OrderDetailsModal 
+          order={selectedOrder} 
+          onClose={() => setSelectedOrder(null)} 
+        />
+      )}
+    </div>
+  )
+}
+

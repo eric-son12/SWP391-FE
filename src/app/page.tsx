@@ -15,7 +15,9 @@ const AppRoutes = () => {
   const routes = [
     {
       path: "/",
-      element: isAuthenticated && (role === "ROLE_STAFF" || role === "ROLE_ADMIN") ? <Navigate to="/dashboard" /> : <AuthPage />,
+      element: isAuthenticated && (role === "ROLE_STAFF" || role === "ROLE_ADMIN")
+      ? <Navigate to="/dashboard" />
+      : <AuthPage />,
     },
     {
       path: "/dashboard",

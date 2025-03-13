@@ -9,10 +9,11 @@ export interface ManagementState {
 
 export interface ManagementActions {
   fetchRoles: () => Promise<Role[]>;
-  fetchPermissions: () => Promise<Permission[]>;
-  createPermission: (params: { name: string; description: string; }) => Promise<Permission>;
   createRole: (params: { name: string; description: string; permissions: string[]; }) => Promise<Role>;
   deleteRole: (roleName: string) => Promise<any>;
+  fetchPermissions: () => Promise<Permission[]>;
+  createPermission: (params: { name: string; description: string; }) => Promise<Permission>;
+  deletePermission: (permission: string) => Promise<any>
   removePermission: (roleName: string, permissionName: string) => Promise<any>;
 }
 
@@ -126,6 +127,31 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
           state.notification.data.push({ status: "ERROR", content: msg });
         }, false, "removePermission: error");
         throw error;
+      }
+    },
+
+    deletePermission: async (permission: string) => {
+      set((state) => {
+        state.loading.isLoading = true;
+      }, false, "loading: start");
+      try {
+        const resp = await axios.delete(`/permissions/delete/${permission}`);
+        set((state) => {
+          state.management.permissions = state.management.permissions.filter(
+            (p) => p.name !== permission
+          );
+        }, false, "deletePermission: success");
+        return resp.data;
+      } catch (error: any) {
+        const msg = error?.response?.data?.message || error?.message;
+        set((state) => {
+          state.notification.data.push({ status: "ERROR", content: msg });
+        }, false, "deletePermission: error");
+        throw error;
+      } finally {
+        set((state) => {
+          state.loading.isLoading = false;
+        }, false, "loading: end");
       }
     },
   };

@@ -21,7 +21,13 @@ export function Header() {
   const router = useRouter()
 
   const { user } = useStore.getState().profile
-  const logout = useStore.getState().logout
+  const {logout} = useStore.getState()
+
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
+
   // const unreadCount = notificationItems.filter((item) => !item.read).length
 
   // const markAllAsRead = () => {
@@ -126,7 +132,7 @@ export function Header() {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

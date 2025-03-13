@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash2, Plus, Eye, Search } from "lucide-react"
 import type { Vaccine } from "@/types/vaccine"
@@ -37,24 +37,25 @@ export default function VaccinesPage() {
   const [searchText, setSearchText] = useState("")
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all")
 
-  useEffect(() => {
-    const loadVaccines = async () => {
-      try {
-        const data = await fetchVaccines()
-        setVaccines(data)
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load vaccines",
-          variant: "destructive",
-        })
-      } finally {
-        setLoading(false)
-      }
+  const loadVaccines = useCallback(async () => {
+    try {
+      setLoading(true)
+      const data = await fetchVaccines()
+      setVaccines(data)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load vaccines",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
     }
+  }, [fetchVaccines, toast])
 
+  useEffect(() => {
     loadVaccines()
-  }, [toast])
+  }, [loadVaccines])
 
   const handlePreview = (vaccineId: number) => {
     const vaccine = vaccines.find((v) => v.id === vaccineId)

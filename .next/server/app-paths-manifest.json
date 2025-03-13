@@ -2,8 +2,10 @@
   "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
   "/(dashboard)/feedback/page": "app/(dashboard)/feedback/page.js",
   "/(dashboard)/roles-management/page": "app/(dashboard)/roles-management/page.js",
+  "/(dashboard)/staff-management/page": "app/(dashboard)/staff-management/page.js",
   "/(dashboard)/users-management/page": "app/(dashboard)/users-management/page.js",
   "/(dashboard)/vaccines/page": "app/(dashboard)/vaccines/page.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
 }

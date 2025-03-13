@@ -16,7 +16,7 @@ import type { Role, Permission } from "@/types/management";
 
 export default function RolesPage() {
   const { user } = useStore.getState().profile;
-  const { fetchRoles, fetchPermissions, deleteRole } = useStore.getState();
+  const { fetchRoles, fetchPermissions, deleteRole, deletePermission } = useStore.getState();
   const { toast } = useToast();
 
   const [roles, setRoles] = useState<Role[]>([]);
@@ -24,11 +24,9 @@ export default function RolesPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("roles");
 
-  // Modal state variables
   const [isCreateRoleModalOpen, setIsCreateRoleModalOpen] = useState(false);
   const [isCreatePermissionModalOpen, setIsCreatePermissionModalOpen] = useState(false);
 
-  // Extract data fetching into a function so it can be reused after mutations
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -75,8 +73,23 @@ export default function RolesPage() {
     }
   };
 
-  // Group permissions by module for the matrix tab.
-  // Alternatively, you could derive the matrix solely from roles.
+  const handleDeletePermission = async (roleName: string) => {
+    try {
+      await deletePermission(roleName);
+      toast({
+        title: "Success",
+        description: "Permission deleted successfully",
+      });
+      await loadData();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete role",
+        variant: "destructive",
+      });
+    }
+  };
+
   const permissionsByModule = roles.reduce((acc, role) => {
     if (role.permissions) {
       role.permissions.forEach((perm) => {
@@ -141,13 +154,13 @@ export default function RolesPage() {
                         {role.name}
                       </CardTitle>
                       <div className="flex space-x-1">
-                        <Button
+                        {/* <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEditRole(role.id)}
                         >
                           <Edit className="h-4 w-4" />
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -188,7 +201,18 @@ export default function RolesPage() {
               {permissions.map((permission) => (
                 <Card key={permission.id}>
                   <CardHeader>
-                    <CardTitle>{permission.name}</CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>{permission.name}</CardTitle>
+                      <div className="flex space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeletePermission(permission.name)}
+                        >
+                          <X className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
