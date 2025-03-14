@@ -227,7 +227,6 @@ export default function PostsPage() {
         />
       )}
 
-      {/* Create / Edit Modal */}
       {isModalOpen && (
         <CreateEditPostModal
           isOpen={isModalOpen}

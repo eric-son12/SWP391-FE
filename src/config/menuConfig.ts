@@ -99,6 +99,12 @@ export const menuItemsByRole: Record<UserRole,
       key: "feedback",
       path: "/feedback",
     },
+    {
+      label: "Notifications",
+      icon: Bell,
+      key: "notifications",
+      path: "/notifications",
+    },
   ],
   ROLE_ADMIN: [
     {
@@ -176,11 +182,11 @@ export const menuItemsByRole: Record<UserRole,
     // key: "vaccinated-age" },
     //   ],
     // },
-    // {
-    //   label: "Notifications",
-    //   icon: Bell,
-    //   key: "notifications",
-    //   path: "/notifications",
-    // },
+    {
+      label: "Notifications",
+      icon: Bell,
+      key: "notifications",
+      path: "/notifications",
+    },
   ],
 };

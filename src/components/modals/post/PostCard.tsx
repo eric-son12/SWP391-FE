@@ -20,7 +20,6 @@ export function PostCard({ post, onView, onEdit, onDelete }: PostCardProps) {
     return new Date(dateString).toLocaleDateString()
   }
 
-  // Truncate content to a reasonable length
   const truncateContent = (content: string, maxLength = 150) => {
     if (content.length <= maxLength) return content
     return content.substring(0, maxLength) + "..."
