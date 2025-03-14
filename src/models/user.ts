@@ -3,6 +3,7 @@ import { UserRole } from "@/types/menu";
 
 export interface User {
   id: number;
+  name: string;
   username: string;
   fullname: string;
   email?: string;

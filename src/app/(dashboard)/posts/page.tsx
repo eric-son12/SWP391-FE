@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash2, Eye, FileText, Plus, LayoutGrid, LayoutList } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
@@ -10,12 +10,21 @@ import axios from '@/utils/axiosConfig';
 import { toast } from "@/hooks/use-toast"
 import { Post } from "@/types/post"
 import { PostCard } from "@/components/modals/post/PostCard"
+import { ViewPostModal } from "@/components/modals/post/ViewPostModal"
+import { CreateEditPostModal } from "@/components/modals/post/CreateEditViewModal"
 
 export default function PostsPage() {
 
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<"list" | "grid">("list")
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalPost, setModalPost] = useState<Post | null>(null)
+
+  const [searchText, setSearchText] = useState("")
 
   const loadPosts = async () => {
     try {
@@ -38,25 +47,38 @@ export default function PostsPage() {
     loadPosts()
   }, [toast])
 
-  // const handleView = (post: Post) => {
-  //   setSelectedPost(post)
-  //   openModal("viewPost")
-  // }
+  const handleCreate = () => {
+    setModalPost(null)
+    setIsModalOpen(true)
+  }
+  const handleEdit = (post: Post) => {
+    setModalPost(post)
+    setIsModalOpen(true)
+  }
+  const handleDelete = async (post: Post) => {
+    await axios.delete(`/post/posts/${post.id}`,{
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+  }
+  const handleView = (post: Post) => {
+    setSelectedPost(post)
+    setIsViewModalOpen(true)
+  }
 
-  // const handleEdit = (post: Post) => {
-  //   setSelectedPost(post)
-  //   openModal("editPost")
-  // }
-
-  // const handleDelete = (post: Post) => {
-  //   setSelectedPost(post)
-  //   openModal("deletePost")
-  // }
-
-  // const handleCreate = () => {
-  //   setSelectedPost(null)
-  //   openModal("createPost")
-  // }
+  const handleSubmitPost = async (formData: FormData, postId?: number) => {
+    if (postId) {
+      // update
+      await axios.put(`/post/posts/${postId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+    } else {
+      // create
+      await axios.post(`/post/posts`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+    }
+    await loadPosts()
+  }
 
   const columns: ColumnDef<Post>[] = [
     {
@@ -87,16 +109,16 @@ export default function PostsPage() {
 
         return (
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => {}}>
+            <Button variant="outline" size="sm" onClick={() => handleView(post)}>
               <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={() => {}}>
+            <Button variant="outline" size="sm" onClick={() => handleEdit(post)}>
               <Edit className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {}}
+              onClick={() => handleDelete(post)}
               className="text-red-500 hover:text-red-700"
             >
               <Trash2 className="h-4 w-4" />
@@ -107,14 +129,24 @@ export default function PostsPage() {
     },
   ]
 
+  const filteredPosts = useMemo(() => {
+    return posts.filter((post) => {
+      const search = searchText.toLowerCase()
+      return (
+        post.title.toLowerCase().includes(search) ||
+        post.id.toString().includes(search)
+      )
+    })
+  }, [posts, searchText])
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Posts Management</h1>
-        {/* <Button onClick={handleCreate}>
+        <Button onClick={handleCreate}>
           <Plus className="mr-2 h-4 w-4" />
           Create Post
-        </Button> */}
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -187,13 +219,13 @@ export default function PostsPage() {
           {view === "list" ? (
             <Card>
               <CardContent className="pt-6">
-                <DataTable columns={columns} data={posts} searchColumn="title" searchPlaceholder="Search by title..." />
+                <DataTable columns={columns} data={filteredPosts} searchPlaceholder="Search by id or title..." />
               </CardContent>
             </Card>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} onView={() => {}} onEdit={() => {}} onDelete={() => {}} />
+                <PostCard key={post.id} post={post} onView={() => handleView(post)} onEdit={() => handleEdit(post)} onDelete={() => handleDelete(post)} />
               ))}
             </div>
           )}
@@ -205,6 +237,23 @@ export default function PostsPage() {
       <EditPostModal />
       <ViewPostModal />
       <DeletePostModal /> */}
+
+      {isViewModalOpen && selectedPost && (
+        <ViewPostModal
+          post={selectedPost}
+          onClose={() => setIsViewModalOpen(false)}
+        />
+      )}
+
+      {/* Create / Edit Modal */}
+      {isModalOpen && (
+        <CreateEditPostModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmitPost}
+          post={modalPost}
+        />
+      )}
     </div>
   )
 }

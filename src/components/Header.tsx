@@ -114,7 +114,7 @@ export function Header() {
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start text-sm">
-                <span className="font-medium">{user?.fullname}</span>
+                <span className="font-medium">{user?.name}</span>
                 <span className="text-xs text-gray-500">{user?.email || ""}</span>
               </div>
               <ChevronDown className="h-4 w-4" />
