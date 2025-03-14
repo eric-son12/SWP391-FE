@@ -423,6 +423,7 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
+// src/components/ui/data-table.tsx
 __turbopack_context__.s({
     "DataTable": (()=>DataTable)
 });
@@ -453,6 +454,7 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
     _s();
     const [sorting, setSorting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [columnFilters, setColumnFilters] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [globalSearch, setGlobalSearch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const table = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$table$2f$build$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["useReactTable"])({
         data: data || [],
         columns,
@@ -467,10 +469,20 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
             columnFilters
         }
     });
+    const searchKeys = Array.isArray(searchColumn) ? searchColumn : searchColumn ? [
+        searchColumn
+    ] : [];
+    const handleSearchChange = (e)=>{
+        const value = e.target.value;
+        setGlobalSearch(value);
+        searchKeys.forEach((key)=>{
+            table.getColumn(key)?.setFilterValue(value);
+        });
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-4",
         children: [
-            searchColumn && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            searchKeys.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex items-center",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "relative flex-1",
@@ -479,28 +491,28 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                             className: "absolute left-2 top-2.5 h-4 w-4 text-muted-foreground"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ui/data-table.tsx",
-                            lineNumber: 58,
+                            lineNumber: 80,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                             placeholder: searchPlaceholder,
-                            value: table.getColumn(searchColumn)?.getFilterValue() ?? "",
-                            onChange: (event)=>table.getColumn(searchColumn)?.setFilterValue(event.target.value),
+                            value: globalSearch,
+                            onChange: handleSearchChange,
                             className: "pl-8"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ui/data-table.tsx",
-                            lineNumber: 59,
+                            lineNumber: 81,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/ui/data-table.tsx",
-                    lineNumber: 57,
+                    lineNumber: 79,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/ui/data-table.tsx",
-                lineNumber: 56,
+                lineNumber: 78,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -522,37 +534,37 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/ui/data-table.tsx",
-                                                            lineNumber: 87,
+                                                            lineNumber: 109,
                                                             columnNumber: 32
                                                         }, this),
                                                         desc: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$down$2d$wide$2d$narrow$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowDownWideNarrow$3e$__["ArrowDownWideNarrow"], {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/ui/data-table.tsx",
-                                                            lineNumber: 88,
+                                                            lineNumber: 110,
                                                             columnNumber: 33
                                                         }, this)
                                                     }[header.column.getIsSorted()] ?? null
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                                lineNumber: 84,
+                                                lineNumber: 106,
                                                 columnNumber: 23
                                             }, this)
                                         }, header.id, false, {
                                             fileName: "[project]/src/components/ui/data-table.tsx",
-                                            lineNumber: 75,
+                                            lineNumber: 97,
                                             columnNumber: 21
                                         }, this);
                                     })
                                 }, headerGroup.id, false, {
                                     fileName: "[project]/src/components/ui/data-table.tsx",
-                                    lineNumber: 72,
+                                    lineNumber: 94,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/components/ui/data-table.tsx",
-                            lineNumber: 70,
+                            lineNumber: 92,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -562,12 +574,12 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                             children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$table$2f$build$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["flexRender"])(cell.column.columnDef.cell, cell.getContext())
                                         }, cell.id, false, {
                                             fileName: "[project]/src/components/ui/data-table.tsx",
-                                            lineNumber: 103,
+                                            lineNumber: 124,
                                             columnNumber: 21
                                         }, this))
                                 }, row.id, false, {
                                     fileName: "[project]/src/components/ui/data-table.tsx",
-                                    lineNumber: 101,
+                                    lineNumber: 122,
                                     columnNumber: 17
                                 }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -576,28 +588,28 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                     children: "No results."
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ui/data-table.tsx",
-                                    lineNumber: 109,
+                                    lineNumber: 130,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                lineNumber: 108,
+                                lineNumber: 129,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/ui/data-table.tsx",
-                            lineNumber: 98,
+                            lineNumber: 119,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/ui/data-table.tsx",
-                    lineNumber: 69,
+                    lineNumber: 91,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/ui/data-table.tsx",
-                lineNumber: 68,
+                lineNumber: 90,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -615,12 +627,12 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/ui/data-table.tsx",
-                            lineNumber: 119,
+                            lineNumber: 140,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/ui/data-table.tsx",
-                        lineNumber: 118,
+                        lineNumber: 139,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -635,12 +647,12 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                     className: "h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ui/data-table.tsx",
-                                    lineNumber: 130,
+                                    lineNumber: 151,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                lineNumber: 124,
+                                lineNumber: 145,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -652,18 +664,18 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                     className: "h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ui/data-table.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 154,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                lineNumber: 132,
+                                lineNumber: 153,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ui/data-table.tsx",
-                        lineNumber: 123,
+                        lineNumber: 144,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -681,12 +693,12 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                             placeholder: table.getState().pagination.pageSize
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ui/data-table.tsx",
-                                            lineNumber: 144,
+                                            lineNumber: 165,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ui/data-table.tsx",
-                                        lineNumber: 143,
+                                        lineNumber: 164,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -702,18 +714,18 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                                 children: pageSize
                                             }, pageSize, false, {
                                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                                lineNumber: 148,
+                                                lineNumber: 169,
                                                 columnNumber: 17
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ui/data-table.tsx",
-                                        lineNumber: 146,
+                                        lineNumber: 167,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                lineNumber: 137,
+                                lineNumber: 158,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -721,29 +733,29 @@ function DataTable({ columns, data, searchColumn, searchPlaceholder = "Search...
                                 children: "rows per page"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ui/data-table.tsx",
-                                lineNumber: 154,
+                                lineNumber: 175,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ui/data-table.tsx",
-                        lineNumber: 136,
+                        lineNumber: 157,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ui/data-table.tsx",
-                lineNumber: 117,
+                lineNumber: 138,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/ui/data-table.tsx",
-        lineNumber: 54,
+        lineNumber: 76,
         columnNumber: 5
     }, this);
 }
-_s(DataTable, "ynZrKdu5f0ScbvFXEja9jBr5cU4=", false, function() {
+_s(DataTable, "5afXx7c/LHUGIlPYradrDSdl5xk=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$table$2f$build$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["useReactTable"]
     ];
@@ -2797,7 +2809,9 @@ function VaccinesPage() {
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$data$2d$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DataTable"], {
                             columns: columns,
-                            data: filteredVaccines
+                            data: filteredVaccines,
+                            searchColumn: "",
+                            searchPlaceholder: "Search by id or title..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
                             lineNumber: 231,
@@ -2818,7 +2832,7 @@ function VaccinesPage() {
                 onClose: ()=>setIsCreateModalOpen(false)
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                lineNumber: 241,
+                lineNumber: 243,
                 columnNumber: 9
             }, this),
             selectedVaccine && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2828,12 +2842,12 @@ function VaccinesPage() {
                     onClose: ()=>setSelectedVaccine(null)
                 }, void 0, false, {
                     fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                    lineNumber: 247,
+                    lineNumber: 249,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                lineNumber: 246,
+                lineNumber: 248,
                 columnNumber: 9
             }, this),
             isUpdateModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$VaccineModal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["VaccineModal"], {
@@ -2841,7 +2855,7 @@ function VaccinesPage() {
                 vaccine: isUpdateModalOpen
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                lineNumber: 253,
+                lineNumber: 255,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -2855,20 +2869,20 @@ function VaccinesPage() {
                                     children: "Are you sure?"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                                    lineNumber: 259,
+                                    lineNumber: 261,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
                                     children: "This action cannot be undone. This will permanently delete the vaccine and may affect appointments that use this vaccine."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                                    lineNumber: 260,
+                                    lineNumber: 262,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                            lineNumber: 258,
+                            lineNumber: 260,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -2877,7 +2891,7 @@ function VaccinesPage() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                                    lineNumber: 266,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -2886,24 +2900,24 @@ function VaccinesPage() {
                                     children: "Delete"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                                    lineNumber: 267,
+                                    lineNumber: 269,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                            lineNumber: 265,
+                            lineNumber: 267,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                    lineNumber: 257,
+                    lineNumber: 259,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/vaccines/page.tsx",
-                lineNumber: 256,
+                lineNumber: 258,
                 columnNumber: 7
             }, this)
         ]

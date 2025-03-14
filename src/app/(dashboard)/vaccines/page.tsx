@@ -231,6 +231,7 @@ export default function VaccinesPage() {
             <DataTable
               columns={columns}
               data={filteredVaccines}
+              searchPlaceholder="Search by id or title..."
             />
           )}
         </CardContent>

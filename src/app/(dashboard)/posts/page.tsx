@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash2, Eye, FileText, Plus, LayoutGrid, LayoutList } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
@@ -24,9 +24,7 @@ export default function PostsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalPost, setModalPost] = useState<Post | null>(null)
 
-  const [searchText, setSearchText] = useState("")
-
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     try {
       setLoading(true)
       const response = await axios.get("/post/posts")
@@ -41,11 +39,11 @@ export default function PostsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     loadPosts()
-  }, [toast])
+  }, [loadPosts])
 
   const handleCreate = () => {
     setModalPost(null)
@@ -129,16 +127,6 @@ export default function PostsPage() {
     },
   ]
 
-  const filteredPosts = useMemo(() => {
-    return posts.filter((post) => {
-      const search = searchText.toLowerCase()
-      return (
-        post.title.toLowerCase().includes(search) ||
-        post.id.toString().includes(search)
-      )
-    })
-  }, [posts, searchText])
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -219,7 +207,7 @@ export default function PostsPage() {
           {view === "list" ? (
             <Card>
               <CardContent className="pt-6">
-                <DataTable columns={columns} data={filteredPosts} searchPlaceholder="Search by id or title..." />
+                <DataTable columns={columns} data={posts} searchColumn={["title", "id"]} searchPlaceholder="Search by title..." />
               </CardContent>
             </Card>
           ) : (
@@ -231,12 +219,6 @@ export default function PostsPage() {
           )}
         </>
       )}
-
-      {/* Modals */}
-      {/* <CreatePostModal />
-      <EditPostModal />
-      <ViewPostModal />
-      <DeletePostModal /> */}
 
       {isViewModalOpen && selectedPost && (
         <ViewPostModal

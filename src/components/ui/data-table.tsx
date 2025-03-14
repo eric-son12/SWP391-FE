@@ -1,5 +1,5 @@
+// src/components/ui/data-table.tsx
 "use client"
-
 import { useState } from "react"
 import {
   type ColumnDef,
@@ -12,7 +12,13 @@ import {
   getFilteredRowModel,
   type ColumnFiltersState,
 } from "@tanstack/react-table"
-import { ArrowDownWideNarrow, ArrowUpNarrowWide, ArrowUpWideNarrow, ChevronLeft, ChevronRight, Search } from "lucide-react"
+import {
+  ArrowDownWideNarrow,
+  ArrowUpNarrowWide,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,7 +28,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  searchColumn?: string
+  searchColumn?: string | string[]
   searchPlaceholder?: string
 }
 
@@ -34,6 +40,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [globalSearch, setGlobalSearch] = useState("")
 
   const table = useReactTable({
     data: data || [],
@@ -50,16 +57,31 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  const searchKeys: string[] =
+    Array.isArray(searchColumn)
+      ? searchColumn
+      : searchColumn
+      ? [searchColumn]
+      : []
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setGlobalSearch(value)
+    searchKeys.forEach((key) => {
+      table.getColumn(key)?.setFilterValue(value)
+    })
+  }
+
   return (
     <div className="space-y-4">
-      {searchColumn && (
+      {searchKeys.length > 0 && (
         <div className="flex items-center">
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={searchPlaceholder}
-              value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
-              onChange={(event) => table.getColumn(searchColumn)?.setFilterValue(event.target.value)}
+              value={globalSearch}
+              onChange={handleSearchChange}
               className="pl-8"
             />
           </div>
@@ -84,17 +106,16 @@ export function DataTable<TData, TValue>({
                       <div className="flex items-center gap-[2px]">
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
-                          asc: <ArrowUpNarrowWide className="h-4 w-4"/>,
-                          desc: <ArrowDownWideNarrow className="h-4 w-4"/>,
+                          asc: <ArrowUpNarrowWide className="h-4 w-4" />,
+                          desc: <ArrowDownWideNarrow className="h-4 w-4" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
           </TableHeader>
-
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

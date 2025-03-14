@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Eye, ShoppingCart, CreditCard, Calendar } from "lucide-react"
 import { useStore } from "@/store"
@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import type { Order } from "@/types/order"
 import { OrderDetailsModal } from "@/components/modals/OrderDetail"
 import axios from "@/utils/axiosConfig"
+import OrderStatusSelect from "@/components/OrderStatusSelect"
 
 export default function OrdersPage() {
   const { toast } = useToast()
@@ -19,32 +20,30 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
-  const [searchText, setSearchText] = useState("")
+
+  const loadOrders = useCallback(async () => {
+    try {
+      setLoading(true)
+      const token = localStorage.getItem("token")
+      const response = await axios.get("/order/all-orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data: Order[] = response.data.result || []
+      setOrders(data)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load orders",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [toast])
 
   useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const token = localStorage.getItem("token")
-        const response = await axios.get("/order/all-orders", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        const data: Order[] = response.data.result || []
-        setOrders(data)
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load orders",
-          variant: "destructive",
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadOrders()
-  }, [toast])
+  }, [loadOrders])
 
   const handleViewOrder = (orderId: number) => {
     const order = orders.find((o) => o.orderId === orderId)
@@ -68,26 +67,39 @@ export default function OrdersPage() {
     }
   }
 
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const token = localStorage.getItem("token")
+      await axios.put("/order/update-status-v2", null, {
+        params: { orderId, status: newStatus },
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      toast({
+        title: "Success",
+        description: "Order status updated successfully",
+      })
+      await loadOrders()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update order status",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const statusOptions: { [key: string]: { label: string; classes: string } } = {
+    IN_PROGRESS: { label: "In Progress", classes: "bg-blue-100 text-blue-800" },
+    ORDER_RECEIVED: { label: "Order Received", classes: "bg-gray-100 text-gray-800" },
+    OUT_FOR_DELIVERY: { label: "Out For Delivery", classes: "bg-blue-100 text-blue-800" },
+    CANCEL: { label: "Cancel", classes: "bg-red-100 text-red-800" },
+    SUCCESS: { label: "Completed", classes: "bg-green-100 text-green-800" },
+  }
+
   const columns: ColumnDef<Order>[] = [
     {
       accessorKey: "orderId",
       header: "Order ID",
-    },
-    {
-      accessorKey: "orderDate",
-      header: "Order Date",
-      cell: ({ row }) => {
-        const date = row.getValue("orderDate") as string
-        return new Date(date).toLocaleDateString()
-      },
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => {
-        const status = row.getValue("status") as string
-        return getStatusBadge(status)
-      },
     },
     {
       accessorKey: "paymentType",
@@ -102,6 +114,38 @@ export default function OrdersPage() {
           style: "currency",
           currency: "vnd",
         }).format(price)
+      },
+    },
+    {
+      accessorKey: "orderDate",
+      header: "Order Date",
+      cell: ({ row }) => {
+        const date = row.getValue("orderDate") as string
+        return new Date(date).toLocaleDateString()
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const order = row.original
+        const currentStatus = order.status.toUpperCase().replace(" ", "_")
+
+        return (
+          <select
+            value={currentStatus}
+            onChange={(e) => updateOrderStatus(order.orderId.toString(), e.target.value)}
+            className={`rounded border border-gray-300 p-1 ${
+              statusOptions[currentStatus]?.classes || "bg-gray-100 text-gray-800"
+            }`}
+          >
+            {Object.entries(statusOptions).map(([key, { label }]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+        )
       },
     },
     {
@@ -123,13 +167,6 @@ export default function OrdersPage() {
   const totalOrders = orders.length
   const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0)
   const pendingOrders = orders.filter((order) => order.status.toLowerCase() === "pending").length
-
-  const filteredOrder = useMemo(() => {
-    return orders.filter((o) => {
-      const matchesSearch = o.orderId.toString().includes(searchText);
-      return matchesSearch;
-    });
-  }, [orders, searchText]);
 
   return (
     <div className="space-y-4">
@@ -192,7 +229,7 @@ export default function OrdersPage() {
           ) : (
             <DataTable
               columns={columns}
-              data={filteredOrder}
+              data={orders}
               searchColumn="orderId"
               searchPlaceholder="Search by order ID..."
             />

@@ -1,9 +1,7 @@
 "use client"
-
 import { Mail, Phone, Calendar, User } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { User as UserType } from "@/types/user"
 
@@ -103,9 +101,9 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
             </div>
           </div>
 
-          <div className="flex justify-end">
+          {/* <div className="flex justify-end">
             <Button onClick={handleEdit}>Edit User</Button>
-          </div>
+          </div> */}
         </div>
       </DialogContent>
     </Dialog>
