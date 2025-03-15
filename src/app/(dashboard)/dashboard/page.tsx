@@ -27,6 +27,8 @@ const generateMockData = (days: number) => {
     })
   }
 
+  console.log("data dashboard: ", data)
+
   return data
 }
 
