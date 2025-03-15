@@ -169,7 +169,7 @@ export function Header() {
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start text-sm">
-                <span className="font-medium">{user?.fullname}</span>
+                <span className="font-medium">{user?.name}</span>
                 <span className="text-xs text-gray-500">{user?.email || ""}</span>
               </div>
               <ChevronDown className="h-4 w-4" />
@@ -178,7 +178,7 @@ export function Header() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </DropdownMenuItem>
@@ -186,7 +186,7 @@ export function Header() {
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator /> */}
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>

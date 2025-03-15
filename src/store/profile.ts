@@ -204,7 +204,8 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
         if (token) {
           localStorage.setItem("token", token);
           const parsedToken = parseJWT(token);
-          const role = parsedToken.scope || "";
+          const roleParsedToken: string = parsedToken.scope || "";
+          const role = roleParsedToken.replace(/ROLE_/g, "");
           localStorage.setItem("role", role);
           set((state) => {
             state.profile.user = {

@@ -1,6 +1,6 @@
 import type { ComponentType } from "react"
 
-export type UserRole = "ROLE_ADMIN" | "ROLE_ROLE_STAFF" | "ROLE_CUSTOMER" | "ROLE_CHILD"
+export type UserRole = "ADMIN" | "STAFF" | "ROLE_CUSTOMER" | "ROLE_CHILD"
 
 export interface MenuItem {
   key: string

@@ -188,7 +188,7 @@ export default function UsersManagementPage() {
             <Button variant="outline" size="sm" onClick={() => handleViewUserDetails(id)}>
               <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={() => handleEditUser(id)}>
+            {/* <Button variant="outline" size="sm" onClick={() => handleEditUser(id)}>
               <Edit className="h-4 w-4" />
             </Button>
             <Button
@@ -198,7 +198,7 @@ export default function UsersManagementPage() {
               className="text-red-500 hover:text-red-700"
             >
               <Trash2 className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         )
       },
@@ -209,10 +209,10 @@ export default function UsersManagementPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">User Management</h1>
-        <Button onClick={() => {}}>
+        {/* <Button onClick={() => {}}>
           <UserPlus className="mr-2 h-4 w-4" />
           Add User
-        </Button>
+        </Button> */}
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

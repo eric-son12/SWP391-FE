@@ -99,7 +99,7 @@ export default function NotificationsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Notifications</h1>
-        {user && (user.role === "ROLE_ADMIN" || user.role === "ROLE_ROLE_STAFF") && (
+        {user && (user.role === "ADMIN" || user.role === "STAFF") && (
           <Button onClick={handleCreateNotification}>
             <Plus className="mr-2 h-4 w-4" />
             Create Notification

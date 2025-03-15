@@ -26,13 +26,13 @@ export function CreateNotificationModal({ onClose }: CreateNotificationModalProp
     setIsSubmitting(true)
     try {
       const token = localStorage.getItem("token")
-      if (user?.role === "ROLE_ADMIN") {
+      if (user?.role === "ADMIN") {
         await axios.post(
           "/notification/notifications/staff",
           { message },
           { headers: { Authorization: `Bearer ${token}` } }
         )
-      } else if (user?.role === "ROLE_ROLE_STAFF") {
+      } else if (user?.role === "STAFF") {
         if (!targetUserId) {
           toast({
             title: "Error",
@@ -82,7 +82,7 @@ export function CreateNotificationModal({ onClose }: CreateNotificationModalProp
             required
           />
         </div>
-        {user?.role === "ROLE_ROLE_STAFF" && (
+        {user?.role === "STAFF" && (
           <div className="space-y-2">
             <Label htmlFor="targetUserId">User ID</Label>
             <Input

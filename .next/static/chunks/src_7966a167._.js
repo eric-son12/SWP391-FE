@@ -261,7 +261,9 @@ function profileActions(set, get) {
                 if (token) {
                     localStorage.setItem("token", token);
                     const parsedToken = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["parseJWT"])(token);
-                    const role = parsedToken.scope || "";
+                    const roleParsedToken = parsedToken.scope || "";
+                    const role = roleParsedToken.replace(/ROLE_/g, "");
+                    console.log("role: ", role, roleParsedToken);
                     localStorage.setItem("role", role);
                     set((state)=>{
                         state.profile.user = {
@@ -2115,7 +2117,7 @@ const AppRoutes = ()=>{
     const routes = [
         {
             path: "/",
-            element: isAuthenticated && (role === "ROLE_ROLE_STAFF" || role === "ROLE_ADMIN") ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$router$2f$dist$2f$development$2f$chunk$2d$K6CSEXPM$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Navigate"], {
+            element: isAuthenticated && (role === "STAFF" || role === "ADMIN") ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$router$2f$dist$2f$development$2f$chunk$2d$K6CSEXPM$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Navigate"], {
                 to: "/dashboard"
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
@@ -2130,7 +2132,7 @@ const AppRoutes = ()=>{
         {
             path: "/dashboard",
             element: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$ProtectedRoute$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                isAllowed: isAuthenticated && (role === "ROLE_ROLE_STAFF" || role === "ROLE_ADMIN"),
+                isAllowed: isAuthenticated && (role === "STAFF" || role === "ADMIN"),
                 redirectPath: "/",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f28$dashboard$292f$dashboard$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/src/app/page.tsx",

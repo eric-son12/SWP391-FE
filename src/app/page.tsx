@@ -15,7 +15,7 @@ const AppRoutes = () => {
   const routes = [
     {
       path: "/",
-      element: isAuthenticated && (role === "ROLE_ROLE_STAFF" || role === "ROLE_ADMIN")
+      element: isAuthenticated && (role === "STAFF" || role === "ADMIN")
       ? <Navigate to="/dashboard" />
       : <AuthPage />,
     },
@@ -23,7 +23,7 @@ const AppRoutes = () => {
       path: "/dashboard",
       element: (
         <ProtectedRoute
-          isAllowed={isAuthenticated && (role === "ROLE_ROLE_STAFF" || role === "ROLE_ADMIN")}
+          isAllowed={isAuthenticated && (role === "STAFF" || role === "ADMIN")}
           redirectPath="/"
         >
           <DashboardPage />

@@ -1,8 +1,44 @@
 "use client"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Activity, Users, Syringe, DollarSign, Calendar } from "lucide-react"
+import { Users, Syringe, DollarSign, Calendar } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
+
+
+const generateMockData = (days: number) => {
+  const data = []
+  const now = new Date()
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(now)
+    date.setDate(date.getDate() - i)
+
+    // Random values for each metric
+    const users = Math.floor(Math.random() * 15) + 5
+    const income = Math.floor(Math.random() * 1500) + 500
+    const vaccines = Math.floor(Math.random() * 40) + 10
+
+    data.push({
+      date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      users,
+      income,
+      vaccines,
+    })
+  }
+
+  return data
+}
+
+const chartData = {
+  "7days": generateMockData(7),
+  "30days": generateMockData(30),
+  "90days": generateMockData(90),
+}
 
 export default function DashboardPage() {
+  const [activePeriod, setActivePeriod] = useState<"7days" | "30days" | "90days">("7days")
+
   const stats = [
     {
       title: "Total Users",
@@ -33,6 +69,27 @@ export default function DashboardPage() {
       color: "text-orange-600",
     },
   ]
+
+  // Custom tooltip formatter for the chart
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="rounded border bg-white p-3 shadow-md">
+          <p className="mb-2 font-medium">{label}</p>
+          {payload.map((entry: any) => (
+            <div key={entry.name} className="flex items-center gap-2 py-1">
+              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.stroke }}></div>
+              <p className="text-sm" style={{ color: entry.stroke }}>
+                {entry.name}: {entry.name === "Revenue" ? "$" : ""}
+                {entry.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    return null
+  }
 
   return (
     <div className="space-y-6">
@@ -67,29 +124,76 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+      <div className="grid gap-6 grid-cols-4">
+        <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Performance Metrics</CardTitle>
+              <Tabs defaultValue="7days" value={activePeriod} onValueChange={(v) => setActivePeriod(v as any)}>
+                <TabsList>
+                  <TabsTrigger value="7days">7 Days</TabsTrigger>
+                  <TabsTrigger value="30days">30 Days</TabsTrigger>
+                  <TabsTrigger value="90days">90 Days</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex items-center gap-4 rounded-lg border p-3">
-                  <Activity className="h-8 w-8 text-blue-500" />
-                  <div>
-                    <p className="font-medium">
-                      {i % 2 === 0 ? "New vaccination appointment scheduled" : "User profile updated"}
-                    </p>
-                    <p className="text-sm text-gray-500">{new Date(Date.now() - i * 3600000).toLocaleTimeString()}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={chartData[activePeriod]}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis yAxisId="left" orientation="left" stroke="#3b82f6" />
+                  <YAxis yAxisId="right" orientation="right" stroke="#8b5cf6" />
+                  <Tooltip
+                    content={<CustomTooltip />}
+                    wrapperStyle={{ outline: "none" }}
+                    cursor={{ strokeDasharray: "3 3" }}
+                  />
+                  <Legend />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="users"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    activeDot={{ r: 6 }}
+                    name="Users"
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="income"
+                    stroke="#8b5cf6"
+                    strokeWidth={2}
+                    activeDot={{ r: 6 }}
+                    name="Revenue"
+                  />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="vaccines"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    activeDot={{ r: 6 }}
+                    name="Vaccines"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="col-span-1">
           <CardHeader>
             <CardTitle>Top Vaccines</CardTitle>
           </CardHeader>

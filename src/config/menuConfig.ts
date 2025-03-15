@@ -36,7 +36,7 @@ export const menuItemsByRole: Record<UserRole,
   MenuItem[]> = {
   ROLE_CHILD: [],
   ROLE_CUSTOMER: [],
-  ROLE_ROLE_STAFF: [
+  STAFF: [
     {
       label: "Dashboard",
       icon: LayoutDashboard,
@@ -106,7 +106,7 @@ export const menuItemsByRole: Record<UserRole,
       path: "/notifications",
     },
   ],
-  ROLE_ADMIN: [
+  ADMIN: [
     {
       label: "Dashboard",
       icon: LayoutDashboard,
