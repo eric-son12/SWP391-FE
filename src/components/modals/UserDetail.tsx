@@ -23,14 +23,10 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
     })
   }
 
-  const handleEdit = () => {
-    onClose()
-  }
-
   const getParentInfo = () => {
     if (user.parentid === 0) {
       return "None (This is a parent account)"
-    }
+    }  
     return `Parent ID: ${user.parentid}`
   }
 
@@ -95,10 +91,10 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
               <p className="font-medium">{user.gender}</p>
             </div>
 
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               <div className="text-sm text-gray-500">Parent Account</div>
               <p className="font-medium">{getParentInfo()}</p>
-            </div>
+            </div> */}
           </div>
 
           {/* <div className="flex justify-end">

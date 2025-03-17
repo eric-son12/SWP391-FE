@@ -33,19 +33,19 @@ export function CreateNotificationModal({ onClose }: CreateNotificationModalProp
           { headers: { Authorization: `Bearer ${token}` } }
         )
       } else if (user?.role === "STAFF") {
-        if (!targetUserId) {
-          toast({
-            title: "Error",
-            description: "Please enter a user ID",
-            variant: "destructive",
-          })
-          return
+        if (targetUserId.trim() !== "") {
+          await axios.post(
+            "/notification/notifications",
+            { userId: Number(targetUserId), message },
+            { headers: { Authorization: `Bearer ${token}` } }
+          )
+        } else {
+          await axios.post(
+            "/notification/all",
+            { message },
+            { headers: { Authorization: `Bearer ${token}` } }
+          )
         }
-        await axios.post(
-          "/notification/notifications",
-          { userId: Number(targetUserId), message },
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
       }
       toast({
         title: "Success",
@@ -84,14 +84,15 @@ export function CreateNotificationModal({ onClose }: CreateNotificationModalProp
         </div>
         {user?.role === "STAFF" && (
           <div className="space-y-2">
-            <Label htmlFor="targetUserId">User ID</Label>
+            <Label htmlFor="targetUserId">
+              User ID (leave blank for all customers)
+            </Label>
             <Input
               id="targetUserId"
               name="targetUserId"
               type="number"
               value={targetUserId}
               onChange={(e) => setTargetUserId(e.target.value)}
-              required
             />
           </div>
         )}

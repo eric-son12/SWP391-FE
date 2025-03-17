@@ -27,19 +27,17 @@ const generateMockData = (days: number) => {
     })
   }
 
-  console.log("data dashboard: ", data)
-
   return data
 }
 
 const chartData = {
   "7days": generateMockData(7),
+  "15days": generateMockData(15),
   "30days": generateMockData(30),
-  "90days": generateMockData(90),
 }
 
 export default function DashboardPage() {
-  const [activePeriod, setActivePeriod] = useState<"7days" | "30days" | "90days">("7days")
+  const [activePeriod, setActivePeriod] = useState<"7days" | "15days" | "30days">("7days")
 
   const stats = [
     {
@@ -134,8 +132,8 @@ export default function DashboardPage() {
               <Tabs defaultValue="7days" value={activePeriod} onValueChange={(v) => setActivePeriod(v as any)}>
                 <TabsList>
                   <TabsTrigger value="7days">7 Days</TabsTrigger>
+                  <TabsTrigger value="15days">15 Days</TabsTrigger>
                   <TabsTrigger value="30days">30 Days</TabsTrigger>
-                  <TabsTrigger value="90days">90 Days</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>

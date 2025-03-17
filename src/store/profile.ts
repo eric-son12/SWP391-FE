@@ -212,7 +212,7 @@ export function profileActions(set: StoreSet, get: StoreGet): ProfileActions {
               ...parsedToken,
               token,
               username,
-              role,
+              role: role,
             };
             state.notification.data.push({
               content: "Login success!",

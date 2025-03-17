@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
-import { Bell, Plus, Search } from "lucide-react"
+import { Plus, Search } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useStore } from "@/store"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,9 +11,7 @@ import type { Notification } from "@/types/notification"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import axios from '@/utils/axiosConfig'
-import { ViewPostModal } from "@/components/modals/post/ViewPostModal" // if needed
 import { CreateNotificationModal } from "@/components/modals/CreateNotificationModal"
-import { useRouter } from "next/navigation"
 
 export default function NotificationsPage() {
   const { toast } = useToast()
@@ -24,7 +23,7 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<string>("all")
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
-  const loadNotifications = async () => {
+  const fetchNotifications = async () => {
     if (!user) return
     try {
       setLoading(true)
@@ -32,7 +31,6 @@ export default function NotificationsPage() {
       const response = await axios.get("/notification/notifications", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      // Assume API returns an array in response.data.result (or directly in response.data)
       const data: Notification[] = response.data.result || response.data || []
       setNotifications(data)
     } catch (error) {
@@ -47,10 +45,9 @@ export default function NotificationsPage() {
   }
 
   useEffect(() => {
-    loadNotifications()
+    fetchNotifications()
   }, [user, toast])
 
-  // Mark a single notification as read by calling the PUT endpoint
   const markAsRead = async (id: number) => {
     try {
       const token = localStorage.getItem("token")
@@ -58,7 +55,9 @@ export default function NotificationsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, readStatus: true } : n))
+        prev.map((n) =>
+          n.id === id ? { ...n, readStatus: true } : n
+        )
       )
     } catch (error) {
       toast({
@@ -69,28 +68,30 @@ export default function NotificationsPage() {
     }
   }
 
-  const filteredNotifications = notifications.filter((n) => {
-    if (activeTab === "unread" && n.readStatus) return false
-    if (activeTab === "read" && !n.readStatus) return false
+  const markAllAsRead = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      await axios.put("/notification/notifications/read-all", null, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      await fetchNotifications()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to mark all notifications as read",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const filteredNotifications = notifications.filter((notification) => {
+    if (activeTab === "unread" && notification.readStatus) return false
+    if (activeTab === "read" && !notification.readStatus) return false
     return true
   })
 
-  // Friendly date formatter (e.g. "5 minutes ago")
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffMins = Math.round(diffMs / 60000)
-    const diffHours = Math.round(diffMs / 3600000)
-    const diffDays = Math.round(diffMs / 86400000)
+  const unreadCount = notifications.filter((n) => !n.readStatus).length
 
-    if (diffMins < 60) return `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`
-    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`
-    if (diffDays < 7) return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`
-    return date.toLocaleDateString()
-  }
-
-  // Handler to open the create notification modal
   const handleCreateNotification = () => {
     setIsCreateModalOpen(true)
   }
@@ -117,6 +118,19 @@ export default function NotificationsPage() {
         </Tabs>
       </div>
 
+      {/* Search input */}
+      <div className="relative flex-1">
+        <input
+          type="text"
+          placeholder="Search notifications..."
+          className="w-full rounded-md border border-gray-300 p-2 pl-10"
+          onChange={(e) => {}}
+        />
+        <span className="absolute left-3 top-2.5 text-gray-500">
+          <Search />
+        </span>
+      </div>
+
       <Card>
         <CardContent className="p-0">
           {loading ? (
@@ -129,6 +143,19 @@ export default function NotificationsPage() {
             </div>
           ) : (
             <div className="divide-y">
+              <div className="flex items-center justify-between border-b p-3">
+                <span className="font-semibold">Notifications</span>
+                {unreadCount > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto p-0 text-xs text-blue-600"
+                    onClick={markAllAsRead}
+                  >
+                    Read All
+                  </Button>
+                )}
+              </div>
               {filteredNotifications.map((notification) => (
                 <div
                   key={notification.id}
@@ -143,7 +170,7 @@ export default function NotificationsPage() {
                   </p>
                   <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
                     <span>From: {notification.user.fullname}</span>
-                    <span>{formatDate(notification.createdAt)}</span>
+                    <span>{new Date(notification.createdAt).toLocaleString()}</span>
                   </div>
                 </div>
               ))}
@@ -156,7 +183,7 @@ export default function NotificationsPage() {
         <CreateNotificationModal
           onClose={async () => {
             setIsCreateModalOpen(false)
-            await loadNotifications()
+            await fetchNotifications()
           }}
         />
       )}

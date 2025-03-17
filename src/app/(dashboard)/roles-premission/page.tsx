@@ -146,8 +146,8 @@ export default function RolesPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-3">
-              {roles.map((role) => (
-                <Card key={role.id}>
+              {roles.map((role, idx) => (
+                <Card key={idx}>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg font-medium">

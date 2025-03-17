@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react"
+import { Bell, ChevronDown, LogOut } from "lucide-react"
 import { useStore } from "@/store"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,20 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import axios from "@/utils/axiosConfig"
-
-interface Notification {
-  id: number;
-  user: {
-    id: number;
-    parentid: any;
-    username: string;
-    fullname: string;
-    email: string;
-  };
-  message: string;
-  createdAt: string;
-  readStatus: boolean;
-}
+import { Notification } from "@/types/notification"
 
 export function Header() {
   const router = useRouter()
@@ -38,7 +25,7 @@ export function Header() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [loadingNotifications, setLoadingNotifications] = useState(false)
 
-  // Fetch notifications from API
+  // Fetch all notifications
   const fetchNotifications = async () => {
     try {
       setLoadingNotifications(true)
@@ -46,7 +33,6 @@ export function Header() {
       const response = await axios.get("/notification/notifications", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      // Assuming the API returns an array in response.data
       setNotifications(response.data || [])
     } catch (error) {
       console.error("Failed to fetch notifications", error)
@@ -59,12 +45,17 @@ export function Header() {
     fetchNotifications()
   }, [])
 
+  // Mark a single notification as read
   const markAsRead = async (id: number) => {
     try {
       const token = localStorage.getItem("token")
-      await axios.put(`/notification/notifications/${id}/read`, {id}, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      await axios.put(
+        `/notification/notifications/${id}/read`,
+        { id },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
       setNotifications((prev) =>
         prev.map((notif) =>
           notif.id === id ? { ...notif, readStatus: true } : notif
@@ -75,10 +66,17 @@ export function Header() {
     }
   }
 
+  // Mark all notifications as read, then refetch
   const markAllAsRead = async () => {
-    await Promise.all(
-      notifications.filter((n) => !n.readStatus).map((n) => markAsRead(n.id))
-    )
+    try {
+      const token = localStorage.getItem("token")
+      await axios.put("/notification/notifications/read-all", null, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      await fetchNotifications()
+    } catch (error) {
+      console.error("Failed to mark all as read", error)
+    }
   }
 
   const unreadCount = notifications.filter((n) => !n.readStatus).length
@@ -91,6 +89,7 @@ export function Header() {
   return (
     <header className="flex h-16 items-center justify-end border-b bg-white px-6">
       <div className="flex items-center gap-4">
+        {/* Notifications Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
@@ -108,7 +107,7 @@ export function Header() {
           <DropdownMenuContent className="w-80 p-0" align="end">
             <div className="flex items-center justify-between border-b p-3">
               <DropdownMenuLabel className="font-semibold">Notifications</DropdownMenuLabel>
-              {/* {unreadCount > 0 && (
+              {unreadCount > 0 && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -117,29 +116,27 @@ export function Header() {
                 >
                   Mark all as read
                 </Button>
-              )} */}
+              )}
             </div>
             <div className="max-h-[300px] overflow-y-auto">
               {notifications.length > 0 ? (
                 notifications.map((notification) => (
                   <DropdownMenuItem
                     key={notification.id}
-                    className={`flex flex-col cursor-pointer p-3 hover:bg-gray-50 justity-start ${
+                    className={`flex cursor-pointer flex-col p-3 hover:bg-gray-50 ${
                       !notification.readStatus ? "bg-blue-50" : ""
                     }`}
                     onClick={() => markAsRead(notification.id)}
                   >
                     <div className="flex gap-1">
-                      <div className="flex items-center justify-between">
-                        {!notification.readStatus && (
-                          <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                        )}
-                      </div>
+                      {!notification.readStatus && (
+                        <div className="h-2 w-2 rounded-full bg-blue-600"></div>
+                      )}
                       <p className="text-sm text-gray-600">{notification.message}</p>
                     </div>
-                      <span className="w-full text-xs text-gray-500 ml-8">
-                        {new Date(notification.createdAt).toLocaleString()}
-                      </span>
+                    <span className="ml-6 w-full text-xs text-gray-500">
+                      {new Date(notification.createdAt).toLocaleString()}
+                    </span>
                   </DropdownMenuItem>
                 ))
               ) : (
@@ -161,6 +158,7 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* User Avatar Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="flex items-center gap-2 hover:bg-gray-100">

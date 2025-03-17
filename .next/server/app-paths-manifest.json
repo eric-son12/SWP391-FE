@@ -1,7 +1,15 @@
 {
+  "/(dashboard)/categories/page": "app/(dashboard)/categories/page.js",
   "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
   "/(dashboard)/feedback/page": "app/(dashboard)/feedback/page.js",
-  "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
+  "/(dashboard)/notifications/page": "app/(dashboard)/notifications/page.js",
+  "/(dashboard)/roles-premission/page": "app/(dashboard)/roles-premission/page.js",
+  "/(dashboard)/staff-management/page": "app/(dashboard)/staff-management/page.js",
+  "/(dashboard)/staff/page": "app/(dashboard)/staff/page.js",
+  "/(dashboard)/users-management/page": "app/(dashboard)/users-management/page.js",
+  "/(dashboard)/users/page": "app/(dashboard)/users/page.js",
+  "/(dashboard)/vaccines/page": "app/(dashboard)/vaccines/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js"
 }

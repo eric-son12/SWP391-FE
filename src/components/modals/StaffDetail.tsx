@@ -93,10 +93,10 @@ export function StaffDetailsModal({ isOpen, onClose, staff }: StaffDetailsModalP
           </div>
           
           <Tabs defaultValue="profile">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="roles">Roles & Permissions</TabsTrigger>
-              <TabsTrigger value="actions">Account Actions</TabsTrigger>
+              {/* <TabsTrigger value="actions">Account Actions</TabsTrigger> */}
             </TabsList>
             
             <TabsContent value="profile" className="space-y-4 pt-4">
@@ -177,7 +177,7 @@ export function StaffDetailsModal({ isOpen, onClose, staff }: StaffDetailsModalP
               )}
             </TabsContent>
             
-            <TabsContent value="actions" className="space-y-4 pt-4">
+            {/* <TabsContent value="actions" className="space-y-4 pt-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <Card>
                   <CardHeader>
@@ -242,7 +242,7 @@ export function StaffDetailsModal({ isOpen, onClose, staff }: StaffDetailsModalP
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </div>
       </DialogContent>

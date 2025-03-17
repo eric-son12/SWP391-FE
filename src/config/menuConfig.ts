@@ -71,7 +71,7 @@ export const menuItemsByRole: Record<UserRole,
     {
       label: "Products",
       icon: Layers,
-      key: "category-management",
+      key: "category",
       subItems: [
         {
           label: "Categories",
@@ -90,7 +90,7 @@ export const menuItemsByRole: Record<UserRole,
     {
       label: "Post Management",
       icon: FileText,
-      key: "post-management",
+      key: "post",
       path: "/posts",
     },
     {
@@ -121,27 +121,27 @@ export const menuItemsByRole: Record<UserRole,
         {
           label: "Users",
           icon: Users,
-          key: "users-management",
+          key: "users",
           path: "/users-management"
         },
         {
           label: "Staff",
           icon: BadgeCheck,
-          key: "staff-management",
+          key: "staff",
           path: "/staff-management"
         },
         {
           label: "Roles & Permissions",
           icon: BadgeCheck,
-          key: "roles-management",
-          path: "/roles-management"
+          key: "roles",
+          path: "/roles-premission"
         },
       ],
     },
     {
       label: "Products",
       icon: Layers,
-      key: "category-management",
+      key: "category",
       subItems: [
         {
           label: "Categories",

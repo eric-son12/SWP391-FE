@@ -91,8 +91,8 @@ export default function OrdersPage() {
   const statusOptions: { [key: string]: { label: string; classes: string } } = {
     IN_PROGRESS: { label: "In Progress", classes: "bg-blue-100 text-blue-800" },
     ORDER_RECEIVED: { label: "Order Received", classes: "bg-gray-100 text-gray-800" },
-    OUT_FOR_DELIVERY: { label: "Out For Delivery", classes: "bg-blue-100 text-blue-800" },
-    CANCEL: { label: "Cancel", classes: "bg-red-100 text-red-800" },
+    OUT_FOR_STOCK: { label: "Out for Stock", classes: "bg-blue-100 text-blue-800" },
+    CANCELLED: { label: "Cancelled", classes: "bg-red-100 text-red-800" },
     SUCCESS: { label: "Completed", classes: "bg-green-100 text-green-800" },
   }
 
@@ -129,8 +129,7 @@ export default function OrdersPage() {
       header: "Status",
       cell: ({ row }) => {
         const order = row.original
-        const currentStatus = order.status.toUpperCase().replace(" ", "_")
-
+        const currentStatus = order.status.toUpperCase().replace(/ /g, "_")
         return (
           <select
             value={currentStatus}

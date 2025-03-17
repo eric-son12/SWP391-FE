@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { StaffDetailsModal } from "@/components/modals/StaffDetail"
 import axios from "@/utils/axiosConfig"
+import { CreateStaffModal } from "@/components/modals/CreateStaffModal"
 
 export default function StaffManagementPage() {
   const { toast } = useToast()
@@ -28,6 +29,7 @@ export default function StaffManagementPage() {
   const [staffMembers, setStaffMembers] = useState<StaffMember[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null)
+  const [isCreateStaffModalOpen, setIsCreateStaffModalOpen] = useState(false)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null)
@@ -177,33 +179,33 @@ export default function StaffManagementPage() {
             <Button variant="outline" size="sm" onClick={() => handleViewStaffDetails(id)}>
               <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={() => handleEditStaff(id)}>
+            {/* <Button variant="outline" size="sm" onClick={() => handleEditStaff(id)}>
               <Edit className="h-4 w-4" />
-            </Button>
-            <Button 
+            </Button> */}
+            {/* <Button 
               variant="outline" 
               size="sm" 
               onClick={() => toggleStaffStatus(id)}
               className={enabled ? "text-red-500 hover:text-red-700" : "text-green-500 hover:text-green-700"}
             >
               {enabled ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
-            </Button>
-            <Button 
+            </Button> */}
+            {/* <Button 
               variant="outline" 
               size="sm" 
               onClick={() => toggleAccountLock(id)}
               className={accountNonLocked ? "text-yellow-500 hover:text-yellow-700" : "text-blue-500 hover:text-blue-700"}
             >
               {accountNonLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="outline"
               size="sm"
               onClick={() => confirmDelete(id)}
               className="text-red-500 hover:text-red-700"
             >
               <Trash2 className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         )
       },
@@ -214,13 +216,13 @@ export default function StaffManagementPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Staff Management</h1>
-        <Button onClick={() => { /* Add Staff button logic */ }}>
+        <Button onClick={() => setIsCreateStaffModalOpen(true)}>
           <UserPlus className="mr-2 h-4 w-4" />
           Add Staff
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total Staff</CardTitle>
@@ -247,7 +249,7 @@ export default function StaffManagementPage() {
             <div className="text-2xl font-bold">{staffMembers.filter(s => !s.accountNonLocked).length}</div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
       <Card>
         <CardHeader>
@@ -268,6 +270,10 @@ export default function StaffManagementPage() {
           )}
         </CardContent>
       </Card>
+
+      {isCreateStaffModalOpen && (
+        <CreateStaffModal onClose={() => setIsCreateStaffModalOpen(false)} />
+      )}
 
       <StaffDetailsModal 
         isOpen={isDetailsModalOpen} 

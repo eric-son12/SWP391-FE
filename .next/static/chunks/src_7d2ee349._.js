@@ -13,8 +13,8 @@ __turbopack_context__.s({
     "RoleUser": (()=>RoleUser)
 });
 var RoleUser = /*#__PURE__*/ function(RoleUser) {
-    RoleUser["ADMIN"] = "ROLE_ADMIN";
-    RoleUser["STAFF"] = "ROLE_ROLE_STAFF";
+    RoleUser["ADMIN"] = "ADMIN";
+    RoleUser["STAFF"] = "STAFF";
     RoleUser["CUSTOMER"] = "ROLE_CUSTOMER";
     RoleUser["CHILD"] = "ROLE_CHILD";
     return RoleUser;
