@@ -1,1 +1,0 @@
-(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[337],{2429:(e,s,l)=>{Promise.resolve().then(l.bind(l,6879))},6879:(e,s,l)=>{"use strict";l.r(s),l.d(s,{default:()=>a});var r=l(5155);let a=()=>(0,r.jsx)("div",{className:"flex flex-col items-center justify-center",children:"Dashboard"})}},e=>{var s=s=>e(e.s=s);e.O(0,[441,684,358],()=>s(2429)),_N_E=e.O()}]);

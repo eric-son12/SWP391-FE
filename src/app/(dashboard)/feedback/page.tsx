@@ -24,10 +24,11 @@ export default function FeedbackPage() {
       try {
         const response = await axios.get('/feedback/sorted/desc')
         setFeedback(response.data.result)
-      } catch (error) {
+      } catch (error: unknown) {
+        const msg = error?.response?.data?.message || error?.message;
         toast({
           title: "Error",
-          description: "Failed to load feedback",
+          description: msg ||"Failed to delete category",
           variant: "destructive",
         })
       } finally {

@@ -1,9 +1,7 @@
 "use client"
-
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Eye, ShoppingCart, CreditCard, Calendar } from "lucide-react"
-import { useStore } from "@/store"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -79,10 +77,11 @@ export default function OrdersPage() {
         description: "Order status updated successfully",
       })
       await loadOrders()
-    } catch (error) {
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Failed to update status";
       toast({
         title: "Error",
-        description: "Failed to update order status",
+        description: msg,
         variant: "destructive",
       })
     }

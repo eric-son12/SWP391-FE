@@ -1,4 +1,4 @@
-import { StoreGet, StoreSet } from "@/store"
+import { StoreSet } from "@/store"
 import axios from "@/utils/axiosConfig"
 import { Notification } from "@/types/notification"
 
@@ -19,7 +19,7 @@ export const initialNotification: NotificationState = {
   loading: false,
 }
 
-export function notificationActions(set: StoreSet, get: StoreGet): NotificationActions {
+export function notificationActions(set: StoreSet): NotificationActions {
   return {
     fetchNotifications: async () => {
       try {

@@ -90,19 +90,18 @@ export default function RolesPage() {
     }
   };
 
-  const permissionsByModule = roles.reduce((acc, role) => {
-    if (role.permissions) {
-      role.permissions.forEach((perm) => {
-        if (!acc[perm.module]) {
-          acc[perm.module] = [];
-        }
-        acc[perm.module].push(perm);
-      });
-    }
-    return acc;
-  }, {} as Record<string, Permission[]>);
+  // const permissionsByModule = roles.reduce((acc, role) => {
+  //   if (role.permissions) {
+  //     role.permissions.forEach((perm) => {
+  //       if (!acc[perm.module]) {
+  //         acc[perm.module] = [];
+  //       }
+  //       acc[perm.module].push(perm);
+  //     });
+  //   }
+  //   return acc;
+  // }, {} as Record<string, Permission[]>);
 
-  // Only admin can access this page.
   if (user?.role !== RoleUser.ADMIN) {
     return (
       <div className="flex h-[calc(100vh-16rem)] flex-col items-center justify-center">

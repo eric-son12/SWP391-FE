@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Eye } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { ChildDetailsModal } from "@/components/modals/ChildDetail"
+import { ApiError } from "@/types/error"
 
 export default function UsersManagementPage() {
   const { toast } = useToast()
@@ -30,7 +31,7 @@ export default function UsersManagementPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<number | null>(null)
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true)
       const token = localStorage.getItem("token")
@@ -39,20 +40,22 @@ export default function UsersManagementPage() {
       })
       const data: Child[] = resp.data.result || resp.data || []
       setUsers(data)
-    } catch (error) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      const msg = apiError?.response?.data?.message || apiError?.message || "Failed to load users";
       toast({
         title: "Error",
-        description: "Failed to load users",
+        description: msg,
         variant: "destructive",
       })
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     loadUsers()
-  }, [toast])
+  }, [loadUsers])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -78,17 +81,16 @@ export default function UsersManagementPage() {
   const handleDelete = async () => {
     if (!userToDelete) return
     try {
-      // If there's an API endpoint to delete the user, call it here.
-      // For now, just remove from local state:
       setUsers((prev) => prev.filter((user) => user.childId !== userToDelete))
       toast({
         title: "Success",
         description: "User deleted successfully",
       })
-    } catch (error) {
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Failed to delete user";
       toast({
         title: "Error",
-        description: "Failed to delete user",
+        description: msg,
         variant: "destructive",
       })
     } finally {
