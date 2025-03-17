@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { devtools, persist } from "zustand/middleware";
 import { Draft } from "immer";
 import { initialLoading, LoadingState } from "./store/loading";
 import {
@@ -7,41 +8,48 @@ import {
   profileActions,
   ProfileActions,
   ProfileState,
-} from "./store/profile";
-import {
-  initialUsers,
-  usersActions,
-  UsersActions,
-  UsersState,
-} from "./store/users";
+} from "@/store/profile";
 import {
   initialNotification,
   NotificationActions,
   notificationActions,
   NotificationState,
-} from "./store/notification";
+} from "@/store/notification";
+import { initialManagement, managementActions, ManagementActions, ManagementState } from "./store/management";
+import { initialProduct, ProductActions, productActions, ProductState } from "./store/product";
 
 export interface State {
   loading: LoadingState;
   notification: NotificationState;
   profile: ProfileState;
-  users: UsersState;
+  management: ManagementState;
+  product: ProductState;
 }
 
-export type Actions = ProfileActions & UsersActions & NotificationActions;
+export type StoreSet = {
+  <U>(f: (state: Draft<State>) => U, replace?: false, action?: string): void;
+  <U>(f: (state: Draft<State>) => U, replace: true, action?: string): void;
+};
 
+export type Actions = ProfileActions & NotificationActions & ManagementActions & ProductActions;
 export type Store = State & Actions;
 export type StoreGet = () => Store;
-export type StoreSet = (f: (state: Draft<State>) => void) => void;
 
-export const useStore = create<Store, [["zustand/immer", never]]>(
-  immer((set, get) => ({
-    profile: initialProfile,
-    ...profileActions(set, get),
-    users: initialUsers,
-    ...usersActions(set, get),
-    notification: initialNotification,
-    ...notificationActions(set, get),
-    loading: initialLoading,
-  }))
+export const useStore = create<Store>()(
+  devtools(
+    persist(
+      immer((set, get) => ({
+        profile: initialProfile,
+        ...profileActions(set, get),
+        notification: initialNotification,
+        ...notificationActions(set, get),
+        management: initialManagement,
+        ...managementActions(set, get),
+        product: initialProduct,
+        ...productActions(set, get),
+        loading: initialLoading,
+      })),
+      { name: "zustand-store"}
+    )
+  )
 );

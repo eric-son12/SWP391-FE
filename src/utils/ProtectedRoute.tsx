@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
@@ -9,7 +10,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({
   children,
   isAllowed,
-  redirectPath = "/login",
+  redirectPath = "/",
 }: ProtectedRouteProps) => {
   if (!isAllowed) {
     return <Navigate to={redirectPath} />;
