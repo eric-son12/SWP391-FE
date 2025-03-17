@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash2, Plus, Tag } from "lucide-react"
 import { useStore } from "@/store"
@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Category } from "@/types/category"
-import axios from "@/utils/axiosConfig";
 import { useToast } from "@/hooks/use-toast"
 import { CategoryModal } from "@/components/modals/CategoryModal"
+import Image from "next/image"
 
 export default function CategoriesPage() {
   const { fetchCategories, deleteCategory } = useStore.getState()
@@ -21,12 +21,12 @@ export default function CategoriesPage() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       setLoading(true)
       const data = await fetchCategories()
       setCategories(data)
-    } catch (error) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: "Failed to load categories",
@@ -35,11 +35,11 @@ export default function CategoriesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [fetchCategories, toast])
 
   useEffect(() => {
     loadCategories()
-  }, [toast])
+  }, [loadCategories])
 
   const handleEdit = (category: Category) => {
     setSelectedCategory(category)
@@ -54,10 +54,11 @@ export default function CategoriesPage() {
         description: "Category deleted successfully",
       })
       await loadCategories()
-    } catch (error) {
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Failed to delete category";
       toast({
-        title: "Error",
-        description: "Failed to delete category",
+        title: "Error", 
+        description: msg,
         variant: "destructive",
       })
     }
@@ -81,9 +82,11 @@ export default function CategoriesPage() {
         return (
           <div className="flex items-center">
             <div className="h-10 w-10 overflow-hidden rounded-md border">
-              <img
+              <Image
                 src={imageName || '/images/placeholder.webp'}
                 alt={imageName}
+                width={40}
+                height={40}
                 className="h-full w-full object-cover"
               />
             </div>

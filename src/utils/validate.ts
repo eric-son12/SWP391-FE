@@ -9,7 +9,7 @@ export class Validate {
   }
 }
 
-export function parseJWT(token: string): any {
+export function parseJWT(token: string): string {
   try {
     const base64Url = token.split('.')[1];
     if (!base64Url) {

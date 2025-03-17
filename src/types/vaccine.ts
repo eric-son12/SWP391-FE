@@ -1,9 +1,9 @@
 export interface Vaccine {
-  category: any
+  category: string
   id: number
   title: string
   description?: string
-  schedule: any
+  schedule: string
   vaccine_age?: string
   price: number
   stock: number

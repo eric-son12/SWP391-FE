@@ -8,11 +8,8 @@ import {
   ListChecks,
   Layers,
   BadgeCheck,
-  FolderPlus,
   Bell,
   FileText,
-  History,
-  TrendingUp,
   MessageSquare
 } from "lucide-react";
 

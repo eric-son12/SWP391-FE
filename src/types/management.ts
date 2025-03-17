@@ -6,7 +6,6 @@ export interface Role {
 }
 
 export interface Permission {
-  module: any
   id: number
   name: string
   description: string
