@@ -572,19 +572,76 @@ __turbopack_context__.s({
     "initialNotification": (()=>initialNotification),
     "notificationActions": (()=>notificationActions)
 });
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/utils/axiosConfig.ts [app-ssr] (ecmascript)");
+;
 const initialNotification = {
-    data: []
+    notifications: [],
+    loading: false
 };
 function notificationActions(set, get) {
     return {
-        addNotification: (notification)=>{
-            set((state)=>{
-                state.notification.data.push(notification);
-            });
+        fetchNotifications: async ()=>{
+            try {
+                set((state)=>{
+                    state.notification.loading = true;
+                });
+                const token = localStorage.getItem("token");
+                const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/notification/notifications", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = response.data.result || response.data || [];
+                set((state)=>{
+                    state.notification.notifications = data;
+                });
+            } catch (error) {
+                console.error("Failed to fetch notifications", error);
+            } finally{
+                set((state)=>{
+                    state.notification.loading = false;
+                });
+            }
         },
-        clearNotification: ()=>{
+        markAsRead: async (id)=>{
+            try {
+                const token = localStorage.getItem("token");
+                await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(`/notification/notifications/${id}/read`, null, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                set((state)=>{
+                    state.notification.notifications = state.notification.notifications.map((notif)=>notif.id === id ? {
+                            ...notif,
+                            readStatus: true
+                        } : notif);
+                });
+            } catch (error) {
+                console.error("Failed to mark notification as read", error);
+            }
+        },
+        markAllAsRead: async ()=>{
+            try {
+                const token = localStorage.getItem("token");
+                await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put("/notification/notifications/read-all", null, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                set((state)=>{
+                    state.notification.notifications = state.notification.notifications.map((notif)=>({
+                            ...notif,
+                            readStatus: true
+                        }));
+                });
+            } catch (error) {
+                console.error("Failed to mark all notifications as read", error);
+            }
+        },
+        setNotifications: (notifications)=>{
             set((state)=>{
-                state.notification.data = [];
+                state.notification.notifications = notifications;
             });
         }
     };

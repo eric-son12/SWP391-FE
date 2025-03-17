@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Bell, ChevronDown, LogOut } from "lucide-react"
 import { useStore } from "@/store"
@@ -14,70 +14,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import axios from "@/utils/axiosConfig"
-import { Notification } from "@/types/notification"
 
 export function Header() {
   const router = useRouter()
-  const { user } = useStore.getState().profile
-  const { logout } = useStore.getState()
+  const { user } = useStore((state) => state.profile)
+  const logout = useStore((state) => state.logout)
 
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [loadingNotifications, setLoadingNotifications] = useState(false)
-
-  // Fetch all notifications
-  const fetchNotifications = async () => {
-    try {
-      setLoadingNotifications(true)
-      const token = localStorage.getItem("token")
-      const response = await axios.get("/notification/notifications", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      setNotifications(response.data || [])
-    } catch (error) {
-      console.error("Failed to fetch notifications", error)
-    } finally {
-      setLoadingNotifications(false)
-    }
-  }
+  const notifications = useStore((state) => state.notification.notifications) || [];
+  const loadingNotifications = useStore((state) => state.notification.loading)
+  const fetchNotifications = useStore((state) => state.fetchNotifications)
+  const markAsRead = useStore((state) => state.markAsRead)
+  const markAllAsRead = useStore((state) => state.markAllAsRead)
 
   useEffect(() => {
     fetchNotifications()
-  }, [])
-
-  // Mark a single notification as read
-  const markAsRead = async (id: number) => {
-    try {
-      const token = localStorage.getItem("token")
-      await axios.put(
-        `/notification/notifications/${id}/read`,
-        { id },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      setNotifications((prev) =>
-        prev.map((notif) =>
-          notif.id === id ? { ...notif, readStatus: true } : notif
-        )
-      )
-    } catch (error) {
-      console.error("Failed to mark notification as read", error)
-    }
-  }
-
-  // Mark all notifications as read, then refetch
-  const markAllAsRead = async () => {
-    try {
-      const token = localStorage.getItem("token")
-      await axios.put("/notification/notifications/read-all", null, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      await fetchNotifications()
-    } catch (error) {
-      console.error("Failed to mark all as read", error)
-    }
-  }
+  }, [fetchNotifications])
 
   const unreadCount = notifications.filter((n) => !n.readStatus).length
 
@@ -112,7 +63,7 @@ export function Header() {
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0 text-xs text-blue-600"
-                  onClick={markAllAsRead}
+                  onClick={() => markAllAsRead()}
                 >
                   Mark all as read
                 </Button>
