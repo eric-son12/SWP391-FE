@@ -1,1 +1,8 @@
-{}
+{
+  "/(dashboard)/children/page": "app/(dashboard)/children/page.js",
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/(dashboard)/notifications/page": "app/(dashboard)/notifications/page.js",
+  "/(dashboard)/parents/page": "app/(dashboard)/parents/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
+}
