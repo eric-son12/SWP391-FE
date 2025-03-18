@@ -10,6 +10,7 @@ __turbopack_context__.s({
     "FeedbackStatus": (()=>FeedbackStatus),
     "GenderUser": (()=>GenderUser),
     "PaymentStatus": (()=>PaymentStatus),
+    "RelationshipType": (()=>RelationshipType),
     "RoleUser": (()=>RoleUser)
 });
 var RoleUser = /*#__PURE__*/ function(RoleUser) {
@@ -43,6 +44,13 @@ var FeedbackStatus = /*#__PURE__*/ function(FeedbackStatus) {
     FeedbackStatus["HIDDEN"] = "HIDDEN";
     FeedbackStatus["FLAGGED"] = "FLAGGED";
     return FeedbackStatus;
+}({});
+var RelationshipType = /*#__PURE__*/ function(RelationshipType) {
+    RelationshipType["BROTHER_SISTER"] = "ANH_CHI";
+    RelationshipType["UNCLE_AUNT"] = "CHU_THIEM";
+    RelationshipType["PARENTS"] = "CHA_ME";
+    RelationshipType["GRANDMASTERS"] = "ONG_BA";
+    return RelationshipType;
 }({});
 }}),
 "[project]/src/components/ui/card.tsx [app-ssr] (ecmascript)": ((__turbopack_context__) => {

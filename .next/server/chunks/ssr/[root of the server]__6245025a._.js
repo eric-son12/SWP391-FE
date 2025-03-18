@@ -1325,9 +1325,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$product$2e$t
 ;
 const useStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$react$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["create"])()((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["devtools"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["persist"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2f$immer$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["immer"])((set, get)=>({
         profile: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$profile$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initialProfile"],
-        ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$profile$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["profileActions"])(set, get),
+        ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$profile$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["profileActions"])(set),
         notification: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$notification$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initialNotification"],
-        ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$notification$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["notificationActions"])(set, get),
+        ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$notification$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["notificationActions"])(set),
         management: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$management$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initialManagement"],
         ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$management$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["managementActions"])(set, get),
         product: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$product$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initialProduct"],

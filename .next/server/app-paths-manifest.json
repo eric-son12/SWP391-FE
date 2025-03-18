@@ -1,5 +1,17 @@
 {
+  "/(dashboard)/categories/page": "app/(dashboard)/categories/page.js",
+  "/(dashboard)/children/page": "app/(dashboard)/children/page.js",
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/(dashboard)/feedback/page": "app/(dashboard)/feedback/page.js",
+  "/(dashboard)/notifications/page": "app/(dashboard)/notifications/page.js",
   "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
+  "/(dashboard)/parents/page": "app/(dashboard)/parents/page.js",
+  "/(dashboard)/posts/page": "app/(dashboard)/posts/page.js",
+  "/(dashboard)/roles-premission/page": "app/(dashboard)/roles-premission/page.js",
+  "/(dashboard)/staff-management/page": "app/(dashboard)/staff-management/page.js",
+  "/(dashboard)/users-management/page": "app/(dashboard)/users-management/page.js",
   "/(dashboard)/vaccines/page": "app/(dashboard)/vaccines/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
 }
