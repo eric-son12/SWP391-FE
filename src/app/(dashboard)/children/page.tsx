@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Eye } from "lucide-react"
+import { Eye, UserPlus } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -114,7 +114,9 @@ export default function UsersManagementPage() {
     {
       accessorKey: "gender",
       header: "Gender",
-      cell: ({row}) => row.getValue("gender") || "-"
+      cell: ({row}) => {
+        return <span className="capitalize">{row.getValue("gender") || "-"}</span>
+      }
     },
     {
       id: "actions",
@@ -148,12 +150,11 @@ export default function UsersManagementPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">User Management</h1>
-        {/* If you want an "Add User" button, uncomment:
+        <h1 className="text-2xl font-bold">Children Management</h1>
         <Button onClick={() => {}}>
           <UserPlus className="mr-2 h-4 w-4" />
-          Add User
-        </Button> */}
+          Add Child
+        </Button>
       </div>
 
       <Card>

@@ -113,7 +113,7 @@ export default function UsersManagementPage() {
       accessorKey: "gender",
       header: "Gender",
       cell: ({row}) => {
-        return <span className="capitalize">{row.getValue("gender")}</span>
+        return <span className="capitalize">{row.getValue("gender") || "-"}</span>
       }
     },
     {
