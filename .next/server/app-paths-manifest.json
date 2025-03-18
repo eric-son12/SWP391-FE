@@ -1,5 +1,4 @@
 {
-  "/(dashboard)/roles-premission/page": "app/(dashboard)/roles-premission/page.js",
   "/(dashboard)/staff-management/page": "app/(dashboard)/staff-management/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js"
 }
