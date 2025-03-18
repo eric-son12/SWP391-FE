@@ -62,7 +62,6 @@ export default function StaffManagementPage() {
     const staff = staffMembers.find(s => s.id === id)
     if (staff) {
       setSelectedStaff(staff)
-      setDefaultEdit(false)
       setIsDetailsModalOpen(true)
     }
   }
