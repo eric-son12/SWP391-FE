@@ -1419,8 +1419,7 @@ function UsersManagementPage() {
             const data = resp.data.result || resp.data || [];
             setUsers(data);
         } catch (error) {
-            const apiError = error;
-            const msg = apiError?.response?.data?.message || apiError?.message || "Failed to load users";
+            const msg = error instanceof Error ? error.message : "Failed to load users";
             toast({
                 title: "Error",
                 description: msg,
@@ -1450,10 +1449,6 @@ function UsersManagementPage() {
             setSelectedUser(user);
             setIsDetailsModalOpen(true);
         }
-    };
-    const confirmDelete = (id)=>{
-        setUserToDelete(id);
-        setDeleteDialogOpen(true);
     };
     const handleDelete = async ()=>{
         if (!userToDelete) return;
@@ -1512,17 +1507,17 @@ function UsersManagementPage() {
                             className: "h-4 w-4"
                         }, void 0, false, {
                             fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                            lineNumber: 134,
+                            lineNumber: 128,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                        lineNumber: 133,
+                        lineNumber: 127,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                    lineNumber: 132,
+                    lineNumber: 126,
                     columnNumber: 11
                 }, this);
             }
@@ -1538,12 +1533,12 @@ function UsersManagementPage() {
                     children: "User Management"
                 }, void 0, false, {
                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                    lineNumber: 157,
+                    lineNumber: 151,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                lineNumber: 156,
+                lineNumber: 150,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1553,12 +1548,12 @@ function UsersManagementPage() {
                             children: "All Users"
                         }, void 0, false, {
                             fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                            lineNumber: 167,
+                            lineNumber: 161,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                        lineNumber: 166,
+                        lineNumber: 160,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1568,12 +1563,12 @@ function UsersManagementPage() {
                                 children: "Loading users..."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                                lineNumber: 172,
+                                lineNumber: 166,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                            lineNumber: 171,
+                            lineNumber: 165,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$data$2d$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DataTable"], {
                             columns: columns,
@@ -1582,18 +1577,18 @@ function UsersManagementPage() {
                             searchPlaceholder: "Search by name..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                            lineNumber: 175,
+                            lineNumber: 169,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                        lineNumber: 169,
+                        lineNumber: 163,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                lineNumber: 165,
+                lineNumber: 159,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$ChildDetail$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ChildDetailsModal"], {
@@ -1602,7 +1597,7 @@ function UsersManagementPage() {
                 user: selectedUser
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                lineNumber: 186,
+                lineNumber: 180,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -1616,20 +1611,20 @@ function UsersManagementPage() {
                                     children: "Are you sure?"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                                    lineNumber: 195,
+                                    lineNumber: 189,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
                                     children: "This action cannot be undone. This will permanently delete the user and remove their data from our servers."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                                    lineNumber: 196,
+                                    lineNumber: 190,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                            lineNumber: 194,
+                            lineNumber: 188,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -1638,7 +1633,7 @@ function UsersManagementPage() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 196,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -1647,30 +1642,30 @@ function UsersManagementPage() {
                                     children: "Delete"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                                    lineNumber: 203,
+                                    lineNumber: 197,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                            lineNumber: 201,
+                            lineNumber: 195,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                    lineNumber: 193,
+                    lineNumber: 187,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-                lineNumber: 192,
+                lineNumber: 186,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/(dashboard)/children/page.tsx",
-        lineNumber: 155,
+        lineNumber: 149,
         columnNumber: 5
     }, this);
 }

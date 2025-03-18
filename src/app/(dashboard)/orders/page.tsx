@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import type { Order } from "@/types/order"
 import { OrderDetailsModal } from "@/components/modals/OrderDetail"
 import axios from "@/utils/axiosConfig"
-import OrderStatusSelect from "@/components/OrderStatusSelect"
 
 export default function OrdersPage() {
   const { toast } = useToast()

@@ -41,8 +41,7 @@ export default function UsersManagementPage() {
       const data: Child[] = resp.data.result || resp.data || []
       setUsers(data)
     } catch (error: unknown) {
-      const apiError = error as ApiError;
-      const msg = apiError?.response?.data?.message || apiError?.message || "Failed to load users";
+      const msg = error instanceof Error ? error.message : "Failed to load users";
       toast({
         title: "Error",
         description: msg,
@@ -71,11 +70,6 @@ export default function UsersManagementPage() {
       setSelectedUser(user)
       setIsDetailsModalOpen(true)
     }
-  }
-
-  const confirmDelete = (id: number) => {
-    setUserToDelete(id)
-    setDeleteDialogOpen(true)
   }
 
   const handleDelete = async () => {

@@ -14,7 +14,6 @@ const generateMockData = (days: number) => {
     const date = new Date(now)
     date.setDate(date.getDate() - i)
 
-    // Random values for each metric
     const users = Math.floor(Math.random() * 15) + 5
     const income = Math.floor(Math.random() * 1500) + 500
     const vaccines = Math.floor(Math.random() * 40) + 10

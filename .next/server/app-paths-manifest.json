@@ -1,6 +1,5 @@
 {
-  "/(dashboard)/children/page": "app/(dashboard)/children/page.js",
-  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
+  "/(dashboard)/roles-premission/page": "app/(dashboard)/roles-premission/page.js",
+  "/(dashboard)/staff-management/page": "app/(dashboard)/staff-management/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }
