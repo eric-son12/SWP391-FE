@@ -14,6 +14,8 @@ import type { Order } from "@/types/order"
 import { useEffect, useState } from "react"
 import axios from "@/utils/axiosConfig"
 import { toast } from "@/hooks/use-toast"
+import { DateTimePicker } from "@/components/DateTimePicker"
+import { format } from "date-fns"
 
 interface OrderDetailsModalProps {
   order: Order | null
@@ -77,33 +79,44 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     }
   }
 
+  const displayDateTime = (dateString: string) => {
+    const date = new Date(dateString)
+    return format(date, "yyyy-MM-dd'T'HH:mm:ss")
+  }
+  
   const VaccinationDateCell = ({ item }: { item: any }) => {
     const [editing, setEditing] = useState(false)
-    const [selectedDate, setSelectedDate] = useState(
-      item.vaccinationDate ? item.vaccinationDate.substring(0, 10) : ""
+    const [tempDate, setTempDate] = useState<Date | undefined>(
+      item.vaccinationDate ? new Date(item.vaccinationDate) : undefined
     )
-
-    const handleOk = async () => {
+  
+    const handleSetDate = async (newDate: Date | undefined) => {
+      if (!newDate) return
       try {
         const token = localStorage.getItem("token")
+  
+        const formattedDate = format(newDate, "yyyy-MM-dd'T'HH:mm:ss")
+  
         await axios.put(
           "/order/update-vaccination-date-mail",
-          {
-            orderDetailId: item.orderdetialid,
-            vaccinationDate: selectedDate,
-          },
+          null,
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              orderDetailId: item.orderdetialid,
+              vaccinationDate: formattedDate,
+            },
           }
         )
+  
+        item.vaccinationDate = formattedDate
+  
         toast({
           title: "Success",
           description: "Vaccination date updated successfully",
         })
-        item.vaccinationDate = selectedDate
-        setEditing(false)
       } catch (error) {
         toast({
           title: "Error",
@@ -112,7 +125,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
         })
       }
     }
-
+  
     if (!item.vaccinationDate && !editing) {
       return (
         <div className="flex items-center gap-2">
@@ -123,30 +136,28 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
         </div>
       )
     }
-
+  
     if (!editing) {
       return (
         <div className="flex items-center gap-2">
-          <span>{formatDate(item.vaccinationDate)}</span>
+          <span>{displayDateTime(item.vaccinationDate)}</span>
           <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
             Edit
           </button>
         </div>
       )
     }
-
+  
     return (
-      <div className="flex items-center gap-2">
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          className="border p-1"
-        />
-        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={handleOk}>
-          OK
-        </button>
-      </div>
+      <DateTimePicker
+        date={tempDate}
+        setDate={async (pickedDate) => {
+          await handleSetDate(pickedDate)
+        }}
+        onClose={() => {
+          setEditing(false)
+        }}
+      />
     )
   }
 
