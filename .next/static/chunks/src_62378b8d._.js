@@ -685,10 +685,33 @@ function notificationActions(set) {
                 });
             }
         },
+        fetchSendedNotifications: async ()=>{
+            try {
+                set((state)=>{
+                    state.notification.loading = true;
+                });
+                const token = localStorage.getItem("token");
+                const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get("/notification/notifications/sent", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = response.data.result || response.data || [];
+                set((state)=>{
+                    state.notification.notifications = data;
+                });
+            } catch (error) {
+                console.error("Failed to fetch notifications", error);
+            } finally{
+                set((state)=>{
+                    state.notification.loading = false;
+                });
+            }
+        },
         markAsRead: async (id)=>{
             try {
                 const token = localStorage.getItem("token");
-                await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].put(`/notification/notifications/${id}/read`, null, {
+                await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$axiosConfig$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].put(`/notification/notifications/${id}/read`, id, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -1965,7 +1988,7 @@ function DashboardPage() {
         },
         {
             title: "Revenue Today",
-            value: todayData ? `${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Validate"].formatPrice(todayData.revenueInDay)}vnđ` : "-",
+            value: todayData ? `${__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Validate"].formatPrice(todayData.revenueInDay)}` : "-",
             icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$dollar$2d$sign$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__DollarSign$3e$__["DollarSign"],
             color: "text-purple-600"
         }

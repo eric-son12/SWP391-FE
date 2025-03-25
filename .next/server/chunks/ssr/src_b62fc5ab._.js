@@ -2586,7 +2586,7 @@ function VaccinesPage() {
             header: "Vaccine Name"
         },
         {
-            accessorKey: "category.name",
+            accessorKey: "categoryName",
             header: "Category Name"
         },
         {
@@ -2601,11 +2601,11 @@ function VaccinesPage() {
             }
         },
         {
-            accessorKey: "stock",
-            header: "Stock",
+            accessorKey: "quantity",
+            header: "Quantity",
             cell: ({ row })=>{
-                const stock = row.getValue("stock");
-                return stock;
+                const quantity = row.getValue("quantity");
+                return quantity;
             }
         },
         {
