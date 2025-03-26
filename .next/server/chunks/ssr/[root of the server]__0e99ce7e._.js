@@ -206,7 +206,10 @@ class Validate {
         return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail);
     }
     static formatPrice(price) {
-        return new Intl.NumberFormat("vi-VN").format(price);
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND"
+        }).format(price);
     }
 }
 function parseJWT(token) {
