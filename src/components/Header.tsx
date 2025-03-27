@@ -21,7 +21,6 @@ export function Header() {
   const logout = useStore((state) => state.logout)
 
   const notifications = useStore((state) => state.notification.notifications) || [];
-  const loadingNotifications = useStore((state) => state.notification.loading)
   const fetchNotifications = useStore((state) => state.fetchNotifications)
   const markAsRead = useStore((state) => state.markAsRead)
   const markAllAsRead = useStore((state) => state.markAllAsRead)
@@ -70,7 +69,7 @@ export function Header() {
               )}
             </div>
             <div className="max-h-[300px] overflow-y-auto">
-              {notifications.length > 0 ? (
+              {notifications.length > 0 && (
                 notifications.map((notification) => (
                   <DropdownMenuItem
                     key={notification.id}
@@ -90,10 +89,6 @@ export function Header() {
                     </span>
                   </DropdownMenuItem>
                 ))
-              ) : (
-                <div className="p-4 text-center text-gray-500">
-                  {loadingNotifications ? "Loading..." : "No notifications"}
-                </div>
               )}
             </div>
             <DropdownMenuSeparator />
