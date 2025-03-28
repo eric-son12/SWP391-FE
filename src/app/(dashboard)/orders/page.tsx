@@ -42,7 +42,7 @@ export default function OrdersPage() {
     loadOrders()
   }, [loadOrders])
 
-  const handleViewOrder = (orderId: number) => {
+  const handleViewOrder = (orderId: string) => {
     const order = orders.find((o) => o.orderId === orderId)
     if (order) {
       setSelectedOrder(order)
@@ -112,7 +112,7 @@ export default function OrdersPage() {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        const orderId = row.getValue("orderId") as number
+        const orderId = row.getValue("orderId") as string
 
         return (
           <Button variant="outline" size="sm" onClick={() => handleViewOrder(orderId)}>

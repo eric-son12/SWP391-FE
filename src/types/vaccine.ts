@@ -1,7 +1,4 @@
-import { Category } from "./category";
-
 export interface Vaccine {
-  category: Category
   id: number,
   title: string,
   description: string,

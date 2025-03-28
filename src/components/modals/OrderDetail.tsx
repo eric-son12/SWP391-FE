@@ -1,5 +1,5 @@
 "use client"
-import { Mail, Phone, User, CreditCard, Clock } from "lucide-react"
+import { Mail, Phone, User, CreditCard, Clock, CalendarDays } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -69,10 +69,10 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     switch (status.toLowerCase()) {
       case "success":
         return <Badge className="bg-green-100 text-green-800">Completed</Badge>
-      case "pending":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
-      case "in progress":
-        return <Badge className="bg-blue-100 text-blue-800">Processing</Badge>
+      case "paid":
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>
+      case "canceled_partial":
+        return <Badge className="bg-red-100 text-red-800">Canceled Partial</Badge>
       case "cancelled":
         return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
       default:
@@ -86,6 +86,8 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
   }
   
   const VaccinationDateCell = ({ item }: { item: any }) => {
+    console.log("item: ", item)
+
     const [editing, setEditing] = useState(false)
     const [tempDate, setTempDate] = useState<Date | undefined>(
       item.vaccinationDate ? new Date(item.vaccinationDate) : undefined
@@ -106,7 +108,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
               Authorization: `Bearer ${token}`,
             },
             params: {
-              orderDetailId: item.orderdetialid,
+              orderDetailId: item.id,
               vaccinationDate: formattedDate,
             },
           }
@@ -130,9 +132,8 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     if (!item.vaccinationDate && !editing) {
       return (
         <div className="flex items-center gap-2">
-          <span>-</span>
           <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
-            Set Date
+            Set New Date
           </button>
         </div>
       )
@@ -185,13 +186,20 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Order Summary</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="space-y-1">
                 <p className="text-xs text-gray-500">Payment Method</p>
                 <div className="flex items-center gap-1">
                   <CreditCard className="h-4 w-4 text-gray-500" />
                   <span className="text-sm">{order.paymentType}</span>
                 </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-gray-500">Order Date</p>
+                <p className="flex items-center gap-1">
+                  <CalendarDays className="h-4 w-4 text-gray-500"/>
+                  <span className="text-sm">{order.orderDate}</span>
+                </p>
               </div>
               <div className="space-y-1">
                 <p className="text-xs text-gray-500">Total Amount</p>
@@ -210,7 +218,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                   <AccordionTrigger className="ml-4">
                     {child.childName}
                   </AccordionTrigger>
-                  <AccordionContent className="m-2">
+                  <AccordionContent className="pb-0 mx-2 mb-2">
                     {child.vaccines && child.vaccines.length > 0 ? (
                       <div className="rounded-md border">
                         <Table>
