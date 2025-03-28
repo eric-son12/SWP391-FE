@@ -11,12 +11,14 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { Order } from "@/types/order"
 import { useEffect, useState } from "react"
 import axios from "@/utils/axiosConfig"
 import { toast } from "@/hooks/use-toast"
 import { DateTimePicker } from "@/components/DateTimePicker"
 import { format } from "date-fns"
+import { VaccineOrder, VaccineStatus } from "@/types/vaccine"
 
 interface OrderDetailsModalProps {
   order: Order | null
@@ -84,10 +86,45 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     const date = new Date(dateString)
     return format(date, "yyyy-MM-dd'T'HH:mm:ss")
   }
+
+  const updateVaccineStatus = async (id: string, newStatus: VaccineStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(`/order/${id}/status`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            orderDetailId: id,
+            status: newStatus,
+          },
+        });
+      toast({
+        title: "Success",
+        description: "Status updated successfully",
+      });
+      setOrderDetail((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          orderDetails: prev.orderDetails.map((od) => ({
+            ...od,
+            vaccines: od.vaccines.map((v) =>
+              v.id.toString() === id ? { ...v, status: newStatus } : v
+            ),
+          })),
+        };
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update status",
+        variant: "destructive",
+      });
+    }
+  };
   
   const VaccinationDateCell = ({ item }: { item: any }) => {
-    console.log("item: ", item)
-
     const [editing, setEditing] = useState(false)
     const [tempDate, setTempDate] = useState<Date | undefined>(
       item.vaccinationDate ? new Date(item.vaccinationDate) : undefined
@@ -230,17 +267,40 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                               <TableHead>Date</TableHead>
                             </TableRow>
                           </TableHeader>
+
                           <TableBody>
-                            {child.vaccines.map((vaccine, idx) => (
-                              <TableRow key={idx}>
-                                <TableCell className="font-medium">{vaccine.name}</TableCell>
-                                <TableCell>{formatPrice(vaccine.price)}</TableCell>
-                                <TableCell>{vaccine.status}</TableCell>
-                                <TableCell>
-                                  <VaccinationDateCell item={vaccine} />
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                            {child.vaccines.map((vaccine, idx) => {
+                            
+                              return (<TableRow key={idx}>
+                                  <TableCell className="font-medium">{vaccine.name}</TableCell>
+                                  <TableCell>{formatPrice(vaccine.price)}</TableCell>
+                                  <TableCell>
+                                    <Select
+                                      value={vaccine.status}
+                                      onValueChange={(newStatus: VaccineStatus) =>
+                                        updateVaccineStatus(vaccine.id.toString(), newStatus)
+                                      }
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select status" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {
+                                          Object.entries(VaccineStatus).map(([key, value]) => (
+                                            <SelectItem key={key} value={key}>
+                                              {value}
+                                            </SelectItem>
+                                          ))
+                                        }
+                                      </SelectContent>
+                                    </Select>
+                                  </TableCell>
+                                  <TableCell>
+                                    <VaccinationDateCell item={vaccine} />
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            )}
                           </TableBody>
                         </Table>
                       </div>

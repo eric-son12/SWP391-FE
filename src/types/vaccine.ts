@@ -26,13 +26,13 @@ export interface VaccineOrder {
   id: number
   name: string
   price: number
-  status: "DA_HUY"
+  status: string
 }
 
 export enum VaccineStatus {
-  DA_HUY = "DA_HUY",
-  CHUA_TIEM = "CHUA_TIEM",
-  DA_TIEM = "DA_TIEM",
-  DA_LEN_LICH = "DA_LEN_LICH",
-  QUA_HAN = "QUA_HAN",
+  DA_LEN_LICH = "Đã lên lịch",
+  DA_TIEM = "Đã tiêm",
+  CHUA_TIEM = "Chưa tiêm",
+  QUA_HAN = "Quá hạn",
+  DA_HUY = "Đã huỷ",
 }
