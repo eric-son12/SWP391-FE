@@ -73,7 +73,7 @@ export function Header() {
                 notifications.map((notification) => (
                   <DropdownMenuItem
                     key={notification.id}
-                    className={`flex cursor-pointer flex-col p-3 hover:bg-gray-50 ${
+                    className={`flex items-start cursor-pointer flex-col p-3 hover:bg-gray-50 ${
                       !notification.readStatus ? "bg-blue-50" : ""
                     }`}
                     onClick={() => markAsRead(notification.id)}
