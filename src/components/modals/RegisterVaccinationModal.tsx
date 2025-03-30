@@ -30,7 +30,6 @@ import { DateTimePicker } from "../DateTimePicker"
 import { Vaccine } from "@/types/vaccine"
 import { Validate } from "@/utils/validate"
 
-/** Each child's data + an array of selected vaccines */
 interface ChildSelection {
   childId: number
   childName: string
@@ -46,56 +45,47 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
   const { allUsers } = useStore((state) => state.profile)
   const allVaccines = useStore((state) => state.product.vaccines) as Vaccine[]
 
-  // ================== Parent selection ==================
   const [selectedParentId, setSelectedParentId] = useState<number | "">("")
   const [selectedParent, setSelectedParent] = useState<Patient | null>(null)
   const [parentPopoverOpen, setParentPopoverOpen] = useState(false)
 
-  // Guardian info
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [mobileNo, setMobileNo] = useState("")
 
-  // ================== Final Child + Vaccine List ==================
   const [selectedList, setSelectedList] = useState<ChildSelection[]>([])
 
-  // ================== Temp child being edited ==================
   const [tempChildId, setTempChildId] = useState<number | "">("")
   const [tempChildName, setTempChildName] = useState("")
   const [tempChildVaccines, setTempChildVaccines] = useState<Vaccine[]>([])
   const [childPopoverOpen, setChildPopoverOpen] = useState(false)
   const [vaccinePopoverOpen, setVaccinePopoverOpen] = useState(false)
 
-  // ================== Searching States ==================
   const [searchTerm, setSearchTerm] = useState("") // parent search
   const [childSearch, setChildSearch] = useState("")
   const [vaccineSearch, setVaccineSearch] = useState("")
 
-  // ================== Vaccination Date & Confirmation ==================
   const [vaccinationDate, setVaccinationDate] = useState<Date | undefined>()
 
-  // We'll show a confirm dialog with final summary
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
-  // 1) parent popup filtering
   const filteredUsers = useMemo(() => {
     return (
       allUsers?.filter(
         (user) =>
-          user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.id.toString().includes(searchTerm)
+          user.id.toString().includes(searchTerm) || 
+          user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
       ) || []
     )
   }, [allUsers, searchTerm])
 
-  // 2) child popup filtering
   const usedChildIds = selectedList.map((c) => c.childId)
   const childFiltered = useMemo(() => {
     if (!selectedParent) return []
     return (
       selectedParent.children?.filter((child) => {
-        // Don't show if child is already in final selectedList
         if (usedChildIds.includes(child.childId)) return false
 
         const matchName =
@@ -107,7 +97,6 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
     )
   }, [selectedParent, childSearch, usedChildIds])
 
-  // 3) vaccine popup filtering
   const filteredVaccines = useMemo(() => {
     const results = allVaccines?.filter((v) => {
       if (tempChildVaccines.some((tv) => tv.id === v.id)) return false
@@ -121,10 +110,8 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
     return results
   }, [allVaccines, vaccineSearch, tempChildVaccines])
 
-  // ================== Load parent info if selected ==================
   useEffect(() => {
     if (!selectedParentId) {
-      // reset all
       setSelectedParent(null)
       setFirstName("")
       setLastName("")
@@ -153,7 +140,6 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
         setEmail(p.email || "")
         setMobileNo(p.phone || "")
 
-        // Clear previous child/vaccine selection
         setSelectedList([])
         setTempChildId("")
         setTempChildName("")
@@ -171,14 +157,12 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
     fetchUser()
   }, [selectedParentId, toast])
 
-  // ============== Child & Vaccine Helpers ==============
   const addVaccineToChild = (vaccine: Vaccine) => {
-    // automatically close the vaccine popover
     setVaccinePopoverOpen(false)
 
     setTempChildVaccines((prev) => {
       if (prev.find((x) => x.id === vaccine.id)) {
-        return prev // already in the list
+        return prev 
       }
       return [...prev, vaccine]
     })
@@ -334,7 +318,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                 <CommandGroup className="max-h-[300px] overflow-y-auto">
                   {filteredUsers.map((user) => (
                     <CommandItem
-                      key={user.id}
+                      key={`${user.id} ${user.username} ${user.fullname} ${user.phone}`}
                       value={user.id.toString()}
                       onSelect={() => {
                         setSelectedParentId(user.id)
@@ -446,20 +430,17 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                         value={vaccineSearch}
                         onValueChange={setVaccineSearch}
                       />
-                      <CommandList>
+                      <CommandList className="flex max-h-[250px] overflow-y-auto overscroll-contain">
                         <CommandEmpty>No vaccine found.</CommandEmpty>
-                        <CommandGroup className="max-h-[250px] overflow-y-auto">
+                        <CommandGroup className="flex w-[calc(60svw-4rem)]">
                           {filteredVaccines.map((v) => (
                             <CommandItem
                               key={v.id}
-                              value={String(v.id)}
+                              value={`${v.title} ${v.id}`}
                               onSelect={() => addVaccineToChild(v)}
                               className="flex items-center justify-between"
                             >
-                              <span className="flex">
-                                <p className="w-12">{v.id}</p>
-                                <p>{v.title}</p>
-                              </span>
+                              <p>{v.title}</p>
                               {Validate.formatPrice(v.price)}
                             </CommandItem>
                           ))}
@@ -470,7 +451,6 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                 </Popover>
               </div>
 
-              {/* Show selected vaccines for this child */}
               {tempChildVaccines.length > 0 && (
                 <div className="mt-2 space-y-2">
                   <p className="text-sm font-medium">Vaccines Selected:</p>
@@ -504,7 +484,6 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
               </div>
             </div>
 
-            {/* Final list of children */}
             {selectedList.length > 0 && (
               <div className="mt-4 space-y-2">
                 <Label>Children to Vaccinate</Label>
@@ -549,13 +528,11 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
           </>
         )}
 
-        {/* Vaccination Date */}
         <div className="my-4 space-y-2">
           <Label>Vaccination Date</Label>
           <DateTimePicker date={vaccinationDate} setDate={setVaccinationDate} showBtn={false} />
         </div>
 
-        {/* Action Buttons */}
         <div className="mt-6 flex justify-end gap-3">
           <Button variant="outline" onClick={onClose}>
             Cancel
@@ -570,7 +547,6 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
         </div>
       </DialogContent>
 
-      {/* ============ Confirmation Dialog ============ */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent>
           <DialogHeader>

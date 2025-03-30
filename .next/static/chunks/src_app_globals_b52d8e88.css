@@ -797,12 +797,16 @@
     height: 1.15rem;
   }
 
-  .h-\[80svh\] {
-    height: 80svh;
+  .h-\[250px\] {
+    height: 250px;
   }
 
   .h-\[300px\] {
     height: 300px;
+  }
+
+  .h-\[calc\(100\%-40px\)\] {
+    height: calc(100% - 40px);
   }
 
   .h-\[calc\(100vh-16rem\)\] {
@@ -859,6 +863,10 @@
 
   .max-h-\[300px\] {
     max-height: 300px;
+  }
+
+  .max-h-\[400px\] {
+    max-height: 400px;
   }
 
   .min-h-16 {
@@ -939,10 +947,6 @@
 
   .w-\[250px\] {
     width: 250px;
-  }
-
-  .w-\[300px\] {
-    width: 300px;
   }
 
   .w-\[calc\(60svw-4rem\)\] {
@@ -1298,6 +1302,14 @@
 
   .overflow-y-auto {
     overflow-y: auto;
+  }
+
+  .overscroll-auto {
+    overscroll-behavior: auto;
+  }
+
+  .overscroll-contain {
+    overscroll-behavior: contain;
   }
 
   .rounded {
@@ -1920,6 +1932,10 @@
     color: var(--color-gray-600);
   }
 
+  .text-gray-700 {
+    color: var(--color-gray-700);
+  }
+
   .text-gray-800 {
     color: var(--color-gray-800);
   }
@@ -2466,6 +2482,12 @@
       --tw-scale-y: 105%;
       --tw-scale-z: 105%;
       scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:cursor-pointer:hover {
+      cursor: pointer;
     }
   }
 
