@@ -1,5 +1,5 @@
 "use client"
-import { Mail, Phone, User, CreditCard, Clock, CalendarDays } from "lucide-react"
+import { Mail, Phone, User, CreditCard, Clock } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import axios from "@/utils/axiosConfig"
 import { toast } from "@/hooks/use-toast"
 import { DateTimePicker } from "@/components/DateTimePicker"
 import { format } from "date-fns"
-import { VaccineOrder, VaccineStatus } from "@/types/vaccine"
+import { VaccineStatus } from "@/types/vaccine"
 
 interface OrderDetailsModalProps {
   order: Order | null
@@ -84,7 +84,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
   const displayDateTime = (dateString: string) => {
     const date = new Date(dateString)
-    return format(date, "yyyy-MM-dd'T'HH:mm:ss")
+    return format(date, "yyyy-MM-dd HH:mm")
   }
 
   const updateVaccineStatus = async (id: string, newStatus: VaccineStatus) => {
@@ -127,7 +127,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
   const VaccinationDateCell = ({ item }: { item: any }) => {
     const [editing, setEditing] = useState(false)
     const [tempDate, setTempDate] = useState<Date | undefined>(
-      item.vaccinationDate ? new Date(item.vaccinationDate) : undefined
+      item.date ? new Date(item.date) : undefined
     )
   
     const handleSetDate = async (newDate: Date | undefined) => {
@@ -151,7 +151,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           }
         )
   
-        item.vaccinationDate = formattedDate
+        item.date = formattedDate
   
         toast({
           title: "Success",
@@ -166,11 +166,11 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
       }
     }
   
-    if (!item.vaccinationDate && !editing) {
+    if (!item.date && !editing) {
       return (
         <div className="flex items-center gap-2">
           <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
-            Set New Date
+            Set Date
           </button>
         </div>
       )
@@ -179,7 +179,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     if (!editing) {
       return (
         <div className="flex items-center gap-2">
-          <span>{displayDateTime(item.vaccinationDate)}</span>
+          <span>{displayDateTime(item.date)}</span>
           <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
             Edit
           </button>
@@ -199,7 +199,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
       />
     )
   }
-
+  
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] min-w-[60svw] overflow-y-auto">

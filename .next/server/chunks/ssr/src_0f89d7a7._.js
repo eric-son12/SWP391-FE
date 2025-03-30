@@ -2563,6 +2563,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$
 function RegisterVaccinationModal({ open, onClose }) {
     const { allUsers } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"])((state)=>state.profile);
     const allVaccines = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"])((state)=>state.product.vaccines);
+    const { fetchAllUsers, fetchVaccines } = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"].getState();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        fetchAllUsers();
+        fetchVaccines();
+    }, [
+        fetchAllUsers,
+        fetchVaccines
+    ]);
     const [selectedParentId, setSelectedParentId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [selectedParent, setSelectedParent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [parentPopoverOpen, setParentPopoverOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -2794,20 +2802,20 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Register Vaccination for User"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 288,
+                                lineNumber: 293,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                 children: "Staff can help create an order for a selected user (parent)."
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 289,
+                                lineNumber: 294,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                        lineNumber: 287,
+                        lineNumber: 292,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2817,7 +2825,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Select Parent"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 295,
+                                lineNumber: 300,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Popover"], {
@@ -2837,23 +2845,24 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                     className: "ml-2 h-4 w-4 shrink-0 opacity-50"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                    lineNumber: 307,
+                                                    lineNumber: 312,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                            lineNumber: 298,
+                                            lineNumber: 303,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 302,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PopoverContent"], {
                                         className: "w-[calc(60svw-4rem)] p-0",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Command"], {
+                                            className: "max-h-[300px]",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandInput"], {
                                                     placeholder: "Search parent...",
@@ -2861,18 +2870,18 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                     onValueChange: setSearchTerm
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                    lineNumber: 312,
+                                                    lineNumber: 317,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandEmpty"], {
                                                     children: "No parent found."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                    lineNumber: 317,
+                                                    lineNumber: 322,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandGroup"], {
-                                                    className: "max-h-[300px] overflow-y-auto",
+                                                    className: "h-auto overflow-y-auto",
                                                     children: filteredUsers.map((user)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandItem"], {
                                                             value: user.id.toString(),
                                                             onSelect: ()=>{
@@ -2888,35 +2897,35 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                             ]
                                                         }, `${user.id} ${user.username} ${user.fullname} ${user.phone}`, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 320,
+                                                            lineNumber: 325,
                                                             columnNumber: 21
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                    lineNumber: 318,
+                                                    lineNumber: 323,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                            lineNumber: 311,
+                                            lineNumber: 316,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 310,
+                                        lineNumber: 315,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 296,
+                                lineNumber: 301,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                        lineNumber: 294,
+                        lineNumber: 299,
                         columnNumber: 9
                     }, this),
                     selectedParent && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2927,7 +2936,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Guardian Info"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 339,
+                                lineNumber: 344,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2940,7 +2949,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "First Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 342,
+                                                lineNumber: 347,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -2948,13 +2957,13 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 onChange: (e)=>setFirstName(e.target.value)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 343,
+                                                lineNumber: 348,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 341,
+                                        lineNumber: 346,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2964,7 +2973,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "Last Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 346,
+                                                lineNumber: 351,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -2972,19 +2981,19 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 onChange: (e)=>setLastName(e.target.value)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 347,
+                                                lineNumber: 352,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 345,
+                                        lineNumber: 350,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 340,
+                                lineNumber: 345,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2997,7 +3006,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "Email"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 352,
+                                                lineNumber: 357,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -3006,13 +3015,13 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 onChange: (e)=>setEmail(e.target.value)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 353,
+                                                lineNumber: 358,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 351,
+                                        lineNumber: 356,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3022,7 +3031,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "Mobile No"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 356,
+                                                lineNumber: 361,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -3031,25 +3040,25 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 onChange: (e)=>setMobileNo(e.target.value)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 357,
+                                                lineNumber: 362,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 355,
+                                        lineNumber: 360,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 350,
+                                lineNumber: 355,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                        lineNumber: 338,
+                        lineNumber: 343,
                         columnNumber: 11
                     }, this),
                     selectedParent && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -3059,7 +3068,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Pick a Child & Vaccines"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 365,
+                                lineNumber: 370,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3071,7 +3080,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "Choose Child"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 369,
+                                                lineNumber: 374,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Popover"], {
@@ -3091,18 +3100,18 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                     className: "ml-2 h-4 w-4 shrink-0 opacity-50"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 381,
+                                                                    lineNumber: 386,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 372,
+                                                            lineNumber: 377,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                        lineNumber: 371,
+                                                        lineNumber: 376,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PopoverContent"], {
@@ -3115,14 +3124,14 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                     onValueChange: setChildSearch
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 386,
+                                                                    lineNumber: 391,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandEmpty"], {
                                                                     children: "No child found."
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 391,
+                                                                    lineNumber: 396,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandGroup"], {
@@ -3137,35 +3146,35 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                             children: child.fullname
                                                                         }, child.childId, false, {
                                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                            lineNumber: 394,
+                                                                            lineNumber: 399,
                                                                             columnNumber: 27
                                                                         }, this))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 392,
+                                                                    lineNumber: 397,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 385,
+                                                            lineNumber: 390,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                        lineNumber: 384,
+                                                        lineNumber: 389,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 370,
+                                                lineNumber: 375,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 368,
+                                        lineNumber: 373,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3174,7 +3183,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "Select Vaccine"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 413,
+                                                lineNumber: 418,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Popover"], {
@@ -3194,22 +3203,22 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                     className: "ml-2 h-4 w-4 shrink-0 opacity-50"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 423,
+                                                                    lineNumber: 428,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 416,
+                                                            lineNumber: 421,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                        lineNumber: 415,
+                                                        lineNumber: 420,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PopoverContent"], {
-                                                        className: "w-[calc(60svw-4rem)] p-0 max-h-[250px] overflow-y-auto",
+                                                        className: "w-[calc(60svw-4rem)]",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Command"], {
                                                             children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandInput"], {
@@ -3218,21 +3227,21 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                     onValueChange: setVaccineSearch
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 428,
+                                                                    lineNumber: 433,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandList"], {
-                                                                    className: "flex max-h-[250px] overflow-y-auto overscroll-contain",
+                                                                    className: "flex max-h-[250px] w-full z-[9999] overflow-y-scroll",
                                                                     children: [
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandEmpty"], {
                                                                             children: "No vaccine found."
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                            lineNumber: 434,
+                                                                            lineNumber: 439,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandGroup"], {
-                                                                            className: "flex w-[calc(60svw-4rem)]",
+                                                                            className: "h-auto z-[9999] w-[calc(60svw-6rem)]",
                                                                             children: filteredVaccines.map((v)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$command$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CommandItem"], {
                                                                                     value: `${v.title} ${v.id}`,
                                                                                     onSelect: ()=>addVaccineToChild(v),
@@ -3242,48 +3251,48 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                                             children: v.title
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                                            lineNumber: 443,
+                                                                                            lineNumber: 448,
                                                                                             columnNumber: 31
                                                                                         }, this),
                                                                                         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Validate"].formatPrice(v.price)
                                                                                     ]
                                                                                 }, v.id, true, {
                                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                                    lineNumber: 437,
+                                                                                    lineNumber: 442,
                                                                                     columnNumber: 29
                                                                                 }, this))
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                            lineNumber: 435,
+                                                                            lineNumber: 440,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 433,
+                                                                    lineNumber: 438,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 427,
+                                                            lineNumber: 432,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                        lineNumber: 426,
+                                                        lineNumber: 431,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 414,
+                                                lineNumber: 419,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 412,
+                                        lineNumber: 417,
                                         columnNumber: 15
                                     }, this),
                                     tempChildVaccines.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3294,7 +3303,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 children: "Vaccines Selected:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 456,
+                                                lineNumber: 461,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3310,7 +3319,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                lineNumber: 463,
+                                                                lineNumber: 468,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3322,31 +3331,31 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                         className: "mr-1 h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                        lineNumber: 471,
+                                                                        lineNumber: 476,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     "Remove"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                lineNumber: 466,
+                                                                lineNumber: 471,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, v.id, true, {
                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                        lineNumber: 459,
+                                                        lineNumber: 464,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 457,
+                                                lineNumber: 462,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 455,
+                                        lineNumber: 460,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3357,18 +3366,18 @@ function RegisterVaccinationModal({ open, onClose }) {
                                             children: "Confirm This Child"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                            lineNumber: 481,
+                                            lineNumber: 486,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 480,
+                                        lineNumber: 485,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 367,
+                                lineNumber: 372,
                                 columnNumber: 13
                             }, this),
                             selectedList.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3378,7 +3387,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                         children: "Children to Vaccinate"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 489,
+                                        lineNumber: 494,
                                         columnNumber: 17
                                     }, this),
                                     selectedList.map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3395,7 +3404,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 496,
+                                                            lineNumber: 501,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3410,14 +3419,14 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                             className: "mr-1 h-4 w-4"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                            lineNumber: 505,
+                                                                            lineNumber: 510,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         " Edit"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 500,
+                                                                    lineNumber: 505,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3429,26 +3438,26 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                             className: "mr-1 h-4 w-4"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                            lineNumber: 512,
+                                                                            lineNumber: 517,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         " Remove"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 507,
+                                                                    lineNumber: 512,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 499,
+                                                            lineNumber: 504,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                    lineNumber: 495,
+                                                    lineNumber: 500,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -3460,37 +3469,37 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                                     children: v.title
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 519,
+                                                                    lineNumber: 524,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                     children: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Validate"].formatPrice(v.price)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                                    lineNumber: 520,
+                                                                    lineNumber: 525,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, v.id, true, {
                                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                            lineNumber: 518,
+                                                            lineNumber: 523,
                                                             columnNumber: 25
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                    lineNumber: 516,
+                                                    lineNumber: 521,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, entry.childId, true, {
                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                            lineNumber: 491,
+                                            lineNumber: 496,
                                             columnNumber: 19
                                         }, this))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 488,
+                                lineNumber: 493,
                                 columnNumber: 15
                             }, this)
                         ]
@@ -3502,7 +3511,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Vaccination Date"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 532,
+                                lineNumber: 537,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$DateTimePicker$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DateTimePicker"], {
@@ -3511,13 +3520,13 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 showBtn: false
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 533,
+                                lineNumber: 538,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                        lineNumber: 531,
+                        lineNumber: 536,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3529,7 +3538,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Cancel"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 537,
+                                lineNumber: 542,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3539,19 +3548,19 @@ function RegisterVaccinationModal({ open, onClose }) {
                                 children: "Review & Submit"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                lineNumber: 540,
+                                lineNumber: 545,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                        lineNumber: 536,
+                        lineNumber: 541,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                lineNumber: 286,
+                lineNumber: 291,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -3565,20 +3574,20 @@ function RegisterVaccinationModal({ open, onClose }) {
                                     children: "Confirm Order"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                    lineNumber: 553,
+                                    lineNumber: 558,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                     children: "Please review the children, vaccines, and total price before creating the order."
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                    lineNumber: 554,
+                                    lineNumber: 559,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                            lineNumber: 552,
+                            lineNumber: 557,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3592,7 +3601,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                    lineNumber: 559,
+                                    lineNumber: 564,
                                     columnNumber: 13
                                 }, this),
                                 selectedList.map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3608,7 +3617,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 565,
+                                                lineNumber: 570,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -3624,18 +3633,18 @@ function RegisterVaccinationModal({ open, onClose }) {
                                                         ]
                                                     }, v.id, true, {
                                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                        lineNumber: 570,
+                                                        lineNumber: 575,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                                lineNumber: 568,
+                                                lineNumber: 573,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, entry.childId, true, {
                                         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                        lineNumber: 564,
+                                        lineNumber: 569,
                                         columnNumber: 15
                                     }, this)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3647,7 +3656,7 @@ function RegisterVaccinationModal({ open, onClose }) {
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                            lineNumber: 582,
+                                            lineNumber: 587,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3655,36 +3664,36 @@ function RegisterVaccinationModal({ open, onClose }) {
                                             children: "Confirm & Create"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                            lineNumber: 585,
+                                            lineNumber: 590,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                                    lineNumber: 581,
+                                    lineNumber: 586,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                            lineNumber: 558,
+                            lineNumber: 563,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                    lineNumber: 551,
+                    lineNumber: 556,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-                lineNumber: 550,
+                lineNumber: 555,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/modals/RegisterVaccinationModal.tsx",
-        lineNumber: 285,
+        lineNumber: 290,
         columnNumber: 5
     }, this);
 }

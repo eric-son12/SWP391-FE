@@ -44,6 +44,12 @@ interface RegisterVaccinationModalProps {
 export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationModalProps) {
   const { allUsers } = useStore((state) => state.profile)
   const allVaccines = useStore((state) => state.product.vaccines) as Vaccine[]
+  const { fetchAllUsers, fetchVaccines } = useStore.getState()
+
+  useEffect(() => {
+    fetchAllUsers()
+    fetchVaccines()
+  }, [fetchAllUsers, fetchVaccines])
 
   const [selectedParentId, setSelectedParentId] = useState<number | "">("")
   const [selectedParent, setSelectedParent] = useState<Patient | null>(null)
@@ -67,7 +73,6 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
   const [vaccineSearch, setVaccineSearch] = useState("")
 
   const [vaccinationDate, setVaccinationDate] = useState<Date | undefined>()
-
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
   const filteredUsers = useMemo(() => {
@@ -308,14 +313,14 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[calc(60svw-4rem)] p-0">
-              <Command>
+              <Command className="max-h-[300px]">
                 <CommandInput
                   placeholder="Search parent..."
                   value={searchTerm}
                   onValueChange={setSearchTerm}
                 />
                 <CommandEmpty>No parent found.</CommandEmpty>
-                <CommandGroup className="max-h-[300px] overflow-y-auto">
+                <CommandGroup className="h-auto overflow-y-auto">
                   {filteredUsers.map((user) => (
                     <CommandItem
                       key={`${user.id} ${user.username} ${user.fullname} ${user.phone}`}
@@ -423,16 +428,16 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[calc(60svw-4rem)] p-0 max-h-[250px] overflow-y-auto">
+                  <PopoverContent className="w-[calc(60svw-4rem)]">
                     <Command>
                       <CommandInput
                         placeholder="Search vaccine..."
                         value={vaccineSearch}
                         onValueChange={setVaccineSearch}
                       />
-                      <CommandList className="flex max-h-[250px] overflow-y-auto overscroll-contain">
+                      <CommandList className="flex max-h-[250px] w-full z-[9999] overflow-y-scroll">
                         <CommandEmpty>No vaccine found.</CommandEmpty>
-                        <CommandGroup className="flex w-[calc(60svw-4rem)]">
+                        <CommandGroup className="h-auto z-[9999] w-[calc(60svw-6rem)]">
                           {filteredVaccines.map((v) => (
                             <CommandItem
                               key={v.id}
