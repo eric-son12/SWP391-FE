@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Eye, ShoppingCart, CreditCard, Calendar } from "lucide-react"
+import { Eye, ShoppingCart, CreditCard, Calendar, Plus } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import type { Order } from "@/types/order"
 import { OrderDetailsModal } from "@/components/modals/OrderDetail"
 import axios from "@/utils/axiosConfig"
+import { RegisterVaccinationModal } from "@/components/modals/RegisterVaccinationModal"
 
 export default function OrdersPage() {
   const { toast } = useToast()
@@ -17,6 +18,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [showCreateOrderModal, setShowCreateOrderModal] = useState(false)
 
   const loadOrders = useCallback(async () => {
     try {
@@ -124,6 +126,10 @@ export default function OrdersPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Orders Management</h1>
+        <Button onClick={() => setShowCreateOrderModal(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Create Order
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -193,6 +199,13 @@ export default function OrdersPage() {
         <OrderDetailsModal 
           order={selectedOrder} 
           onClose={() => setSelectedOrder(null)} 
+        />
+      )}
+
+      {showCreateOrderModal && (
+        <RegisterVaccinationModal
+          open={showCreateOrderModal}
+          onClose={() => setShowCreateOrderModal(false)}
         />
       )}
     </div>

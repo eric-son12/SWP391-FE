@@ -223,7 +223,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
           <div className="space-y-2">
             <h3 className="text-sm font-medium">Order Summary</h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <p className="text-xs text-gray-500">Payment Method</p>
                 <div className="flex items-center gap-1">
@@ -231,13 +231,13 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                   <span className="text-sm">{order.paymentType}</span>
                 </div>
               </div>
-              <div className="space-y-1">
+              {/* <div className="space-y-1">
                 <p className="text-xs text-gray-500">Order Date</p>
                 <p className="flex items-center gap-1">
                   <CalendarDays className="h-4 w-4 text-gray-500"/>
                   <span className="text-sm">{order.orderDate}</span>
                 </p>
-              </div>
+              </div> */}
               <div className="space-y-1">
                 <p className="text-xs text-gray-500">Total Amount</p>
                 <p className="text-sm font-medium">{formatPrice(order.totalPrice)}</p>
