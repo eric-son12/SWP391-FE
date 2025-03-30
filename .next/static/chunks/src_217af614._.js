@@ -2932,6 +2932,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
             fetchOrderDetail(orderDetailId).then({
                 "ReactionDialog.useEffect": (data)=>{
                     setOrderDetail(data.data.result);
+                    setHandlingNote(data.data.result.orderDetails[0].vaccines[0].reactions[0].handlingNote);
                 }
             }["ReactionDialog.useEffect"]).catch({
                 "ReactionDialog.useEffect": (err)=>{
@@ -2989,12 +2990,12 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                         children: "Reaction Feedback"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ReactionDialog.tsx",
-                        lineNumber: 87,
+                        lineNumber: 88,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                    lineNumber: 86,
+                    lineNumber: 87,
                     columnNumber: 9
                 }, this),
                 loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3002,7 +3003,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                     children: "Loading..."
                 }, void 0, false, {
                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                    lineNumber: 90,
+                    lineNumber: 91,
                     columnNumber: 21
                 }, this),
                 !loading && orderDetail && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3014,7 +3015,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                                     children: "Name:"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                                    lineNumber: 94,
+                                    lineNumber: 95,
                                     columnNumber: 16
                                 }, this),
                                 " ",
@@ -3024,7 +3025,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 94,
+                            lineNumber: 95,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3048,25 +3049,25 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                                                                         children: "Vaccine"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                                        lineNumber: 106,
+                                                                        lineNumber: 107,
                                                                         columnNumber: 33
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                         children: "Price"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                                        lineNumber: 107,
+                                                                        lineNumber: 108,
                                                                         columnNumber: 33
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                                lineNumber: 105,
+                                                                lineNumber: 106,
                                                                 columnNumber: 31
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                            lineNumber: 104,
+                                                            lineNumber: 105,
                                                             columnNumber: 29
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -3078,64 +3079,64 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                                                                             children: vaccine.name
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                                            lineNumber: 114,
+                                                                            lineNumber: 115,
                                                                             columnNumber: 35
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$utils$2f$validate$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Validate"].formatPrice(vaccine.price)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                                            lineNumber: 115,
+                                                                            lineNumber: 116,
                                                                             columnNumber: 35
                                                                         }, this)
                                                                     ]
                                                                 }, idx, true, {
                                                                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                                    lineNumber: 113,
+                                                                    lineNumber: 114,
                                                                     columnNumber: 41
                                                                 }, this);
                                                             })
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                            lineNumber: 111,
+                                                            lineNumber: 112,
                                                             columnNumber: 29
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                    lineNumber: 103,
+                                                    lineNumber: 104,
                                                     columnNumber: 27
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                lineNumber: 102,
+                                                lineNumber: 103,
                                                 columnNumber: 25
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "p-4 text-sm text-muted-foreground",
                                                 children: "No vaccines found for this child."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ReactionDialog.tsx",
-                                                lineNumber: 124,
+                                                lineNumber: 125,
                                                 columnNumber: 25
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                                            lineNumber: 100,
+                                            lineNumber: 101,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ReactionDialog.tsx",
-                                        lineNumber: 99,
+                                        lineNumber: 100,
                                         columnNumber: 19
                                     }, this)
                                 }, child.childId, false, {
                                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                                    lineNumber: 98,
+                                    lineNumber: 99,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 96,
+                            lineNumber: 97,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -3143,7 +3144,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                             children: "Reaction"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 132,
+                            lineNumber: 133,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -3153,7 +3154,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                             onChange: (e)=>setHandlingNote(e.target.value)
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 133,
+                            lineNumber: 134,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -3161,23 +3162,24 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                             children: "Handling Note"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 140,
+                            lineNumber: 141,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
                             id: "handlingNote",
                             placeholder: "Enter handling note for the child's reaction...",
                             value: handlingNote,
+                            readOnly: !orderDetail.orderDetails[0].vaccines[0].reactions[0].isHandled,
                             onChange: (e)=>setHandlingNote(e.target.value)
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 141,
+                            lineNumber: 142,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                    lineNumber: 93,
+                    lineNumber: 94,
                     columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -3188,7 +3190,7 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                             children: "Cancel"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 151,
+                            lineNumber: 153,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3197,24 +3199,24 @@ function ReactionDialog({ open, onClose, orderDetailId }) {
                             children: "Submit"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ReactionDialog.tsx",
-                            lineNumber: 154,
+                            lineNumber: 156,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/ReactionDialog.tsx",
-                    lineNumber: 150,
+                    lineNumber: 152,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/ReactionDialog.tsx",
-            lineNumber: 85,
+            lineNumber: 86,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/ReactionDialog.tsx",
-        lineNumber: 84,
+        lineNumber: 85,
         columnNumber: 5
     }, this);
 }

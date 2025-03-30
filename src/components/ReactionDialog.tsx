@@ -33,6 +33,7 @@ export function ReactionDialog({ open, onClose, orderDetailId }: ReactionDialogP
     fetchOrderDetail(orderDetailId)
       .then((data) => {
         setOrderDetail(data.data.result)
+        setHandlingNote(data.data.result.orderDetails[0].vaccines[0].reactions[0].handlingNote)
       })
       .catch((err) => {
         console.error(err)
@@ -142,6 +143,7 @@ export function ReactionDialog({ open, onClose, orderDetailId }: ReactionDialogP
               id="handlingNote"
               placeholder="Enter handling note for the child's reaction..."
               value={handlingNote}
+              readOnly={!orderDetail.orderDetails[0].vaccines[0].reactions[0].isHandled}
               onChange={(e) => setHandlingNote(e.target.value)}
             />
           </div>
