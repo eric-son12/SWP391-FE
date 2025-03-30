@@ -20,6 +20,11 @@ export function Sidebar() {
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false)
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({})
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!user || user.role === "ROLE_CUSTOMER" || user.role === "ROLE_CHILD") {
@@ -33,7 +38,7 @@ export function Sidebar() {
     }
   }, [sidebarCollapsed])
 
-  if (!user) {
+  if (!user || !mounted) {
     return null
   }
 

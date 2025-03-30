@@ -12,6 +12,7 @@ import { OrderDetailsModal } from "@/components/modals/OrderDetail"
 import axios from "@/utils/axiosConfig"
 import { RegisterVaccinationModal } from "@/components/modals/RegisterVaccinationModal"
 import { CancelOrderModal } from "@/components/modals/CancelOrderModal"
+import { Validate } from "@/utils/validate"
 
 export default function OrdersPage() {
   const { toast } = useToast()
@@ -163,12 +164,9 @@ export default function OrdersPage() {
           <CardContent>
             <div className="flex items-center">
               <CreditCard className="mr-2 h-5 w-5 text-green-600" />
-              <div className="text-2xl font-bold">
-                {new Intl.NumberFormat("vn-VN", {
-                  style: "currency",
-                  currency: "vnd",
-                }).format(totalRevenue)}
-              </div>
+              <p className="text-2xl font-bold">
+                {Validate.formatPrice(totalRevenue)}
+              </p>
             </div>
           </CardContent>
         </Card>
