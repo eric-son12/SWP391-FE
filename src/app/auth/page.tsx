@@ -27,7 +27,6 @@ const AuthPage = () => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
