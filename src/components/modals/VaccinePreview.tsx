@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { AlertCircle, Calendar, Clock, Package, Syringe, Users } from "lucide-react"
+import { AlertCircle, Package, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -17,14 +17,6 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
   const [showFullSideEffects, setShowFullSideEffects] = useState(false)
   const [showFullSchedule, setShowFullSchedule] = useState(false)
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  }
-
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -32,7 +24,6 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
     }).format(price)
   }
 
-  const vaccineName = vaccine.title
   const vaccineId = vaccine.id
 
   return (

@@ -2,7 +2,7 @@ import { StoreGet, StoreSet } from "@/store";
 import { Vaccine } from "@/types/vaccine";
 import { Category } from "@/types/category";
 import axios from "@/utils/axiosConfig";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { ApiError } from "@/types/error";
 
 export interface ProductState {
@@ -43,7 +43,7 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({ variant: "destructive", description: msg });
+        toast.error(msg);
         return [];
       } finally {
         set((state) => { state.loading.isLoading = false; });
@@ -58,19 +58,11 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
         });
         await get().fetchVaccines();
-        toast({
-          title: "Success",
-          description: "Vaccine created successfully",
-          variant: "success"
-        });
+        toast.success("Vaccine created successfully");
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => { state.loading.isLoading = false; });
       }
@@ -87,19 +79,11 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           },
         });
         await get().fetchVaccines();
-        toast({
-          title: "Success",
-          description: "Vaccine updated successfully",
-          variant: "success"
-        });
+        toast.success("Vaccine updated successfully");
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => { state.loading.isLoading = false; });
       }
@@ -115,19 +99,12 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           }
         });
         await get().fetchVaccines();
-        toast({
-          title: "Success",
-          description: "Vaccine deleted successfully",
-          variant: "success"
-        });
+        toast.success("Vaccine deleted successfully");
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
+
       } finally {
         set((state) => { state.loading.isLoading = false; });
       }
@@ -148,7 +125,7 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({ variant: "destructive", description: msg });
+        toast.error(msg);
         return [];
       } finally {
         set((state) => { state.loading.isLoading = false; });
@@ -163,19 +140,11 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
         });
         await get().fetchCategories();
-        toast({
-          title: "Success",
-          description: "Category created successfully",
-          variant: "success"
-        });
+        toast.success("Category created successfully");
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => { state.loading.isLoading = false; });
       }
@@ -189,19 +158,11 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
         });
         await get().fetchCategories();
-        toast({
-          title: "Success",
-          description: "Category updated successfully",
-          variant: "success"
-        });
+        toast.success("Category updated successfully");
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => { state.loading.isLoading = false; });
       }
@@ -217,19 +178,11 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           }
         });
         await get().fetchCategories();
-        toast({
-          title: "Success",
-          description: "Category deleted successfully",
-          variant: "success"
-        });
+        toast.success("Category deleted successfully");
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => { state.loading.isLoading = false; });
       }

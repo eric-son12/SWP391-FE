@@ -5,7 +5,7 @@ import { Eye, UserPlus } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import type { Child } from "@/types/user"
 import axios from "@/utils/axiosConfig"
 import {
@@ -19,11 +19,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { ChildDetailsModal } from "@/components/modals/ChildDetail"
-import { ApiError } from "@/types/error"
 import { CreateChildModal } from "@/components/modals/CreateChildModal"
 
 export default function UsersManagementPage() {
-  const { toast } = useToast()
+  
 
   const [users, setUsers] = useState<Child[]>([])
   const [loading, setLoading] = useState(true)
@@ -45,15 +44,11 @@ export default function UsersManagementPage() {
       setUsers(data)
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : "Failed to load users";
-      toast({
-        title: "Error",
-        description: msg,
-        variant: "destructive",
-      })
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
-  }, [toast])
+  }, [])
 
   useEffect(() => {
     loadUsers()
@@ -79,17 +74,10 @@ export default function UsersManagementPage() {
     if (!userToDelete) return
     try {
       setUsers((prev) => prev.filter((user) => user.childId !== userToDelete))
-      toast({
-        title: "Success",
-        description: "User deleted successfully",
-      })
+      toast.success("User deleted successfully")
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : "Failed to delete user";
-      toast({
-        title: "Error",
-        description: msg,
-        variant: "destructive",
-      })
+      toast.error(msg)
     } finally {
       setUserToDelete(null)
       setDeleteDialogOpen(false)

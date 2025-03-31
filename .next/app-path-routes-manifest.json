@@ -1,0 +1,18 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/auth/page": "/auth",
+  "/page": "/",
+  "/(dashboard)/children/page": "/children",
+  "/(dashboard)/feedback/page": "/feedback",
+  "/(dashboard)/categories/page": "/categories",
+  "/(dashboard)/notifications/page": "/notifications",
+  "/(dashboard)/dashboard/page": "/dashboard",
+  "/(dashboard)/orders/page": "/orders",
+  "/(dashboard)/posts/page": "/posts",
+  "/(dashboard)/roles-premission/page": "/roles-premission",
+  "/(dashboard)/parents/page": "/parents",
+  "/(dashboard)/users-management/page": "/users-management",
+  "/(dashboard)/staff-management/page": "/staff-management",
+  "/(dashboard)/vaccines/page": "/vaccines"
+}

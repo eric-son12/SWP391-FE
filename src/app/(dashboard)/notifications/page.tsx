@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 import { CreateNotificationModal } from "@/components/modals/CreateNotificationModal"
 import { ReactionDialog } from "@/components/ReactionDialog"
+import { Notification } from "@/types/notification"
 
 export default function NotificationsPage() {
   const { user } = useStore((state) => state.profile)
@@ -47,7 +48,7 @@ export default function NotificationsPage() {
     setIsCreateModalOpen(true)
   }
 
-  const handleNotificationClick = async (notification: any) => {
+  const handleNotificationClick = async (notification: Notification) => {
     markAsRead(notification.id)
 
     const match = notification.message.match(/Mã OrderDetail:\s?(\d+)/)

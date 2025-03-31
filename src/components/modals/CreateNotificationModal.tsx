@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { useStore } from "@/store"
 import axios from "@/utils/axiosConfig"
 
@@ -14,7 +14,7 @@ interface CreateNotificationModalProps {
 }
 
 export function CreateNotificationModal({ onClose }: CreateNotificationModalProps) {
-  const { toast } = useToast()
+  
   const { user } = useStore.getState().profile
 
   const [message, setMessage] = useState("")
@@ -47,17 +47,11 @@ export function CreateNotificationModal({ onClose }: CreateNotificationModalProp
           )
         }
       }
-      toast({
-        title: "Success",
-        description: "Notification sent successfully",
-      })
+      toast.success("Notification sent successfully")
       onClose()
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send notification",
-        variant: "destructive",
-      })
+      console.error("Error:", error)
+      toast.error("Failed to send notification")
     } finally {
       setIsSubmitting(false)
     }

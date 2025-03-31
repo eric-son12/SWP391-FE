@@ -1,12 +1,11 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Edit, Trash2, Eye, UserPlus, CheckCircle, XCircle } from "lucide-react"
-import { useStore } from "@/store"
+import { Trash2, Eye, UserPlus, CheckCircle, XCircle } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import type { Role, StaffMember } from "@/types/staff"
 import {
@@ -24,7 +23,6 @@ import axios from "@/utils/axiosConfig"
 import { CreateStaffModal } from "@/components/modals/CreateStaffModal"
 
 export default function StaffManagementPage() {
-  const { toast } = useToast()
 
   const [staffMembers, setStaffMembers] = useState<StaffMember[]>([])
   const [loading, setLoading] = useState(true)
@@ -34,7 +32,7 @@ export default function StaffManagementPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null)
 
-  const loadStaffMembers = async () => {
+  const loadStaffMembers = useCallback(async () => {
     try {
       setLoading(true)
       const token = localStorage.getItem("token")
@@ -44,19 +42,16 @@ export default function StaffManagementPage() {
       const data: StaffMember[] = response.data.result || []
       setStaffMembers(data)
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load staff members",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast.error("Failed to load staff members")
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadStaffMembers()
-  }, [toast])
+  }, [loadStaffMembers])
 
   const handleViewStaffDetails = (id: number) => {
     const staff = staffMembers.find(s => s.id === id)
@@ -65,15 +60,6 @@ export default function StaffManagementPage() {
       setIsDetailsModalOpen(true)
     }
   }
-
-  // const handleEditStaff = (id: number) => {
-  //   const staff = staffMembers.find(s => s.id === id)
-  //   if (staff) {
-  //     setSelectedStaff(staff)
-  //     setDefaultEdit(true)
-  //     setIsDetailsModalOpen(true)
-  //   }
-  // }
 
   const confirmDelete = (id: number) => {
     setStaffToDelete(id)
@@ -88,16 +74,10 @@ export default function StaffManagementPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       await loadStaffMembers()
-      toast({
-        title: "Success",
-        description: "Staff member deleted successfully",
-      })
+      toast.success("Staff member deleted successfully")
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete staff member",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast.error("Failed to delete staff member")
     } finally {
       setStaffToDelete(null)
       setDeleteDialogOpen(false)
@@ -114,16 +94,10 @@ export default function StaffManagementPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       await loadStaffMembers()
-      toast({
-        title: "Success",
-        description: "Staff status updated successfully",
-      })
+      toast.success("Staff status updated successfully")
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update staff status",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast("Failed to update staff status")
     }
   }
 

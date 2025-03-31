@@ -5,7 +5,7 @@ import { Eye, ShoppingCart, CreditCard, Calendar, Plus, Ban } from "lucide-react
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge"
 import type { Order } from "@/types/order"
 import { OrderDetailsModal } from "@/components/modals/OrderDetail"
@@ -15,7 +15,6 @@ import { CancelOrderModal } from "@/components/modals/CancelOrderModal"
 import { Validate } from "@/utils/validate"
 
 export default function OrdersPage() {
-  const { toast } = useToast()
 
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
@@ -33,15 +32,12 @@ export default function OrdersPage() {
       const data: Order[] = response.data.result || []
       setOrders(data)
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load orders",
-        variant: "destructive",
-      })
+      console.error('Error:', error)
+      toast.error("Failed to load orders")
     } finally {
       setLoading(false)
     }
-  }, [toast])
+  }, [])
 
   useEffect(() => {
     loadOrders()

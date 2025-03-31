@@ -4,11 +4,10 @@ import { ModalWrapper } from "@/components/ui/modal-wrapper"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import axios from "@/utils/axiosConfig"
 
 export function CreateStaffModal({ onClose }: { onClose: () => void }) {
-  const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     username: "",
@@ -55,17 +54,13 @@ export function CreateStaffModal({ onClose }: { onClose: () => void }) {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
-      toast({
-        title: "Success",
-        description: "Staff created successfully",
-      })
+      toast.success("Staff created successfully")
       onClose()
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error?.response?.data?.message || error.message,
-        variant: "destructive",
-      })
+    } catch (error) {
+      console.error("Error creating staff:", error)
+
+      const msg = error instanceof Error? error.message : "Failed to create staff"
+      toast(msg)
     } finally {
       setIsSubmitting(false)
     }

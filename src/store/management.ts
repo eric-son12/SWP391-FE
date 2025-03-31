@@ -1,7 +1,7 @@
 import { StoreGet, StoreSet } from "@/store";
 import { Role, Permission } from "@/types/management";
 import axios from "@/utils/axiosConfig";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export interface ManagementState {
   roles: Role[];
@@ -52,11 +52,7 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
         return [];
       } finally {
         set((state) => { state.loading.isLoading = false; }, false, "loading: end");
@@ -74,11 +70,7 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
         return [];
       } finally {
         set((state) => { state.loading.isLoading = false; }, false, "loading: end");
@@ -92,20 +84,12 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
         set((state) => {
           state.management.permissions.push(data);
         }, false, "createPermission: success");
-        toast({
-          title: "Success",
-          description: "Permission created successfully",
-          variant: "success"
-        });
+        toast.success("Permission created successfully");
         return data;
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
         throw error;
       } finally {
         set((state) => { state.loading.isLoading = false; }, false, "loading: end");
@@ -120,20 +104,12 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
         set((state) => {
           state.management.roles.push(data);
         }, false, "createRole: success");
-        toast({
-          title: "Success",
-          description: "Role created successfully",
-          variant: "success"
-        });
+        toast.success("Role created successfully");
         return data;
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
         throw error;
       } finally {
         set((state) => { state.loading.isLoading = false; }, false, "loading: end");
@@ -146,40 +122,24 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
         set((state) => {
           state.management.roles = state.management.roles.filter((r) => r.name !== roleName);
         }, false, "deleteRole: success");
-        toast({
-          title: "Success",
-          description: "Role deleted successfully",
-          variant: "success"
-        });
+        toast.success("Role deleted successfully");
         return resp.data;
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
         throw error;
       }
     },
     removePermission: async (roleName: string, permissionName: string) => {
       try {
         const resp = await axios.delete(`/manage/roles/${roleName}/permissions/${permissionName}`);
-        toast({
-          title: "Success",
-          description: "Permission removed from role successfully",
-          variant: "success"
-        });
+        toast("Permission removed from role successfully");
         return resp.data;
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast(msg);
         throw error;
       }
     },
@@ -194,20 +154,12 @@ export function managementActions(set: StoreSet, get: StoreGet): ManagementActio
             (p) => p.name !== permission
           );
         }, false, "deletePermission: success");
-        toast({
-          title: "Success",
-          description: "Permission deleted successfully",
-          variant: "success"
-        });
+        toast.success("Permission deleted successfully");
         return resp.data;
       } catch (error: unknown) {
         const apiError = error as ApiError;
         const msg = apiError?.response?.data?.message || apiError?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
         throw error;
       } finally {
         set((state) => {

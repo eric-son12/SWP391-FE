@@ -4,7 +4,7 @@ import { ModalWrapper } from "@/components/ui/modal-wrapper"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import axios from "@/utils/axiosConfig"
 
 interface CreatePatientModalProps {
@@ -12,7 +12,6 @@ interface CreatePatientModalProps {
 }
 
 export function CreatePatientModal({ onClose }: CreatePatientModalProps) {
-  const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     username: "",
@@ -36,17 +35,12 @@ export function CreatePatientModal({ onClose }: CreatePatientModalProps) {
       await axios.post("/manage/create-customer", formData, {
         headers: { "Content-Type": "application/json" },
       })
-      toast({
-        title: "Success",
-        description: "Patient created successfully",
-      })
+      toast.success("Patient created successfully")
       onClose()
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error?.response?.data?.message || error.message,
-        variant: "destructive",
-      })
+    } catch (error) {
+      console.error("Error creating patient:", error)
+      const errorMsg = error instanceof Error? error.message : "Failed to create patient"
+      toast.error(errorMsg)
     } finally {
       setIsSubmitting(false)
     }

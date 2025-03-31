@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useStore } from "@/store";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -25,9 +25,7 @@ interface AuthFormData {
 const AuthPage = () => {
   const login = useStore((state) => state.login);
   const router = useRouter();
-  const { toast } = useToast();
 
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -39,17 +37,14 @@ const AuthPage = () => {
   const onSubmit = async (data: AuthFormData) => {
     try {
       await login(data.username, data.password);
-      toast({
-        title: "Login Successful",
+      toast("Login Successful", {
         description: "Welcome back!",
       });
       router.push("/dashboard");
     } catch (error) {
       console.error("Login failed", error);
-      toast({
-        title: "Login Failed",
+      toast.error("Login Failed", {
         description: "Please check your credentials and try again",
-        variant: "destructive",
       });
     }
   };

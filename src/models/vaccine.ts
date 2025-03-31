@@ -6,6 +6,7 @@ export interface Category {
 }
 
 export interface Vaccine {
+  reactions: Reaction[]
   id: number
   name: string
   description: string
@@ -40,4 +41,20 @@ export interface Feedback {
   date: string
   comment: string
   rating: number
+}
+
+export interface Reaction {
+  id: number,
+  symptoms: string,
+  orderDetailId: number,
+  childId: number,
+  childName: string,
+  reportedAt: string,
+  updatedAt: string,
+  createdById: number,
+  createdByName: string,
+  handlingNote: string,
+  handledById: number,
+  handledByName: string,
+  handledAt: string
 }

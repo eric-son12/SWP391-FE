@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}";
+self.__REACT_LOADABLE_MANIFEST='{"app/page.tsx -> ./ClientRouterApp":{"id":46115,"files":["static/chunks/5b87835d.855f426393282b9a.js","static/chunks/747-0bd87391b9af3bc6.js","static/chunks/671-a88593d0528a7793.js","static/chunks/750-c48c04fe97cfecaa.js","static/chunks/288-019b1212c669d7ac.js","static/chunks/976-36655a54e844575c.js","static/chunks/433-7058ffe94228cec2.js","static/chunks/879-b0193dfbc5dd52e7.js","static/chunks/27.544ac737eb88f7d9.js"]}}';

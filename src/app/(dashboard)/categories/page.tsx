@@ -8,13 +8,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Category } from "@/types/category"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { CategoryModal } from "@/components/modals/CategoryModal"
 import Image from 'next/image'
 
 export default function CategoriesPage() {
   const { fetchCategories, deleteCategory } = useStore.getState()
-  const { toast } = useToast()
 
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -28,15 +27,11 @@ export default function CategoriesPage() {
       setCategories(data)
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : "Failed to load category";
-      toast({
-        title: "Error",
-        description: msg,
-        variant: "destructive",
-      })
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
-  }, [fetchCategories, toast])
+  }, [fetchCategories])
 
   useEffect(() => {
     loadCategories()
@@ -50,18 +45,11 @@ export default function CategoriesPage() {
   const handleDelete = async (category: Category) => {
     try {
       await deleteCategory(category.id)
-      toast({
-        title: "Success",
-        description: "Category deleted successfully",
-      })
+      toast.success("Category deleted successfully")
       await loadCategories()
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : "Failed to delete category";
-      toast({
-        title: "Error", 
-        description: msg,
-        variant: "destructive",
-      })
+      toast.error(msg)
     }
   }
 

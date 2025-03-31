@@ -1,9 +1,7 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import axios from "@/utils/axiosConfig"
@@ -12,6 +10,11 @@ import { Accordion, AccordionItem, AccordionContent } from "@/components/ui/acco
 import { ChildOrderDetail } from "@/types/user"
 import { Validate } from "@/utils/validate"
 
+interface OrderDetailType {
+  firstName: string
+  lastName: string
+  orderDetails: ChildOrderDetail[]
+}
 interface ReactionDialogProps {
   open: boolean
   onClose: () => void
@@ -20,7 +23,7 @@ interface ReactionDialogProps {
 
 export function ReactionDialog({ open, onClose, orderDetailId }: ReactionDialogProps) {
   const [loading, setLoading] = useState(false)
-  const [orderDetail, setOrderDetail] = useState<any>(null)
+  const [orderDetail, setOrderDetail] = useState<OrderDetailType | null>(null)
   const [handlingNote, setHandlingNote] = useState("")
 
   useEffect(() => {
@@ -143,7 +146,7 @@ export function ReactionDialog({ open, onClose, orderDetailId }: ReactionDialogP
               id="handlingNote"
               placeholder="Enter handling note for the child's reaction..."
               value={handlingNote}
-              readOnly={!orderDetail.orderDetails[0].vaccines[0].reactions[0].isHandled}
+              readOnly
               onChange={(e) => setHandlingNote(e.target.value)}
             />
           </div>
