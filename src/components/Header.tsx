@@ -1,5 +1,5 @@
 "use client"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Bell, ChevronDown, LogOut } from "lucide-react"
 import { useStore } from "@/store"
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { ReactionDialog } from "./ReactionDialog"
 
 export function Header() {
   const router = useRouter()
@@ -25,6 +26,9 @@ export function Header() {
   const markAsRead = useStore((state) => state.markAsRead)
   const markAllAsRead = useStore((state) => state.markAllAsRead)
 
+  const [openReactionDialog, setOpenReactionDialog] = useState(false)
+  const [selectedOrderDetailId, setSelectedOrderDetailId] = useState<number | null>(null)
+
   useEffect(() => {
     fetchNotifications()
   }, [fetchNotifications])
@@ -34,6 +38,19 @@ export function Header() {
   const handleLogout = () => {
     logout()
     router.push("/")
+  }
+
+  const handleNotificationClick = async (notification: any) => {
+    markAsRead(notification.id)
+
+    const match = notification.message.match(/Mã OrderDetail:\s?(\d+)/)
+    if (match) {
+      const orderDetailId = parseInt(match[1], 10)
+      if (!isNaN(orderDetailId)) {
+        setSelectedOrderDetailId(orderDetailId)
+        setOpenReactionDialog(true)
+      }
+    }
   }
 
   return (
@@ -76,7 +93,7 @@ export function Header() {
                     className={`flex items-start cursor-pointer flex-col p-3 hover:bg-gray-50 ${
                       !notification.readStatus ? "bg-blue-50" : ""
                     }`}
-                    onClick={() => markAsRead(notification.id)}
+                    onClick={() => handleNotificationClick(notification)}
                   >
                     <div className="flex gap-1">
                       {!notification.readStatus && (
@@ -138,6 +155,13 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <ReactionDialog
+        open={openReactionDialog}
+        onClose={() => setOpenReactionDialog(false)}
+        orderDetailId={selectedOrderDetailId}
+      />
+
     </header>
   )
 }

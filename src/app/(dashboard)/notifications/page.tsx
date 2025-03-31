@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 import { CreateNotificationModal } from "@/components/modals/CreateNotificationModal"
+import { ReactionDialog } from "@/components/ReactionDialog"
 
 export default function NotificationsPage() {
   const { user } = useStore((state) => state.profile)
@@ -20,6 +21,9 @@ export default function NotificationsPage() {
 
   const [activeTab, setActiveTab] = useState("all")
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+
+  const [openReactionDialog, setOpenReactionDialog] = useState(false)
+  const [selectedOrderDetailId, setSelectedOrderDetailId] = useState<number | null>(null)
 
   useEffect(() => {
     if (user) {
@@ -41,6 +45,19 @@ export default function NotificationsPage() {
 
   const handleCreateNotification = () => {
     setIsCreateModalOpen(true)
+  }
+
+  const handleNotificationClick = async (notification: any) => {
+    markAsRead(notification.id)
+
+    const match = notification.message.match(/Mã OrderDetail:\s?(\d+)/)
+    if (match) {
+      const orderDetailId = parseInt(match[1], 10)
+      if (!isNaN(orderDetailId)) {
+        setSelectedOrderDetailId(orderDetailId)
+        setOpenReactionDialog(true)
+      }
+    }
   }
 
   return (
@@ -94,11 +111,11 @@ export default function NotificationsPage() {
                   key={notification.id}
                   className={cn(
                     "cursor-pointer p-4 transition-colors hover:bg-gray-50",
-                    !notification.readStatus && "bg-blue-50"
+                    !notification.readStatus && activeTab !== "send" && "bg-blue-50"
                   )}
                   onClick={() => {
                     if (activeTab !== "send") {
-                      markAsRead(notification.id)
+                      handleNotificationClick(notification)
                     }
                   }}
                 >
@@ -106,7 +123,7 @@ export default function NotificationsPage() {
                     {notification.message}
                   </p>
                   <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                    {notification.sender && <span>From: {notification.sender}</span>}
+                    {notification.sender && <span>From: {notification.sender.fullName}</span>}
                     <div className="flex items-center">
                       <Calendar className="mr-1 h-3 w-3" />
                       <span>{new Date(notification.createdAt).toLocaleString()}</span>
@@ -127,6 +144,12 @@ export default function NotificationsPage() {
           }}
         />
       )}
+
+      <ReactionDialog
+        open={openReactionDialog}
+        onClose={() => setOpenReactionDialog(false)}
+        orderDetailId={selectedOrderDetailId}
+      />
     </div>
   )
 }

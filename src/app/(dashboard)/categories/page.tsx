@@ -7,10 +7,10 @@ import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { Category } from "@/types/category"
 import { useToast } from "@/hooks/use-toast"
+import type { Category } from "@/types/category"
 import { CategoryModal } from "@/components/modals/CategoryModal"
-import Image from 'next/image'
+import Image from "next/image"
 
 export default function CategoriesPage() {
   const { fetchCategories, deleteCategory } = useStore.getState()
@@ -21,13 +21,15 @@ export default function CategoriesPage() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
+  // Load categories
   const loadCategories = useCallback(async () => {
     try {
       setLoading(true)
       const data = await fetchCategories()
+      // data is an array of Category objects (each may have subCategories)
       setCategories(data)
     } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : "Failed to load category";
+      const msg = error instanceof Error ? error.message : "Failed to load category"
       toast({
         title: "Error",
         description: msg,
@@ -42,11 +44,13 @@ export default function CategoriesPage() {
     loadCategories()
   }, [loadCategories])
 
+  // Edit Category
   const handleEdit = (category: Category) => {
     setSelectedCategory(category)
     setIsCategoryModalOpen(true)
   }
 
+  // Delete Category
   const handleDelete = async (category: Category) => {
     try {
       await deleteCategory(category.id)
@@ -56,20 +60,22 @@ export default function CategoriesPage() {
       })
       await loadCategories()
     } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : "Failed to delete category";
+      const msg = error instanceof Error ? error.message : "Failed to delete category"
       toast({
-        title: "Error", 
+        title: "Error",
         description: msg,
         variant: "destructive",
       })
     }
   }
 
+  // Create Category
   const handleCreate = () => {
     setSelectedCategory(null)
     setIsCategoryModalOpen(true)
   }
 
+  // Table columns
   const columns: ColumnDef<Category>[] = [
     {
       accessorKey: "id",
@@ -84,7 +90,11 @@ export default function CategoriesPage() {
           <div className="flex items-center">
             <div className="h-10 w-10 overflow-hidden rounded-md border">
               <Image
-                src={imageName?.includes("http") ? imageName : '/images/placeholder.webp'}
+                src={
+                  imageName?.includes("http")
+                    ? imageName
+                    : "/images/placeholder.webp"
+                }
                 alt={`${row.getValue("name")} image`}
                 width={40}
                 height={40}
@@ -100,11 +110,33 @@ export default function CategoriesPage() {
       header: "Name",
     },
     {
+      // NEW COLUMN: Show subcategories (one level deep)
+      id: "subCategories",
+      header: "Subcategories",
+      cell: ({ row }) => {
+        const subCats = row.original.subCategories
+        if (!subCats || subCats.length === 0) {
+          return <span>None</span>
+        }
+        return (
+          <ul className="list-disc pl-5">
+            {subCats.map((sc) => (
+              <li key={sc.id}>{sc.name}</li>
+            ))}
+          </ul>
+        )
+      },
+    },
+    {
       accessorKey: "isActive",
       header: "Status",
       cell: ({ row }) => {
         const isActive = row.getValue("isActive") as boolean
-        return <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
+        return (
+          <Badge variant={isActive ? "default" : "secondary"}>
+            {isActive ? "Active" : "Inactive"}
+          </Badge>
+        )
       },
     },
     {
@@ -133,6 +165,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-4">
+      {/* Header + Add Button */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Categories Management</h1>
         <Button onClick={handleCreate}>
@@ -141,6 +174,7 @@ export default function CategoriesPage() {
         </Button>
       </div>
 
+      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
@@ -161,7 +195,9 @@ export default function CategoriesPage() {
           <CardContent>
             <div className="flex items-center">
               <Tag className="mr-2 h-5 w-5 text-green-600" />
-              <div className="text-2xl font-bold">{categories.filter((c) => c.isActive).length}</div>
+              <div className="text-2xl font-bold">
+                {categories.filter((c) => c.isActive).length}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -173,12 +209,15 @@ export default function CategoriesPage() {
           <CardContent>
             <div className="flex items-center">
               <Tag className="mr-2 h-5 w-5 text-gray-600" />
-              <div className="text-2xl font-bold">{categories.filter((c) => !c.isActive).length}</div>
+              <div className="text-2xl font-bold">
+                {categories.filter((c) => !c.isActive).length}
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Main Table */}
       <Card>
         <CardHeader>
           <CardTitle>All Categories</CardTitle>
@@ -189,16 +228,22 @@ export default function CategoriesPage() {
               <p>Loading categories...</p>
             </div>
           ) : (
-            <DataTable columns={columns} data={categories} searchColumn="name" searchPlaceholder="Search by name..." />
+            <DataTable
+              columns={columns}
+              data={categories}
+              searchColumn="name"
+              searchPlaceholder="Search by name..."
+            />
           )}
         </CardContent>
       </Card>
 
+      {/* Category Modal */}
       {isCategoryModalOpen && (
         <CategoryModal
           onClose={async () => {
-            setIsCategoryModalOpen(false);
-            await loadCategories();
+            setIsCategoryModalOpen(false)
+            await loadCategories()
           }}
           category={selectedCategory || undefined}
         />

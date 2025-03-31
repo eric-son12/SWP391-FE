@@ -29,6 +29,13 @@ interface VaccineModalProps {
   onClose: () => void;
   vaccine?: Vaccine;
 }
+const targetGroupOptions = [
+  { value: "AGE_0_3", label: "0-3 months" },
+  { value: "AGE_4_6", label: "4-6 months" },
+  { value: "AGE_7_12", label: "7-12 months" },
+  { value: "AGE_13_24", label: "13-24 months" },
+  { value: "AGE_25_PLUS", label: "Over 25 months" },
+]
 
 export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
   const { createVaccine, updateVaccine } = useStore();
@@ -96,6 +103,11 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.price < 5000) {
+      alert("Price must be at least 5000!");
+      return;
+    }
 
     const formDataToSubmit = new FormData();
     isUpdateMode && vaccine && formDataToSubmit.append("id", formData.id.toString());
@@ -256,8 +268,8 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 id="price"
                 name="price"
                 type="number"
-                min="0"
-                step="0.01"
+                min="5000"
+                step="1000"
                 value={formData.price}
                 onChange={handleChange}
                 required
@@ -357,13 +369,25 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
             {/* Target Group */}
             <div className="space-y-2">
               <Label htmlFor="targetGroup">Target Group</Label>
-              <Input
-                id="targetGroup"
+              <Select
                 name="targetGroup"
                 value={formData.targetGroup}
-                onChange={handleChange}
-                required
-              />
+                onValueChange={(val) => handleSelectChange("targetGroup", val)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select target group" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {targetGroupOptions.map((tg) => (
+                      <SelectItem key={tg.value} value={tg.value}>
+                        {tg.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
             </div>
 
             {/* Description */}

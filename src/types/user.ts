@@ -1,3 +1,4 @@
+import { Vaccine } from "@/models/vaccine";
 import { RelationshipType } from "./enums";
 
 export interface User {
@@ -22,4 +23,10 @@ export interface Child {
   relatives: RelationshipType,
   avatarUrl: string
   parentId?: number
+}
+
+export interface ChildOrderDetail {
+  childId: number;
+  childName: string,
+  vaccines: Vaccine[]
 }

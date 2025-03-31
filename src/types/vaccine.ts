@@ -36,3 +36,11 @@ export enum VaccineStatus {
   QUA_HAN = "Quá hạn",
   DA_HUY = "Đã huỷ",
 }
+
+export enum TargetGroup {
+  AGE_0_3 = "0-3 tháng",
+  AGE_4_6 = "4-6 tháng",
+  AGE_7_12 = "7-12 tháng",
+  AGE_13_24 = "13-24 tháng",
+  AGE_25_PLUS = "Trên 25 tháng"
+}
