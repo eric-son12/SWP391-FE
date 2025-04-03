@@ -4,11 +4,10 @@ import { ModalWrapper } from "@/components/ui/modal-wrapper"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import axios from "@/utils/axiosConfig"
 
 export function CreateChildModal({ onClose }: { onClose: () => void }) {
-  const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     parentId: "",
@@ -39,11 +38,7 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
     setIsSubmitting(true)
     try {
       if (!formData.parentId) {
-        toast({
-          title: "Error",
-          description: "Please enter Parent ID",
-          variant: "destructive",
-        })
+        toast.error("Please enter Parent ID")
         return
       }
       const fd = new FormData()
@@ -59,17 +54,12 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
       await axios.post(`/manage/children/create/${Number(formData.parentId)}`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
       })
-      toast({
-        title: "Success",
-        description: "Child created successfully",
-      })
+      toast.success("Child created successfully")
       onClose()
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error?.response?.data?.message || error.message,
-        variant: "destructive",
-      })
+    } catch (error) {
+      console.error("Error creating child:", error)
+      const errorMsg = error instanceof Error? error.message : "Failed to create child"
+      toast.error(errorMsg)
     } finally {
       setIsSubmitting(false)
     }

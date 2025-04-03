@@ -20,7 +20,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { ChevronsUpDown, Trash2, Edit2 } from "lucide-react"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import axios from "@/utils/axiosConfig"
 import { useStore } from "@/store"
 import { Patient } from "@/models/user"
@@ -151,16 +151,12 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
         setTempChildVaccines([])
       } catch (error) {
         console.error("Error fetching user details", error)
-        toast({
-          title: "Error",
-          description: "Failed to load user details",
-          variant: "destructive",
-        })
+        toast.error("Failed to load user details")
       }
     }
 
     fetchUser()
-  }, [selectedParentId, toast])
+  }, [selectedParentId])
 
   const addVaccineToChild = (vaccine: Vaccine) => {
     setVaccinePopoverOpen(false)
@@ -179,18 +175,14 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
   const handleConfirmChild = () => {
     if (!tempChildId) {
-      toast({
-        title: "Select a child",
+      toast("Select a child", {
         description: "Please pick a child first",
-        variant: "destructive",
       })
       return
     }
     if (tempChildVaccines.length === 0) {
-      toast({
-        title: "No vaccines",
+      toast("No vaccines", {
         description: "Please select at least one vaccine for this child",
-        variant: "destructive",
       })
       return
     }
@@ -237,10 +229,8 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
   const handleOpenConfirm = () => {
     if (!canCreate) {
-      toast({
-        title: "Cannot create order",
-        description: "Please select parent, date, and at least one child with vaccines",
-        variant: "destructive",
+      toast("Cannot create order", {
+        description: "Please select parent, date, and at least one child with vaccines"
       })
       return
     }
@@ -273,16 +263,12 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
         params: { parentId: selectedParent?.id },
       })
 
-      toast({ title: "Success", description: "Order created successfully" })
+      toast.success("Order created successfully")
       setShowConfirmDialog(false)
       onClose()
     } catch (err) {
       console.error(err)
-      toast({
-        title: "Error",
-        description: "Failed to create order",
-        variant: "destructive",
-      })
+      toast.error("Failed to create order")
     }
   }
 

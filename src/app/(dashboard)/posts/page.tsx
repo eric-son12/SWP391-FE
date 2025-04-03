@@ -6,7 +6,7 @@ import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import axios from '@/utils/axiosConfig';
-import { toast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { Post } from "@/types/post"
 import { PostCard } from "@/components/modals/post/PostCard"
 import { ViewPostModal } from "@/components/modals/post/ViewPostModal"
@@ -30,15 +30,11 @@ export default function PostsPage() {
       setPosts(data)
     } catch (error) {
       const msg = error instanceof Error ? error.message : "Failed to load posts";
-      toast({
-        title: "Error",
-        description: msg,
-        variant: "destructive",
-      })
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
-  }, [toast])
+  }, [])
 
   useEffect(() => {
     loadPosts()

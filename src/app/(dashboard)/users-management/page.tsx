@@ -1,11 +1,11 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Eye } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import type { User } from "@/types/user"
 import axios from "@/utils/axiosConfig"
 import {
@@ -21,7 +21,7 @@ import {
 import { UserDetailsModal } from "@/components/modals/UserDetail"
 
 export default function UsersManagementPage() {
-  const { toast } = useToast()
+  
 
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
@@ -30,7 +30,7 @@ export default function UsersManagementPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<number | null>(null)
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true)
       const token = localStorage.getItem("token")
@@ -40,19 +40,16 @@ export default function UsersManagementPage() {
       const data: User[] = resp.data.result || resp.data || []
       setUsers(data)
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load users",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast.error("Failed to load users")
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadUsers()
-  }, [toast])
+  }, [loadUsers])
 
   const handleViewUserDetails = (id: number) => {
     const user = users.find((u) => u.id === id)
@@ -62,27 +59,14 @@ export default function UsersManagementPage() {
     }
   }
 
-  const confirmDelete = (id: number) => {
-    setUserToDelete(id)
-    setDeleteDialogOpen(true)
-  }
-
   const handleDelete = async () => {
     if (!userToDelete) return
     try {
-      // If there's an API endpoint to delete the user, call it here.
-      // For now, just remove from local state:
       setUsers((prev) => prev.filter((user) => user.id !== userToDelete))
-      toast({
-        title: "Success",
-        description: "User deleted successfully",
-      })
+      toast.success("User deleted successfully")
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete user",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast.error("Failed to delete user")
     } finally {
       setUserToDelete(null)
       setDeleteDialogOpen(false)

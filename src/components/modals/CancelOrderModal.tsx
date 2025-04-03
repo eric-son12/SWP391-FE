@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import axios from "@/utils/axiosConfig"
 
 const reasons = [
@@ -18,7 +18,7 @@ interface CancelOrderModalProps {
 }
 
 export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ orderId, onClose }) => {
-  const { toast } = useToast()
+  
   const [selectedReason, setSelectedReason] = useState<string>(reasons[0])
   const [customReason, setCustomReason] = useState<string>("")
 
@@ -32,17 +32,13 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ orderId, onC
       }, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      toast({
-        title: "Order canceled",
+      toast("Order canceled", {
         description: "The order has been canceled successfully.",
       })
       onClose()
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to cancel order",
-        variant: "destructive",
-      })
+      console.error("Error canceling order:", error)
+      toast.error("Failed to cancel order")
     }
   }
 

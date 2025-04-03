@@ -2,7 +2,7 @@ import { Patient, User, UserProfile } from "@/models/user";
 import type { StoreSet } from "@/store";
 import axios from "@/utils/axiosConfig";
 import { parseJWT } from "@/utils/validate";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { ApiError } from "@/types/error";
 import { UserRole } from "@/types/menu";
 
@@ -79,7 +79,7 @@ export function profileActions(set: StoreSet): ProfileActions {
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({ variant: "destructive", description: msg });
+        toast.error(msg);
         return [];
       } finally {
         set((state) => {
@@ -102,7 +102,7 @@ export function profileActions(set: StoreSet): ProfileActions {
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({ variant: "destructive", description: msg });
+        toast.error(msg);
         return [];
       } finally {
         set((state) => {
@@ -117,19 +117,11 @@ export function profileActions(set: StoreSet): ProfileActions {
       }, false, "loading: start");
       try {
         await axios.post(`/users/createUser`, payload);
-        toast({
-          title: "Success",
-          description: "Account created successfully! Please check your email for verification.",
-          variant: "success"
-        });
+        toast.success("Account created successfully! Please check your email for verification.");
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -144,19 +136,11 @@ export function profileActions(set: StoreSet): ProfileActions {
       try {
         const body = { email, code };
         await axios.post(`/users/verify`, body);
-        toast({
-          title: "Success",
-          description: "Email verified successfully!",
-          variant: "success"
-        });
+        toast.success("Email verified successfully!");
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -170,19 +154,11 @@ export function profileActions(set: StoreSet): ProfileActions {
       }, false, "loading: start");
       try {
         await axios.post(`/users/resend`, { email });
-        toast({
-          title: "Success",
-          description: "New verification code has been sent!",
-          variant: "success"
-        });
+        toast.success("New verification code has been sent!");
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -216,20 +192,12 @@ export function profileActions(set: StoreSet): ProfileActions {
               role
             };
           }, false, "login: success");
-          toast({
-            title: "Success",
-            description: "Login successful!",
-            variant: "success"
-          });
+          toast.success("Login successful!");
         }
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -250,7 +218,7 @@ export function profileActions(set: StoreSet): ProfileActions {
       } catch (error: unknown) {
         const err = error as ApiError;
         const message = err?.response?.data?.message || err?.message;
-        toast({ variant: "destructive", description: message });
+        toast.error(message);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -268,19 +236,11 @@ export function profileActions(set: StoreSet): ProfileActions {
         set((state) => {
           state.profile.userProfile = profile;
         }, false, "updateProfile: success");
-        toast({
-          title: "Success",
-          description: "Profile updated successfully",
-          variant: "success"
-        });
+        toast.success("Profile updated successfully");
       } catch (error: unknown) {
         const err = error as ApiError;
         const message = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: message,
-          variant: "destructive"
-        });
+        toast.error(message);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -316,18 +276,10 @@ export function profileActions(set: StoreSet): ProfileActions {
         set((state) => {
           state.profile.user = undefined;
         }, false, "logout: success");
-        toast({
-          title: "Success",
-          description: "Logout successful!",
-          variant: "success"
-        });
+        toast.success("Logout successful!");
       } catch (error: unknown) {
         const err = error as ApiError;
-        toast({
-          title: "Error",
-          description: err?.message || "Logout failed",
-          variant: "destructive"
-        });
+        toast.error(err?.message || "Logout failed");
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -346,19 +298,11 @@ export function profileActions(set: StoreSet): ProfileActions {
           confirmPassword: newPassword,
         };
         await axios.post(`/users/changePassword`, body);
-        toast({
-          title: "Success",
-          description: "Password changed successfully",
-          variant: "success"
-        });
+        toast.success("Password changed successfully");
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -372,19 +316,11 @@ export function profileActions(set: StoreSet): ProfileActions {
       }, false, "loading: start");
       try {
         await axios.post(`/staff/children/create/${parentId}`, childRequest);
-        toast({
-          title: "Success",
-          description: "Child added successfully",
-          variant: "success"
-        });
+        toast.success("Child added successfully");
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;
@@ -398,19 +334,11 @@ export function profileActions(set: StoreSet): ProfileActions {
       }, false, "loading: start");
       try {
         await axios.put(`/staff/children/${childId}/update`, childRequest);
-        toast({
-          title: "Success",
-          description: "Child information updated successfully",
-          variant: "success"
-        });
+        toast.success("Child information updated successfully");
       } catch (error: unknown) {
         const err = error as ApiError;
         const msg = err?.response?.data?.message || err?.message;
-        toast({
-          title: "Error",
-          description: msg,
-          variant: "destructive"
-        });
+        toast.error(msg);
       } finally {
         set((state) => {
           state.loading.isLoading = false;

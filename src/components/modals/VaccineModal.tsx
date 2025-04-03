@@ -110,7 +110,9 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     }
 
     const formDataToSubmit = new FormData();
-    isUpdateMode && vaccine && formDataToSubmit.append("id", formData.id.toString());
+    if (isUpdateMode && vaccine) {
+      formDataToSubmit.append("id", formData.id.toString());
+    }
     formDataToSubmit.append("title", formData.title);
     formDataToSubmit.append("categoryId", formData.categoryId);
     formDataToSubmit.append("price", formData.price.toString());

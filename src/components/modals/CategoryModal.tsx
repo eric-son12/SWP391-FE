@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import type { Category } from "@/types/category"
 
 interface CategoryModalProps {
@@ -16,7 +16,7 @@ interface CategoryModalProps {
 
 export function CategoryModal({ onClose, category }: CategoryModalProps) {
   const { createCategory, updateCategory } = useStore();
-  const { toast } = useToast();
+  ;
   const isUpdateMode = Boolean(category);
 
   const [formData, setFormData] = useState({
@@ -57,24 +57,16 @@ export function CategoryModal({ onClose, category }: CategoryModalProps) {
       }
       if (isUpdateMode && category) {
         await updateCategory(category.id, fd);
-        toast({
-          title: "Success",
-          description: "Category updated successfully",
-        });
+        toast.success("Category updated successfully");
       } else {
         await createCategory(fd);
-        toast({
-          title: "Success",
-          description: "Category created successfully",
-        });
+        toast("Category created successfully");
       }
       onClose();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit category",
-        variant: "destructive",
-      });
+      console.error("Error submitting category:", error);
+      const msg = error instanceof Error? error.message : "Failed to create category";
+      toast(msg);
     } finally {
       setIsSubmitting(false);
     }

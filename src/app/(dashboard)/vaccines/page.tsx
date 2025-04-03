@@ -7,7 +7,7 @@ import { useStore } from "@/store"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,7 +24,7 @@ import { VaccineModal } from "@/components/modals/VaccineModal"
 export default function VaccinesPage() {
   const vaccines = useStore(state => state.product.vaccines)
   const { fetchVaccines, deleteVaccine } = useStore.getState()
-  const { toast } = useToast()
+  
 
   const [loading, setLoading] = useState(true)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -41,15 +41,12 @@ export default function VaccinesPage() {
       setLoading(true)
       await fetchVaccines()
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load vaccines",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast.error("Failed to load vaccines")
     } finally {
       setLoading(false)
     }
-  }, [fetchVaccines, toast])
+  }, [fetchVaccines])
 
   useEffect(() => {
     loadVaccines()
@@ -74,16 +71,10 @@ export default function VaccinesPage() {
 
     try {
       await deleteVaccine(vaccineToDelete)
-      toast({
-        title: "Success",
-        description: "Vaccine deleted successfully",
-      })
+      toast.success("Vaccine deleted successfully")
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete vaccine",
-        variant: "destructive",
-      })
+      console.error(error)
+      toast("Failed to delete vaccine")
     } finally {
       setVaccineToDelete(null)
       setDeleteDialogOpen(false)

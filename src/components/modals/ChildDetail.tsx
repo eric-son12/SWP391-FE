@@ -1,5 +1,5 @@
 "use client"
-import { Mail, Phone, Calendar, User } from "lucide-react"
+import { Calendar, User } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"

@@ -16,10 +16,38 @@ import {
 } from "recharts"
 import { Validate } from "@/utils/validate"
 
+interface ChartData {
+  date: string;
+  newUser: number;
+  countVaccine: number;
+  revenueInDay: number;
+}
+
+interface TopVaccine {
+  name: string;
+  dose: number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: {
+    name: string;
+    value: number;
+    stroke: string;
+  }[];
+  label?: string;
+}
+
+interface CustomTooltipEntry {
+  name: string;
+  value: number;
+  stroke: string;
+}
+
 export default function DashboardPage() {
-  const [activePeriod, setActivePeriod] = useState<"7days" | "15days" | "30days">("7days")
-  const [chartData, setChartData] = useState<any[]>([])
-  const [topVaccines, setTopVaccines] = useState<any[]>([])
+  const [activePeriod, setActivePeriod] = useState<"7days" | "15days" | "30days">("7days");
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [topVaccines, setTopVaccines] = useState<TopVaccine[]>([]);
 
   useEffect(() => {
     const fetchChartData = async () => {
@@ -33,8 +61,8 @@ export default function DashboardPage() {
         const data = response.data
         if (data.code === 1000) {
           const sortedData = data.result.sort(
-            (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
-          )
+            (a: ChartData, b: ChartData) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          );
           setChartData(sortedData)
         }
       } catch (error) {
@@ -90,12 +118,12 @@ export default function DashboardPage() {
     },
   ]
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="rounded border bg-white p-3 shadow-md">
           <p className="mb-2 font-medium">{label}</p>
-          {payload.map((entry: any) => (
+          {payload.map((entry: CustomTooltipEntry) => (
             <div key={entry.name} className="flex items-center gap-2 py-1">
               <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.stroke }}></div>
               <p className="text-sm" style={{ color: entry.stroke }}>
@@ -107,10 +135,10 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <div className="space-y-6">
