@@ -25,7 +25,7 @@ export default function FeedbackPage() {
         const response = await axios.get('/feedback/sorted/desc')
         setFeedback(response.data.result)
       } catch (error: unknown) {
-        const msg = error?.response?.data?.message || error?.message;
+        const msg = error instanceof Error ? error.message : 'An unknown error occurred';
         toast({
           title: "Error",
           description: msg ||"Failed to delete category",

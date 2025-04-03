@@ -2,14 +2,12 @@ const allowedHosts = [
   '*.cloudinary.com',
 ];
 
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: allowedHosts.map((hostname) => ({
-      protocol: 'http',
+      protocol: 'https',
       hostname,
       pathname: '**',
     })),
@@ -18,5 +16,5 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 };
-
+ 
 export default nextConfig;
