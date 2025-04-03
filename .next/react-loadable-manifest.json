@@ -1,1 +1,16 @@
-{}
+{
+  "app/page.tsx -> ./ClientRouterApp": {
+    "id": 41658,
+    "files": [
+      "static/chunks/5b87835d.d420d7945b256480.js",
+      "static/chunks/378-1e1e6f4d12008fbd.js",
+      "static/chunks/438-28860cde6cbc7ee1.js",
+      "static/chunks/126-8d2961d92d95bd6e.js",
+      "static/chunks/980-bb1ad36162380cdb.js",
+      "static/chunks/28-5fd9f9cb481a7c2c.js",
+      "static/chunks/776-86148bbf3fcb8acb.js",
+      "static/chunks/293-21deef516c406712.js",
+      "static/chunks/629.68945395b04b556b.js"
+    ]
+  }
+}
