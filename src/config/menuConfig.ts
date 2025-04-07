@@ -10,7 +10,8 @@ import {
   BadgeCheck,
   Bell,
   FileText,
-  MessageSquare
+  MessageSquare,
+  Phone
 } from "lucide-react";
 
 export interface SubMenuItem {
@@ -64,6 +65,12 @@ export const menuItemsByRole: Record<UserRole,
       icon: CalendarDays,
       key: "bookings",
       path: "/orders",
+    },
+    {
+      label: "Consultation",
+      icon: Phone,
+      key: "consultation",
+      path: "/consultation",
     },
     {
       label: "Products",
@@ -160,25 +167,12 @@ export const menuItemsByRole: Record<UserRole,
       key: "feedback",
       path: "/feedback",
     },
-    // {
-    //   label: "Reports",
-    //   icon: FileText,
-    //   key: "reports",
-    //   subItems: [
-    //     { label: "Daily Orders", 
-    // icon: History, 
-    // key: "daily-orders" },
-    //     { label: "Top Vaccine", 
-    // icon: Syringe, 
-    // key: "top-vaccine" },
-    //     { label: "Revenue", 
-    // icon: TrendingUp, 
-    // key: "revenue" },
-    //     { label: "Vaccinated Age", 
-    // icon: Baby, 
-    // key: "vaccinated-age" },
-    //   ],
-    // },
+    {
+      label: "Consultation",
+      icon: Phone,
+      key: "consultation",
+      path: "/consultation",
+    },
     {
       label: "Notifications",
       icon: Bell,
