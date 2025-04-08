@@ -20,11 +20,12 @@ import {
 } from "@/components/ui/alert-dialog"
 import { VaccinePreview } from "@/components/modals/VaccinePreview"
 import { VaccineModal } from "@/components/modals/VaccineModal"
+import { VaccineBatchModal } from "@/components/modals/VaccineBatchModal"
 
 export default function VaccinesPage() {
   const vaccines = useStore(state => state.product.vaccines)
   const { fetchVaccines, deleteVaccine } = useStore.getState()
-  
+
 
   const [loading, setLoading] = useState(true)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -32,6 +33,7 @@ export default function VaccinesPage() {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<Vaccine | undefined>(undefined)
   const [vaccineToDelete, setVaccineToDelete] = useState<number | null>(null)
   const [selectedVaccine, setSelectedVaccine] = useState<Vaccine | null>(null)
+  const [isBatchModalOpen, setIsBatchModalOpen] = useState(false)
 
   const [searchText, setSearchText] = useState("")
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all")
@@ -168,16 +170,22 @@ export default function VaccinesPage() {
       return matchesSearch && matchesCategory;
     });
   }, [vaccines, searchText, selectedCategoryId]);
-  
+
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Vaccines Management</h1>
-        <Button onClick={() => setIsCreateModalOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Vaccine
-        </Button>
+        <div className="flex gap-3">
+          <Button onClick={() => setIsCreateModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Vaccine
+          </Button>
+          <Button onClick={() => setIsBatchModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Enter New Vaccine Batch
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center space-x-2">
@@ -241,6 +249,12 @@ export default function VaccinesPage() {
       {/* Update Popup */}
       {isUpdateModalOpen && (
         <VaccineModal onClose={() => setIsUpdateModalOpen(undefined)} vaccine={isUpdateModalOpen} />
+      )}
+
+      {isBatchModalOpen && (
+        <VaccineBatchModal
+          onClose={() => setIsBatchModalOpen(false)}
+        />
       )}
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

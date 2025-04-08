@@ -1,5 +1,7 @@
 {
   "/(dashboard)/consultation/page": "app/(dashboard)/consultation/page.js",
+  "/(dashboard)/feedback/page": "app/(dashboard)/feedback/page.js",
+  "/(dashboard)/notifications/page": "app/(dashboard)/notifications/page.js",
   "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
   "/(dashboard)/posts/page": "app/(dashboard)/posts/page.js",
   "/(dashboard)/vaccines/page": "app/(dashboard)/vaccines/page.js",
