@@ -26,7 +26,6 @@ export default function VaccinesPage() {
   const vaccines = useStore(state => state.product.vaccines)
   const { fetchVaccines, deleteVaccine } = useStore.getState()
 
-
   const [loading, setLoading] = useState(true)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)

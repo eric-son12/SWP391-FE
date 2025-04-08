@@ -52,18 +52,24 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
         alt={`Image ${currentIndex + 1}`}
         className="object-contain w-full h-full"
       />
-      <button
-        onClick={prevImage}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-1 rounded"
-      >
-        <ChevronLeft />
-      </button>
-      <button
-        onClick={nextImage}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-1 rounded"
-      >
-        <ChevronRight />
-      </button>
+      {
+        images.length > 1 && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-1 rounded"
+            >
+              <ChevronLeft />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-1 rounded"
+            >
+              <ChevronRight />
+            </button>
+          </>
+        )
+      }
     </div>
   );
 };
@@ -188,12 +194,12 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
 
     try {
       let response;
-    if (isUpdateMode && vaccine) {
-      response = await updateVaccine(vaccine.id, formDataToSubmit);
-    } else {
-      response = await createVaccine(formDataToSubmit);
-    }
-    onClose();
+      if (isUpdateMode && vaccine) {
+        response = await updateVaccine(vaccine.id, formDataToSubmit);
+      } else {
+        response = await createVaccine(formDataToSubmit);
+      }
+      onClose();
     } catch (error) {
       console.error("Error submitting vaccine form:", error);
     }
@@ -338,7 +344,7 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                   required
                 />
               </div>
-              
+
               {/* Quantity */}
               <div className="space-y-2">
                 <Label htmlFor="quantity">Quantity</Label>
