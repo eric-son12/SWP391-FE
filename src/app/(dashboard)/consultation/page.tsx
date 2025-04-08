@@ -1,17 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { format } from "date-fns"
 import type { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/data-table"
 import { Badge } from "@/components/ui/badge"
 import { Consult, ConsultStatus } from "@/types/consult"
 import axios from "@/utils/axiosConfig"
+import { Card, CardContent } from "@/components/ui/card"
+import { toast } from "sonner"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function ConsultsPage() {
   const [consults, setConsults] = useState<Consult[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedConsult, setSelectedConsult] = useState<Consult | null>(null)
 
   useEffect(() => {
     const loadConsults = async () => {
@@ -29,23 +30,72 @@ export default function ConsultsPage() {
     loadConsults()
   }, [])
 
-  const handleStatusChange = (id: number, status: ConsultStatus) => {
-    setConsults(consults.map((consult) => (consult.id === id ? { ...consult, status } : consult)))
-  }
-
-
-  const getStatusBadge = (status: ConsultStatus) => {
-    switch (status) {
-      case "NEW":
-        return <Badge className="bg-blue-500">New</Badge>
-      case "DONE":
-        return <Badge className="bg-green-500">Completed</Badge>
-      case "CANCELLED":
-        return <Badge className="bg-red-500">Cancelled</Badge>
-      default:
-        return <Badge>{status}</Badge>
+  const handleStatusChange = async (id: number, status: ConsultStatus) => {
+    if (!["NEW", "DONE", "CANCELLED"].includes(status)) {
+      console.error("Invalid status value provided");
+      return;
     }
-  }
+    try {
+      await axios.put(`/consult/${id}`, null, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        },
+        params: {
+          id: id,
+          status: status,
+        }
+      });
+      setConsults((prevConsults) =>
+        prevConsults.map((consult) =>
+          consult.id === id ? { ...consult, status } : consult
+        )
+      );
+      toast.success("Status updated successfully");
+    } catch (error) {
+      console.error("Failed to update consult status", error);
+      toast.error("Failed to update status");
+    }
+  };
+
+  const StatusSelect = ({
+    consultId,
+    currentStatus,
+  }: {
+    consultId: number;
+    currentStatus: ConsultStatus;
+  }) => {
+    const [value, setValue] = useState<ConsultStatus>(currentStatus);
+
+    const disabled = currentStatus === "DONE";
+
+    const statusColors: Record<ConsultStatus, string> = {
+      NEW: "bg-blue-500",
+      DONE: "bg-green-500",
+      CANCELLED: "bg-red-500",
+    };
+
+    const onValueChange = async (newStatus: ConsultStatus) => {
+      setValue(newStatus);
+      await handleStatusChange(consultId, newStatus);
+    };
+
+    return (
+      <Select value={value} onValueChange={onValueChange} disabled={disabled}>
+        <SelectTrigger
+          className={`${statusColors[value]} ${disabled ? "cursor-not-allowed" : ""
+            } text-white`}
+        >
+          <SelectValue placeholder="Select status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="NEW">New</SelectItem>
+          <SelectItem value="DONE">Completed</SelectItem>
+          <SelectItem value="CANCELLED">Cancelled</SelectItem>
+        </SelectContent>
+      </Select>
+    );
+  };
 
   const columns: ColumnDef<Consult>[] = [
     {
@@ -65,30 +115,49 @@ export default function ConsultsPage() {
       header: "Phone",
     },
     {
+      accessorKey: "note",
+      header: "Note",
+      cell: ({ row }) => (
+        <div className="flex-1 whitespace-normal break-words">
+          {row.original.note}
+        </div>
+      ),
+    },
+    {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => getStatusBadge(row.original.status),
+      cell: ({ row }) => (
+        <StatusSelect
+          consultId={row.original.id}
+          currentStatus={row.original.status}
+        />
+      ),
+
     },
   ]
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="space-y-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Consultation Requests</h1>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading consults...</p>
-        </div>
-      ) : (
-        <DataTable
-          columns={columns}
-          data={consults}
-          searchColumn="parentName"
-          searchPlaceholder="Search by parent name..."
-        />
-      )}
+      <Card>
+        <CardContent>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <p>Loading consults...</p>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={consults}
+              searchColumn="parentName"
+              searchPlaceholder="Search by parent name..."
+            />
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

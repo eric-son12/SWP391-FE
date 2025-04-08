@@ -22,7 +22,7 @@ export interface Vaccine {
 }
 
 export interface VaccineOrder {
-  date: string 
+  date: string | number[] 
   id: number
   name: string
   price: number

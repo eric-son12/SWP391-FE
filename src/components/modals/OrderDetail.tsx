@@ -76,11 +76,25 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     }
   }
 
-  const displayDateTime = (dateString: string) => {
-    const date = new Date(dateString)
-    return format(date, "yyyy-MM-dd HH:mm")
-  }
-
+  const displayDateTime = (dateInput: string | number[]) => {
+    let date: Date;
+  
+    if (typeof dateInput === "string") {
+      date = new Date(dateInput);
+    } else if (Array.isArray(dateInput)) {
+      const [year, month, day, hour, minute, second, nano] = dateInput;
+      const ms = typeof nano === "number" ? Math.floor(nano / 1000000) : 0;
+      date = new Date(year, month - 1, day, hour, minute, second, ms);
+    } else {
+      return 'Invalid Date';
+    }
+  
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+    return format(date, 'yyyy-MM-dd HH:mm');
+  };
+  
   const updateVaccineStatus = async (id: string, newStatus: VaccineStatus) => {
     try {
       const token = localStorage.getItem("token");
@@ -114,12 +128,28 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
   const VaccinationDateCell = ({ item }: { item: VaccineOrder }) => {
     const [editing, setEditing] = useState(false)
-    const [tempDate, setTempDate] = useState<Date | undefined>(
-      item.date ? new Date(item.date) : undefined
-    )
+    const [tempDate, setTempDate] = useState<Date | undefined>()
 
     useEffect(() => {
-      setTempDate(item.date ? new Date(item.date) : undefined)
+      if (Array.isArray(item.date)) {
+        const [year, month, day, hour, minute, second, nano] = item.date
+        setTempDate(
+          new Date(
+            year,
+            (month || 1) - 1,
+            day || 1,
+            hour || 0,
+            minute || 0,
+            second || 0,
+            nano ? Math.floor(nano / 1000000) : 0
+          )
+        )
+      }
+      else if (typeof item.date === "string" && item.date !== "") {
+        setTempDate(new Date(item.date))
+      } else {
+        setTempDate(undefined)
+      }
     }, [item.date])
 
     const handleSetDate = async (newDate: Date | undefined) => {

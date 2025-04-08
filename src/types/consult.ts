@@ -1,4 +1,8 @@
-export type ConsultStatus = "NEW" | "DONE" | "CANCELLED"
+export enum ConsultStatus {
+  NEW = "NEW",
+  DONE = "DONE",
+  CANCELLED = "CANCELLED",
+}
 
 export interface Consult {
   id: number

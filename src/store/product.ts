@@ -54,61 +54,76 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
       set((state) => { state.loading.isLoading = true; });
       try {
         const token = localStorage.getItem("token")
-        await axios.post("/product/addProduct", formData, {
+        const response = await axios.post("/product/addProduct", formData, {
           headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
         });
-        await get().fetchVaccines();
-        toast.success("Vaccine created successfully");
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
-        const msg = apiError?.response?.data?.message || apiError?.message;
-        toast.error(msg);
-      } finally {
-        set((state) => { state.loading.isLoading = false; });
-      }
+
+        console.log("createVaccine: ", response);
+        if (response.status === 200) {
+          await axios.post(`/underlying-conditions/product/${response?.data.id}`, {
+            condition: formData.get('condition')
+          }, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            },
+            params: {
+              productId: response.data.id,
+            }
+          });
+        }
+      await get().fetchVaccines();
+      toast.success("Vaccine created successfully");
+    } catch(error: unknown) {
+      const apiError = error as ApiError;
+      const msg = apiError?.response?.data?.message || apiError?.message;
+      toast.error(msg);
+    } finally {
+      set((state) => { state.loading.isLoading = false; });
+}
     },
 
-    updateVaccine: async (vaccineId: number, formData: FormData) => {
-      set((state) => { state.loading.isLoading = true; });
-      try {
-        const token = localStorage.getItem("token")
-        await axios.patch(`/product/updateProduct/${vaccineId}`, formData, {
-          headers: { 
-            "Content-Type": "multipart/form-data", 
-            "Authorization": `Bearer ${token}` 
-          },
-        });
-        await get().fetchVaccines();
-        toast.success("Vaccine updated successfully");
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
-        const msg = apiError?.response?.data?.message || apiError?.message;
-        toast.error(msg);
-      } finally {
-        set((state) => { state.loading.isLoading = false; });
-      }
-    },
+updateVaccine: async (vaccineId: number, formData: FormData) => {
+  set((state) => { state.loading.isLoading = true; });
+  try {
+    const token = localStorage.getItem("token")
+    await axios.patch(`/product/updateProduct/${vaccineId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization": `Bearer ${token}`
+      },
+    });
+    await get().fetchVaccines();
+    toast.success("Vaccine updated successfully");
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    const msg = apiError?.response?.data?.message || apiError?.message;
+    toast.error(msg);
+  } finally {
+    set((state) => { state.loading.isLoading = false; });
+  }
+},
 
-    deleteVaccine: async (vaccineId: number) => {
-      set((state) => { state.loading.isLoading = true; });
-      try {
-        const token = localStorage.getItem("token")
-        await axios.delete(`/product/deleteProduct/${vaccineId}`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        await get().fetchVaccines();
-        toast.success("Vaccine deleted successfully");
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
-        const msg = apiError?.response?.data?.message || apiError?.message;
-        toast.error(msg);
+  deleteVaccine: async (vaccineId: number) => {
+    set((state) => { state.loading.isLoading = true; });
+    try {
+      const token = localStorage.getItem("token")
+      await axios.delete(`/product/deleteProduct/${vaccineId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      await get().fetchVaccines();
+      toast.success("Vaccine deleted successfully");
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      const msg = apiError?.response?.data?.message || apiError?.message;
+      toast.error(msg);
 
-      } finally {
-        set((state) => { state.loading.isLoading = false; });
-      }
-    },
+    } finally {
+      set((state) => { state.loading.isLoading = false; });
+    }
+  },
 
     fetchCategories: async () => {
       set((state) => { state.loading.isLoading = true; });
@@ -132,60 +147,60 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
       }
     },
 
-    createCategory: async (formData: FormData) => {
-      set((state) => { state.loading.isLoading = true; });
-      try {
-        const token = localStorage.getItem("token")
-        await axios.post("/category/createCategory", formData, {
-          headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
-        });
-        await get().fetchCategories();
-        toast.success("Category created successfully");
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
-        const msg = apiError?.response?.data?.message || apiError?.message;
-        toast.error(msg);
-      } finally {
-        set((state) => { state.loading.isLoading = false; });
-      }
-    },
+      createCategory: async (formData: FormData) => {
+        set((state) => { state.loading.isLoading = true; });
+        try {
+          const token = localStorage.getItem("token")
+          await axios.post("/category/createCategory", formData, {
+            headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
+          });
+          await get().fetchCategories();
+          toast.success("Category created successfully");
+        } catch (error: unknown) {
+          const apiError = error as ApiError;
+          const msg = apiError?.response?.data?.message || apiError?.message;
+          toast.error(msg);
+        } finally {
+          set((state) => { state.loading.isLoading = false; });
+        }
+      },
 
-    updateCategory: async (categoryId: number, formData: FormData) => {
-      set((state) => { state.loading.isLoading = true; });
-      try {
-        const token = localStorage.getItem("token")
-        await axios.put(`/category/updateCategory/${categoryId}`, formData, {
-          headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
-        });
-        await get().fetchCategories();
-        toast.success("Category updated successfully");
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
-        const msg = apiError?.response?.data?.message || apiError?.message;
-        toast.error(msg);
-      } finally {
-        set((state) => { state.loading.isLoading = false; });
-      }
-    },
-
-    deleteCategory: async (categoryId: number) => {
-      set((state) => { state.loading.isLoading = true; });
-      try {
-        const token = localStorage.getItem("token")
-        await axios.delete(`/category/deleteCategory/${categoryId}`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
+        updateCategory: async (categoryId: number, formData: FormData) => {
+          set((state) => { state.loading.isLoading = true; });
+          try {
+            const token = localStorage.getItem("token")
+            await axios.put(`/category/updateCategory/${categoryId}`, formData, {
+              headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
+            });
+            await get().fetchCategories();
+            toast.success("Category updated successfully");
+          } catch (error: unknown) {
+            const apiError = error as ApiError;
+            const msg = apiError?.response?.data?.message || apiError?.message;
+            toast.error(msg);
+          } finally {
+            set((state) => { state.loading.isLoading = false; });
           }
-        });
-        await get().fetchCategories();
-        toast.success("Category deleted successfully");
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
-        const msg = apiError?.response?.data?.message || apiError?.message;
-        toast.error(msg);
-      } finally {
-        set((state) => { state.loading.isLoading = false; });
-      }
-    },
+        },
+
+          deleteCategory: async (categoryId: number) => {
+            set((state) => { state.loading.isLoading = true; });
+            try {
+              const token = localStorage.getItem("token")
+              await axios.delete(`/category/deleteCategory/${categoryId}`, {
+                headers: {
+                  "Authorization": `Bearer ${token}`
+                }
+              });
+              await get().fetchCategories();
+              toast.success("Category deleted successfully");
+            } catch (error: unknown) {
+              const apiError = error as ApiError;
+              const msg = apiError?.response?.data?.message || apiError?.message;
+              toast.error(msg);
+            } finally {
+              set((state) => { state.loading.isLoading = false; });
+            }
+          },
   };
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStore } from "@/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -21,21 +22,51 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import type { Vaccine } from "@/types/vaccine";
 import { useCategories } from "@/hooks/useCategories";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "@/utils/axiosConfig";
 
 interface VaccineModalProps {
   onClose: () => void;
   vaccine?: Vaccine;
 }
-const targetGroupOptions = [
-  { value: "AGE_0_3", label: "0-3 months" },
-  { value: "AGE_4_6", label: "4-6 months" },
-  { value: "AGE_7_12", label: "7-12 months" },
-  { value: "AGE_13_24", label: "13-24 months" },
-  { value: "AGE_25_PLUS", label: "Over 25 months" },
-]
+
+const ImageCarousel = ({ images }: { images: string[] }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextImage = () => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  if (!images.length) return null;
+
+  return (
+    <div className="relative w-full h-64 border rounded-md overflow-hidden">
+      <img
+        src={images[currentIndex]}
+        alt={`Image ${currentIndex + 1}`}
+        className="object-contain w-full h-full"
+      />
+      <button
+        onClick={prevImage}
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-1 rounded"
+      >
+        <ChevronLeft />
+      </button>
+      <button
+        onClick={nextImage}
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-1 rounded"
+      >
+        <ChevronRight />
+      </button>
+    </div>
+  );
+};
 
 export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
   const { createVaccine, updateVaccine } = useStore();
@@ -53,7 +84,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     discountPrice: vaccine?.discountPrice ?? 0,
     isActive: vaccine?.isActive ?? true,
     manufacturer: vaccine?.manufacturer || "",
-    targetGroup: vaccine?.targetGroup || "",
     schedule: vaccine?.schedule || "",
     sideEffects: vaccine?.sideEffects || "",
     isPriority: vaccine?.isPriority || false,
@@ -61,13 +91,16 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     maxAgeMonths: vaccine?.maxAgeMonths ?? 0,
     numberOfDoses: vaccine?.numberOfDoses ?? 1,
     minDaysBetweenDoses: vaccine?.minDaysBetweenDoses ?? 0,
-    quantity: vaccine?.quantity ?? 0,
+    // Column 2 fields (only for create mode)
+    batchNumber: "",
+    expirationDate: "",
+    condition: "",
+    quantity: 0,
   });
 
-  // For handling multiple images (FileList)
   const [images, setImages] = useState<FileList | null>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
 
-  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -78,7 +111,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     }));
   };
 
-  // Handle select changes
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -86,7 +118,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     }));
   };
 
-  // Handle checkbox changes
   const handleCheckboxChange = (name: string, checked: boolean) => {
     setFormData((prev) => ({
       ...prev,
@@ -94,18 +125,30 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     }));
   };
 
-  // Handle file input (multiple images)
+  // Update file input to accept only image formats and generate preview URLs
   const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setImages(e.target.files);
+      const filePreviews = Array.from(e.target.files)
+        .filter((file) => file.type.startsWith("image/"))
+        .map((file) => URL.createObjectURL(file));
+      setPreviews(filePreviews);
     }
   };
+
+  // Cleanup generated preview URLs to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      previews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previews]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.price < 5000) {
-      alert("Price must be at least 5000!");
+    const priceInput = document.getElementById("price") as HTMLInputElement;
+    if (!priceInput.checkValidity()) {
+      priceInput.reportValidity();
       return;
     }
 
@@ -116,29 +159,27 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     formDataToSubmit.append("title", formData.title);
     formDataToSubmit.append("categoryId", formData.categoryId);
     formDataToSubmit.append("price", formData.price.toString());
-    formDataToSubmit.append("quantity", formData.quantity.toString());
     formDataToSubmit.append("description", formData.description);
     formDataToSubmit.append("discount", formData.discount.toString());
     formDataToSubmit.append("discountPrice", formData.discountPrice.toString());
     formDataToSubmit.append("isActive", JSON.stringify(formData.isActive));
     formDataToSubmit.append("manufacturer", formData.manufacturer);
-    formDataToSubmit.append("targetGroup", formData.targetGroup);
     formDataToSubmit.append("schedule", formData.schedule);
     formDataToSubmit.append("sideEffects", formData.sideEffects);
     formDataToSubmit.append("available", JSON.stringify(formData.isActive));
     formDataToSubmit.append("isPriority", JSON.stringify(formData.isPriority));
     formDataToSubmit.append("minAgeMonths", formData.minAgeMonths.toString());
     formDataToSubmit.append("maxAgeMonths", formData.maxAgeMonths.toString());
-    formDataToSubmit.append(
-      "numberOfDoses",
-      formData.numberOfDoses.toString()
-    );
-    formDataToSubmit.append(
-      "minDaysBetweenDoses",
-      formData.minDaysBetweenDoses.toString()
-    );
+    formDataToSubmit.append("numberOfDoses", formData.numberOfDoses.toString());
+    formDataToSubmit.append("minDaysBetweenDoses", formData.minDaysBetweenDoses.toString());
 
-    // Append images if available
+    if (!isUpdateMode) {
+      formDataToSubmit.append("batchNumber", formData.batchNumber);
+      formDataToSubmit.append("expirationDate", formData.expirationDate);
+      formDataToSubmit.append("condition", formData.condition);
+      formDataToSubmit.append("quantity", formData.quantity.toString());
+    }
+
     if (images) {
       for (let i = 0; i < images.length; i++) {
         formDataToSubmit.append("images", images[i]);
@@ -146,12 +187,13 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     }
 
     try {
-      if (isUpdateMode && vaccine) {
-        await updateVaccine(vaccine.id, formDataToSubmit);
-      } else {
-        await createVaccine(formDataToSubmit);
-      }
-      onClose();
+      let response;
+    if (isUpdateMode && vaccine) {
+      response = await updateVaccine(vaccine.id, formDataToSubmit);
+    } else {
+      response = await createVaccine(formDataToSubmit);
+    }
+    onClose();
     } catch (error) {
       console.error("Error submitting vaccine form:", error);
     }
@@ -159,7 +201,7 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="min-w-[80svw]">
         <DialogHeader>
           <DialogTitle>
             {isUpdateMode ? "Update Vaccine" : "Create Vaccine"}
@@ -171,8 +213,12 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Form with 3-column layout */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-6">
+        {/* Change grid columns based on mode */}
+        <form
+          onSubmit={handleSubmit}
+          className={`grid gap-6 ${isUpdateMode ? "grid-cols-3" : "grid-cols-4"}`}
+          noValidate
+        >
           {/* Column 1 */}
           <div className="flex flex-col space-y-4 col-span-1">
             {/* Vaccine Name */}
@@ -195,7 +241,7 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 value={formData.categoryId}
                 onValueChange={(val) => handleSelectChange("categoryId", val)}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full mb-0">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -203,13 +249,9 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                     if (category.subCategories && category.subCategories.length > 0) {
                       return (
                         <SelectGroup key={category.id}>
-                          <SelectItem
-                            key={category.id}
-                            value={category.id.toString()}
-                          >
+                          <SelectItem value={category.id.toString()}>
                             {category.name}
                           </SelectItem>
-
                           {category.subCategories.map((sub) => (
                             <SelectItem
                               key={sub.id}
@@ -220,9 +262,8 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                             </SelectItem>
                           ))}
                         </SelectGroup>
-                      )
+                      );
                     }
-
                     return (
                       <SelectItem
                         key={category.id}
@@ -230,39 +271,12 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                       >
                         {category.name}
                       </SelectItem>
-                    )
+                    );
                   })}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Manufacturer */}
-            <div className="space-y-2">
-              <Label htmlFor="manufacturer">Manufacturer</Label>
-              <Input
-                id="manufacturer"
-                name="manufacturer"
-                value={formData.manufacturer}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Images (Multiple) */}
-            <div className="space-y-2">
-              <Label htmlFor="images">Images</Label>
-              <Input
-                id="images"
-                name="images"
-                type="file"
-                multiple
-                onChange={handleImagesChange}
-              />
-            </div>
-          </div>
-
-          {/* Column 2 */}
-          <div className="flex flex-col space-y-4 col-span-1">
             {/* Price */}
             <div className="space-y-2">
               <Label htmlFor="price">Price</Label>
@@ -275,9 +289,98 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 value={formData.price}
                 onChange={handleChange}
                 required
+                pattern="^(?:[5-9]\d{3}|\d{5,})$"
               />
             </div>
 
+            {/* Images (Multiple, image files only) */}
+            <div className="space-y-2">
+              <Label htmlFor="images">Images</Label>
+              <Input
+                id="images"
+                name="images"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImagesChange}
+              />
+              {previews.length > 0 && (
+                <div className="mt-4">
+                  <ImageCarousel images={previews} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Column 2 – Only for Create Mode */}
+          {!isUpdateMode && (
+            <div className="flex flex-col space-y-4 col-span-1">
+              {/* Batch Number */}
+              <div className="space-y-2">
+                <Label htmlFor="batchNumber">Batch Number</Label>
+                <Input
+                  id="batchNumber"
+                  name="batchNumber"
+                  value={formData.batchNumber}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              {/* Expiration Date as DatePicker */}
+              <div className="space-y-2">
+                <Label htmlFor="expirationDate">Expiration Date</Label>
+                <Input
+                  id="expirationDate"
+                  name="expirationDate"
+                  type="date"
+                  value={formData.expirationDate}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              {/* Quantity */}
+              <div className="space-y-2">
+                <Label htmlFor="quantity">Quantity</Label>
+                <Input
+                  id="quantity"
+                  name="quantity"
+                  type="number"
+                  min="0"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Condition (String) */}
+              <div className="space-y-2">
+                <Label htmlFor="condition">Condition</Label>
+                <Textarea
+                  id="condition"
+                  name="condition"
+                  value={formData.condition}
+                  onChange={handleChange}
+                  required
+                  rows={5}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Column 3 (or Column 2 in update mode) */}
+          <div className="flex flex-col space-y-4 col-span-1">
+            {/* Manufacturer */}
+            <div className="space-y-2">
+              <Label htmlFor="manufacturer">Manufacturer</Label>
+              <Input
+                id="manufacturer"
+                name="manufacturer"
+                value={formData.manufacturer}
+                onChange={handleChange}
+                required
+              />
+            </div>
             {/* Discount */}
             <div className="space-y-2">
               <Label htmlFor="discount">Discount (%)</Label>
@@ -292,21 +395,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
-            {/* Quantity */}
-            <div className="space-y-2">
-              <Label htmlFor="quantity">Quantity</Label>
-              <Input
-                id="quantity"
-                name="quantity"
-                type="number"
-                min="0"
-                value={formData.quantity}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
             {/* Number of Doses */}
             <div className="space-y-2">
               <Label htmlFor="numberOfDoses">Number of Doses</Label>
@@ -320,7 +408,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
             {/* Min Age */}
             <div className="space-y-2">
               <Label htmlFor="minAgeMonths">Min Age (months)</Label>
@@ -334,7 +421,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
             {/* Max Age */}
             <div className="space-y-2">
               <Label htmlFor="maxAgeMonths">Max Age (months)</Label>
@@ -348,7 +434,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
             {/* Min Days Between Doses */}
             <div className="space-y-2">
               <Label htmlFor="minDaysBetweenDoses">
@@ -366,32 +451,8 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
             </div>
           </div>
 
-          {/* Column 3 */}
+          {/* Column 4 (or Column 3 in update mode) */}
           <div className="flex flex-col space-y-4 col-span-1">
-            {/* Target Group */}
-            <div className="space-y-2">
-              <Label htmlFor="targetGroup">Target Group</Label>
-              <Select
-                name="targetGroup"
-                value={formData.targetGroup}
-                onValueChange={(val) => handleSelectChange("targetGroup", val)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select target group" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {targetGroupOptions.map((tg) => (
-                      <SelectItem key={tg.value} value={tg.value}>
-                        {tg.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-            </div>
-
             {/* Description */}
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
@@ -404,7 +465,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
             {/* Schedule */}
             <div className="space-y-2">
               <Label htmlFor="schedule">Schedule</Label>
@@ -418,7 +478,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
             {/* Side Effects */}
             <div className="space-y-2">
               <Label htmlFor="sideEffects">Side Effects</Label>
@@ -431,7 +490,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                 required
               />
             </div>
-
             {/* Checkboxes */}
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
@@ -446,7 +504,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
                   Active
                 </Label>
               </div>
-
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="isPriority"
@@ -462,8 +519,7 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
             </div>
           </div>
 
-          {/* Action buttons (across all columns) */}
-          <div className="col-span-3 flex justify-end space-x-2 pt-4">
+          <div className="col-span-full flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
