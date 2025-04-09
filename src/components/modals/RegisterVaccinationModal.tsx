@@ -309,8 +309,8 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                 <CommandGroup className="h-auto overflow-y-auto">
                   {filteredUsers.map((user) => (
                     <CommandItem
-                      key={`${user.id} ${user.username} ${user.fullname} ${user.phone}`}
-                      value={user.id.toString()}
+                      key={`${user.id}`}
+                      value={`${user.id} ${user.username} ${user.fullname} ${user.phone}`}
                       onSelect={() => {
                         setSelectedParentId(user.id)
                         setParentPopoverOpen(false) // auto close

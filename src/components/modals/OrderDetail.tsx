@@ -84,7 +84,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     } else if (Array.isArray(dateInput)) {
       const [year, month, day, hour, minute, second, nano] = dateInput;
       const ms = typeof nano === "number" ? Math.floor(nano / 1000000) : 0;
-      date = new Date(year, month - 1, day, hour, minute, second, ms);
+      date = new Date(year, month - 1, day, hour, minute, second);
     } else {
       return 'Invalid Date';
     }
