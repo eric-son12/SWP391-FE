@@ -256,7 +256,7 @@ export default function RegisterVaccinationPage() {
       })
 
       toast.success("Order created successfully")
-      router.push("/orders")
+      // router.push("/orders")
     } catch (err) {
       console.error(err)
       toast.error("Failed to create order")

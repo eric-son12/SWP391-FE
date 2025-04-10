@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Validate } from "@/utils/validate"
 import type { NormalizedSchedule, NormalizedUser, Order, OrderDetail } from "@/types/order"
 import { format } from "date-fns"
+import { VaccineStatus } from "@/types/vaccine"
 
 const normalizeSchedule = (scheduleData: OrderDetail[]): NormalizedSchedule => {
   let index = 1;
@@ -122,6 +123,29 @@ export default function OrdersPage() {
     ])
     setLoading(false)
   }, [loadOrders])
+
+  const handleVaccineStatusChange = (
+    orderId: string,
+    orderDetailId: string,
+    newStatus: VaccineStatus
+  ) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((o) => {
+        if (o.orderId !== orderId) return o
+        return {
+          ...o,
+          orderDetails: o.orderDetails.map((child) => ({
+            ...child,
+            vaccines: child.vaccines.map((v) =>
+              v.id.toString() === orderDetailId
+                ? { ...v, status: newStatus }
+                : v
+            ),
+          })),
+        }
+      })
+    )
+  }
 
   const handleViewOrder = (orderId: string) => {
     const order = orders.find((o) => o.orderId === orderId)
@@ -351,19 +375,6 @@ export default function OrdersPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {/* {loading ? (
-            <div className="flex h-40 items-center justify-center">
-              <p>Loading orders...</p>
-            </div>
-          ) : (
-            <DataTable
-              columns={columns}
-              data={orders}
-              searchColumn="orderId"
-              searchPlaceholder="Search by order ID..."
-            />
-          )} */}
-
             {/* Tab Content All */}
             <TabsContent value="All">
               {loading ? (
@@ -404,6 +415,9 @@ export default function OrdersPage() {
         <OrderDetailsModal
           order={selectedOrder}
           onClose={() => setSelectedOrder(null)}
+          onVaccineStatusChange={(orderDetailId, newStatus) =>
+            handleVaccineStatusChange(selectedOrder.orderId, orderDetailId, newStatus)
+          }
         />
       )}
 
