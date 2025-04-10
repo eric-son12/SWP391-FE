@@ -22,7 +22,7 @@ const normalizeSchedule = (scheduleData: OrderDetail[]): NormalizedSchedule => {
 
   const normalized = scheduleData.reduce((acc, item) => {
     const email = item.email;
-    
+
     if (!acc[email]) {
       acc[email] = {
         id: index++,
@@ -30,7 +30,7 @@ const normalizeSchedule = (scheduleData: OrderDetail[]): NormalizedSchedule => {
         firstName: item.firstName,
         lastName: item.lastName,
         mobileNo: item.mobileNo,
-        children: {}, 
+        children: {},
       };
     }
 
@@ -76,7 +76,6 @@ export default function OrdersPage() {
 
   const loadOrders = useCallback(async () => {
     try {
-      setLoading(true)
       const response = await axios.get("/order/all-orders", {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -116,8 +115,12 @@ export default function OrdersPage() {
   }, [])
 
   useEffect(() => {
-    loadOrders()
-    scheduleByDate()
+    setLoading(true)
+    Promise.all([
+      loadOrders(),
+      scheduleByDate(),
+    ])
+    setLoading(false)
   }, [loadOrders])
 
   const handleViewOrder = (orderId: string) => {
@@ -192,6 +195,7 @@ export default function OrdersPage() {
       header: "Actions",
       cell: ({ row }) => {
         const orderId = row.getValue("orderId") as string
+        const status = (row.getValue("status") as string).toLowerCase() 
 
         return (
           <div className="flex gap-2">
@@ -200,11 +204,14 @@ export default function OrdersPage() {
               View
             </Button>
 
-            <Button variant="outline" size="sm" className="text-red-500 hover:text-red-700 hover:cursor-pointer" onClick={() => setOrderToCancel(orderId)}>
-              <Ban className="mr-2 h-4 w-4" />
-              Cancel
-            </Button>
-          </div>
+            {["success", "paid", "canceled_partial", "cancel", "cancelled"].includes(status) ?
+              null :
+              < Button variant="outline" size="sm" className="text-red-500 hover:text-red-700 hover:cursor-pointer" onClick={() => setOrderToCancel(orderId)}>
+                <Ban className="mr-2 h-4 w-4" />
+                Cancel
+              </Button>
+            }
+          </div >
         )
       },
     },
@@ -269,7 +276,7 @@ export default function OrdersPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Orders Management</h1>
-        <Button onClick={() => setShowCreateOrderModal(true)}>
+        <Button onClick={() => window.open("/orders/register", "_blank")}>
           <Plus className="mr-2 h-4 w-4" />
           Create Order
         </Button>
@@ -407,12 +414,12 @@ export default function OrdersPage() {
         />
       )}
 
-      {showCreateOrderModal && (
+      {/* {showCreateOrderModal && (
         <RegisterVaccinationModal
           open={showCreateOrderModal}
           onClose={() => setShowCreateOrderModal(false)}
         />
-      )}
+      )} */}
 
       {orderToCancel && (
         <CancelOrderModal

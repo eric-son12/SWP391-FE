@@ -67,7 +67,7 @@ export default function ConsultsPage() {
   }) => {
     const [value, setValue] = useState<ConsultStatus>(currentStatus);
 
-    const disabled = currentStatus === "DONE";
+    const disabled = currentStatus === "DONE" || currentStatus === "CANCELLED";
 
     const statusColors: Record<ConsultStatus, string> = {
       NEW: "bg-blue-500",

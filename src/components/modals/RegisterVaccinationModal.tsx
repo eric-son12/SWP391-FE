@@ -29,6 +29,7 @@ import { format } from "date-fns"
 import { DateTimePicker } from "../DateTimePicker"
 import { Vaccine } from "@/types/vaccine"
 import { Validate } from "@/utils/validate"
+import { Portal } from "@radix-ui/react-select"
 
 interface ChildSelection {
   childId: number
@@ -67,6 +68,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
   const [tempChildVaccines, setTempChildVaccines] = useState<Vaccine[]>([])
   const [childPopoverOpen, setChildPopoverOpen] = useState(false)
   const [vaccinePopoverOpen, setVaccinePopoverOpen] = useState(false)
+  const [suggestedVaccines, setSuggestedVaccines] = useState<Vaccine[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("") // parent search
   const [childSearch, setChildSearch] = useState("")
@@ -79,7 +81,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
     return (
       allUsers?.filter(
         (user) =>
-          user.id.toString().includes(searchTerm) || 
+          user.id.toString().includes(searchTerm) ||
           user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
       ) || []
@@ -105,7 +107,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
   const filteredVaccines = useMemo(() => {
     const results = allVaccines?.filter((v) => {
       if (tempChildVaccines.some((tv) => tv.id === v.id)) return false
-      
+
       const matchName =
         v.title.toLowerCase().includes(vaccineSearch.toLowerCase()) ||
         String(v.id).includes(vaccineSearch)
@@ -114,6 +116,22 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
     return results
   }, [allVaccines, vaccineSearch, tempChildVaccines])
+
+  const handleSelectChild = async (childId: number) => {
+    if (!childId) return;
+
+    try {
+      const response = await axios.get(`/order/vaccine/suggestion/staff`, {
+        params: {
+          childId: childId,
+        },
+      });
+      ;
+      setSuggestedVaccines(response.data.result || []);
+    } catch (err) {
+      console.error("Lỗi getSuccessVaccine:", err);
+    }
+  };
 
   useEffect(() => {
     if (!selectedParentId) {
@@ -163,7 +181,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
     setTempChildVaccines((prev) => {
       if (prev.find((x) => x.id === vaccine.id)) {
-        return prev 
+        return prev
       }
       return [...prev, vaccine]
     })
@@ -388,6 +406,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                             onSelect={() => {
                               setTempChildId(child.childId)
                               setTempChildName(child.fullname)
+                              handleSelectChild(child.childId)
                               setChildPopoverOpen(false)
                             }}
                           >
@@ -414,7 +433,12 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[calc(60svw-4rem)]">
+                  <Portal>
+                  <PopoverContent 
+                    side="top" 
+                    sideOffset={8}
+                    className="w-[calc(60svw-4rem)] max-h-64 overflow-auto"
+                  >
                     <Command>
                       <CommandInput
                         placeholder="Search vaccine..."
@@ -423,13 +447,28 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       />
                       <CommandList className="flex max-h-[250px] w-full z-[9999] overflow-y-scroll">
                         <CommandEmpty>No vaccine found.</CommandEmpty>
-                        <CommandGroup className="h-auto z-[9999] w-[calc(60svw-6rem)]">
+                        {suggestedVaccines.length > 0 && (
+                          <CommandGroup heading="Suggest">
+                            {suggestedVaccines.map((v) => (
+                              <CommandItem
+                                key={v.id}
+                                value={`${v.title} ${v.id}`}
+                                onSelect={() => addVaccineToChild(v)}
+                                className="flex w-full items-center justify-between"
+                              >
+                                <p>{v.title}</p>
+                                <span>{Validate.formatPrice(v.price)}</span>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        )}
+                        <CommandGroup heading="Vaccine">
                           {filteredVaccines.map((v) => (
                             <CommandItem
                               key={v.id}
                               value={`${v.title} ${v.id}`}
                               onSelect={() => addVaccineToChild(v)}
-                              className="flex items-center justify-between"
+                              className="flex w-full items-center justify-between"
                             >
                               <p>{v.title}</p>
                               {Validate.formatPrice(v.price)}
@@ -439,6 +478,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       </CommandList>
                     </Command>
                   </PopoverContent>
+                  </Portal>
                 </Popover>
               </div>
 

@@ -11,6 +11,8 @@ export interface User {
   bod: string;
   gender: string;
   avatarUrl: string;
+  children: Child[];
+  relativeType?: string
 }
 
 export interface Child {

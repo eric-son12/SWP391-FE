@@ -192,9 +192,9 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
       return (
         <div className="flex items-center gap-2">
           <span>{displayDateTime(item.date)}</span>
-          <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
+          {!["DA_TIEM", "DA_HUY"].includes(item.status) && <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
             Edit
-          </button>
+          </button>}
         </div>
       )
     }
@@ -282,7 +282,6 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
                           <TableBody>
                             {child.vaccines.map((vaccine, idx) => {
-
                               return (<TableRow key={idx}>
                                 <TableCell className="font-medium">{vaccine.name}</TableCell>
                                 <TableCell>{formatPrice(vaccine.price)}</TableCell>

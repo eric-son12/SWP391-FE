@@ -14,7 +14,7 @@ interface ModalWrapperProps {
 export function ModalWrapper({ title, description, isOpen, onClose, children }: ModalWrapperProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] min-w-[60svw] overflow-y-auto">
+      <DialogContent className="relative max-h-[90vh] min-w-[60svw] overflow-y-auto z-[9999]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

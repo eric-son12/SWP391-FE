@@ -19,8 +19,6 @@ interface OrderDetailsModalProps {
 
 export function VaccinationDetailsModal({ vaccination, onClose }: OrderDetailsModalProps) {
   const [orderDetail, setOrderDetail] = useState<NormalizedUser>(vaccination)
-  console.log("orderDetail: ", orderDetail)
-
   const updateVaccineStatus = async (id: string, newStatus: VaccineStatus) => {
     try {
       const token = localStorage.getItem("token");
@@ -94,8 +92,9 @@ export function VaccinationDetailsModal({ vaccination, onClose }: OrderDetailsMo
                       <div className="rounded-md border">
                         <Table>
                           <TableHeader>
-                            <TableRow className="flex justify-between">
-                              <TableHead className="content-center">Vaccine</TableHead>
+                            <TableRow className="flex ">
+                              <TableHead className="content-center flex-1">Vaccine</TableHead>
+                              <TableHead className="w-[250px] content-center">Doctor</TableHead>
                               <TableHead className="w-[125px] content-center">Status</TableHead>
                             </TableRow>
                           </TableHeader>
@@ -103,8 +102,9 @@ export function VaccinationDetailsModal({ vaccination, onClose }: OrderDetailsMo
                           <TableBody>
                             {child.vaccines.map((vaccine, idx) => (
                               <TableRow key={idx} className="flex justify-between">
-                                <TableCell className="font-medium">{vaccine.productName}</TableCell>
-                                <TableCell>
+                                <TableCell className="font-medium flex-1">{vaccine.productName}</TableCell>
+                                <TableCell className="w-[250px] font-medium">{vaccine.staffName || "-"}</TableCell>
+                                <TableCell className="w-[125px]">
                                   {["DA_TIEM", "DA_HUY"].includes(vaccine.orderDetailStatus as VaccineStatus) ? (
                                     vaccine.orderDetailStatus === "DA_TIEM" ? (
                                       <Badge className="bg-green-100 text-green-800">

@@ -153,8 +153,8 @@ export default function UsersManagementPage() {
             <DataTable
               columns={columns}
               data={users}
-              searchColumn="fullname"
-              searchPlaceholder="Search by name..."
+              searchColumn="email"
+              searchPlaceholder="Search by email..."
             />
           )}
         </CardContent>
