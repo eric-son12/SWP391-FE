@@ -287,10 +287,16 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                                 <TableCell className="font-medium">{vaccine.name}</TableCell>
                                 <TableCell>{formatPrice(vaccine.price)}</TableCell>
                                 <TableCell>
-                                  {[VaccineStatus.DA_TIEM, VaccineStatus.DA_HUY].includes(vaccine.status as VaccineStatus) ? (
-                                    <Badge className="bg-green-100 text-green-800">
-                                      {vaccine.status}
-                                    </Badge>
+                                  {["DA_TIEM", "DA_HUY"].includes(vaccine.status as VaccineStatus) ? (
+                                    vaccine.status === "DA_TIEM" ? (
+                                      <Badge className="bg-green-100 text-green-800">
+                                        Đã tiêm
+                                      </Badge>
+                                    ) : (
+                                      <Badge className="bg-red-100 text-red-800">
+                                        Đã huỷ
+                                      </Badge>
+                                    )
                                   ) : (
                                     <Select
                                       value={vaccine.status}

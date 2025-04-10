@@ -1,8 +1,10 @@
 {
   "/(dashboard)/children/page": "app/(dashboard)/children/page.js",
+  "/(dashboard)/consultation/page": "app/(dashboard)/consultation/page.js",
   "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/(dashboard)/feedback/page": "app/(dashboard)/feedback/page.js",
   "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
   "/(dashboard)/parents/page": "app/(dashboard)/parents/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
+  "/(dashboard)/posts/page": "app/(dashboard)/posts/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }
