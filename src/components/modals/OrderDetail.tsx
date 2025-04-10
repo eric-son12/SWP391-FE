@@ -23,7 +23,7 @@ import { VaccineOrder, VaccineStatus } from "@/types/vaccine"
 interface OrderDetailsModalProps {
   order: Order | null
   onClose: () => void
-  onVaccineStatusChange?: (orderDetailId: string, newStatus: VaccineStatus) => void
+  onVaccineStatusChange?: (newStatus: VaccineStatus) => void
 }
 
 export function OrderDetailsModal({ order, onClose, onVaccineStatusChange }: OrderDetailsModalProps) {
@@ -122,7 +122,7 @@ export function OrderDetailsModal({ order, onClose, onVaccineStatusChange }: Ord
         };
       });
 
-      onVaccineStatusChange?.(id, newStatus)
+      onVaccineStatusChange?.(newStatus)
     } catch (error) {
       console.error("Error updating status:", error)
       toast.error("Failed to update status");

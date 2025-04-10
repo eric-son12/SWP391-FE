@@ -120,47 +120,31 @@ export default function OrdersPage() {
     Promise.all([
       loadOrders(),
       scheduleByDate(),
-    ])
-    setLoading(false)
-  }, [loadOrders])
+    ]).finally(() => setLoading(false))
+  }, [loadOrders, scheduleByDate])
 
-  const handleVaccineStatusChange = (
-    orderId: string,
-    orderDetailId: string,
-    newStatus: VaccineStatus
-  ) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((o) => {
-        if (o.orderId !== orderId) return o
-  
-        const updatedOrderDetails = o.orderDetails.map((child) => ({
-          ...child,
-          vaccines: child.vaccines.map((v) =>
-            v.id.toString() === orderDetailId
-              ? { ...v, status: newStatus }
-              : v
-          ),
-        }))
-  
-        const allVaccines = updatedOrderDetails.flatMap((child) => child.vaccines)
-        const totalVaccines = allVaccines.length
-        const countHuy = allVaccines.filter((v) => v.status === "DA_HUY").length
-  
-        let newOrderStatus = o.status
-        if (countHuy === totalVaccines && totalVaccines > 0) {
-          newOrderStatus = "CANCELED"
-        } else if (countHuy > 0) {
-          newOrderStatus = "CANCELED_PARTIAL"
-        }
-  
+  const handleVaccineStatusChange = (orderId: string, newStatus: string) => {
+
+    setOrders((prevOrders) => {
+      const updatedOrders = prevOrders.map((o) => {
+        if (o.orderId !== orderId) return o;
+        const updatedStatus = newStatus === "DA_HUY" ? "CANCELED_PARTIAL" : o.status;
         return {
           ...o,
-          orderDetails: updatedOrderDetails,
-          status: newOrderStatus,
+          status: updatedStatus,
+        };
+      });
+  
+      setSelectedOrder((prevOrder) => {
+        if (prevOrder && prevOrder.orderId === orderId) {
+          return updatedOrders.find((o) => o.orderId === orderId) || prevOrder;
         }
-      })
-    )
-  }
+        return prevOrder;
+      });
+  
+      return updatedOrders;
+    });
+  };
   
 
   const handleViewOrder = (orderId: string) => {
@@ -235,7 +219,7 @@ export default function OrdersPage() {
       header: "Actions",
       cell: ({ row }) => {
         const orderId = row.getValue("orderId") as string
-        const status = (row.getValue("status") as string).toLowerCase() 
+        const status = (row.getValue("status") as string).toLowerCase()
 
         return (
           <div className="flex gap-2">
@@ -431,8 +415,8 @@ export default function OrdersPage() {
         <OrderDetailsModal
           order={selectedOrder}
           onClose={() => setSelectedOrder(null)}
-          onVaccineStatusChange={(orderDetailId, newStatus) =>
-            handleVaccineStatusChange(selectedOrder.orderId, orderDetailId, newStatus)
+          onVaccineStatusChange={(newStatus) =>
+            handleVaccineStatusChange(selectedOrder.orderId, newStatus)
           }
         />
       )}

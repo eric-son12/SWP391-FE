@@ -256,6 +256,18 @@ export default function RegisterVaccinationPage() {
       })
 
       toast.success("Order created successfully")
+
+      setSelectedParentId("")
+      setSelectedParent(null)
+      setFirstName("")
+      setLastName("")
+      setEmail("")
+      setMobileNo("")
+      setSelectedList([])
+      setTempChildId("")
+      setTempChildName("")
+      setTempChildVaccines([])
+      setVaccinationDate(undefined)
       // router.push("/orders")
     } catch (err) {
       console.error(err)
