@@ -132,20 +132,36 @@ export default function OrdersPage() {
     setOrders((prevOrders) =>
       prevOrders.map((o) => {
         if (o.orderId !== orderId) return o
+  
+        const updatedOrderDetails = o.orderDetails.map((child) => ({
+          ...child,
+          vaccines: child.vaccines.map((v) =>
+            v.id.toString() === orderDetailId
+              ? { ...v, status: newStatus }
+              : v
+          ),
+        }))
+  
+        const allVaccines = updatedOrderDetails.flatMap((child) => child.vaccines)
+        const totalVaccines = allVaccines.length
+        const countHuy = allVaccines.filter((v) => v.status === "DA_HUY").length
+  
+        let newOrderStatus = o.status
+        if (countHuy === totalVaccines && totalVaccines > 0) {
+          newOrderStatus = "CANCELED"
+        } else if (countHuy > 0) {
+          newOrderStatus = "CANCELED_PARTIAL"
+        }
+  
         return {
           ...o,
-          orderDetails: o.orderDetails.map((child) => ({
-            ...child,
-            vaccines: child.vaccines.map((v) =>
-              v.id.toString() === orderDetailId
-                ? { ...v, status: newStatus }
-                : v
-            ),
-          })),
+          orderDetails: updatedOrderDetails,
+          status: newOrderStatus,
         }
       })
     )
   }
+  
 
   const handleViewOrder = (orderId: string) => {
     const order = orders.find((o) => o.orderId === orderId)
@@ -168,7 +184,7 @@ export default function OrdersPage() {
       case "paid":
         return <Badge className="bg-green-100 text-green-800">Completed</Badge>
       case "canceled_partial":
-        return <Badge className="bg-red-100 text-red-800">Canceled Partial</Badge>
+        return <Badge className="bg-amber-100 text-amber-500">Canceled Partial</Badge>
       case "cancel":
         return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
       case "cancelled":
