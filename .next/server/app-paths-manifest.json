@@ -1,5 +1,7 @@
 {
+  "/(dashboard)/children/page": "app/(dashboard)/children/page.js",
   "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
-  "/(dashboard)/orders/register/page": "app/(dashboard)/orders/register/page.js",
+  "/(dashboard)/parents/page": "app/(dashboard)/parents/page.js",
+  "/(dashboard)/vaccines/page": "app/(dashboard)/vaccines/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js"
 }

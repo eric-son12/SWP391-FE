@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useEffect, useState } from "react"
-import { AlertCircle, Package, Users } from "lucide-react"
+import { AlertCircle, Edit, Package, SquarePen, Trash2, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -10,6 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { Vaccine, VaccineBatch } from "@/types/vaccine"
 import { Validate } from "@/utils/validate"
 import axios from "@/utils/axiosConfig"
+import { toast } from "sonner"
 
 function ImageCarousel({ images }: { images: string[] }) {
   const [current, setCurrent] = useState(0)
@@ -61,6 +62,14 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
   const [showFullSideEffects, setShowFullSideEffects] = useState(false)
   const [showFullSchedule, setShowFullSchedule] = useState(false)
   const [batchList, setBatchList] = useState<VaccineBatch[]>([])
+  const [editingBatchId, setEditingBatchId] = useState<number | null>(null)
+  const [editedBatch, setEditedBatch] = useState<{
+    batchNumber: string
+    expirationDate: string
+    quantity: number
+  } | null>(null)
+
+  const [condition, setCondition] = useState<string | null>(null)
 
   const vaccineId = vaccine.id
   const categoryName = vaccine.categoryName || "No Category"
@@ -73,31 +82,214 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
       params: { productId: vaccine.id }
     })
-    const data = await res.data.result
+    const data = await res.data.result || null
     setBatchList(data)
   }, [vaccine.id])
 
+  const getVaccineCondition = useCallback(async () => {
+    const res = await axios.get(`/underlying-conditions/product/${vaccine.id}`, {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
+      params: { vaccineId: vaccine.id }
+    })
+    const dataRaw = await res.data
+    const data = dataRaw.map((item: { condition: any }) => item.condition).join(', ');
+
+    setCondition(data)
+  }, [vaccine.id])
+
   useEffect(() => {
-    fetchBatches()
-  }, [fetchBatches])
+    Promise.all([
+      fetchBatches(),
+      getVaccineCondition()
+    ])
+  }, [vaccine.id, fetchBatches, getVaccineCondition])
+
+  const startEdit = (batch: VaccineBatch) => {
+    setEditingBatchId(batch.id)
+    setEditedBatch({
+      batchNumber: batch.batchNumber,
+      expirationDate: batch.expirationDate,
+      quantity: batch.quantity
+    })
+  }
+
+  const cancelEdit = () => {
+    setEditingBatchId(null)
+    setEditedBatch(null)
+  }
+
+  const handleSaveBatch = async (id: number) => {
+    try {
+      const token = localStorage.getItem("token")
+      if (!editedBatch) return
+
+      const body = {
+        batchNumber: editedBatch.batchNumber,
+        expirationDate: editedBatch.expirationDate,
+        quantity: editedBatch.quantity
+      }
+      await axios.patch(`/product/updateProductDetails/${id}`, body, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      setBatchList((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, ...editedBatch } : b))
+      )
+      toast.success("Batch updated successfully!")
+      cancelEdit()
+    } catch (error) {
+      console.error("Failed to update batch", error)
+      toast.error("Failed to update batch")
+    }
+  }
+
+  const handleDeleteBatch = async (id: number) => {
+    try {
+      const token = localStorage.getItem("token")
+      await axios.delete(`/product/deleteProductDetails/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      setBatchList((prev) => prev.filter((b) => b.id !== id))
+      toast.success("Batch deleted successfully!")
+      if (editingBatchId === id) {
+        cancelEdit()
+      }
+    } catch (error) {
+      console.error("Failed to delete batch", error)
+      toast.error("Failed to delete batch")
+    }
+  }
 
   const columns: ColumnDef<VaccineBatch>[] = [
     {
       accessorKey: "id",
-      header: "ID",
+      header: "ID"
     },
     {
       accessorKey: "batchNumber",
       header: "Batch Number",
+      cell: ({ row }) => {
+        if (editingBatchId === row.original.id) {
+          return (
+            <input
+              type="text"
+              value={editedBatch?.batchNumber ?? row.original.batchNumber}
+              onChange={(e) =>
+                setEditedBatch((prev) =>
+                  prev
+                    ? { ...prev, batchNumber: e.target.value }
+                    : {
+                        batchNumber: e.target.value,
+                        expirationDate: row.original.expirationDate,
+                        quantity: row.original.quantity
+                      }
+                )
+              }
+              className="border p-1"
+            />
+          )
+        }
+        return row.original.batchNumber
+      }
     },
     {
       accessorKey: "quantity",
       header: "Quantity",
+      cell: ({ row }) => {
+        if (editingBatchId === row.original.id) {
+          return (
+            <input
+              type="number"
+              value={editedBatch?.quantity ?? row.original.quantity}
+              onChange={(e) =>
+                setEditedBatch((prev) =>
+                  prev
+                    ? { ...prev, quantity: parseInt(e.target.value, 10) }
+                    : {
+                        batchNumber: row.original.batchNumber,
+                        expirationDate: row.original.expirationDate,
+                        quantity: parseInt(e.target.value, 10)
+                      }
+                )
+              }
+              className="border p-1 w-20"
+            />
+          )
+        }
+        return row.original.quantity
+      }
     },
     {
       accessorKey: "expirationDate",
       header: "Expiration Date",
+      cell: ({ row }) => {
+        if (editingBatchId === row.original.id) {
+          return (
+            <input
+              type="date"
+              value={editedBatch?.expirationDate ?? row.original.expirationDate}
+              onChange={(e) =>
+                setEditedBatch((prev) =>
+                  prev
+                    ? { ...prev, expirationDate: e.target.value }
+                    : {
+                        batchNumber: row.original.batchNumber,
+                        expirationDate: e.target.value,
+                        quantity: row.original.quantity
+                      }
+                )
+              }
+              className="border p-1"
+            />
+          )
+        }
+        return row.original.expirationDate
+      }
     },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        if (editingBatchId === row.original.id) {
+          return (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSaveBatch(row.original.id)}
+              >
+                Save
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => cancelEdit()}
+              >
+                Cancel
+              </Button>
+            </div>
+          )
+        }
+        return (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => startEdit(row.original)}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-500"
+              onClick={() => handleDeleteBatch(row.original.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+      }
+    }
   ]
 
   return (
@@ -265,7 +457,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
 
           {/* Side Effects */}
           {vaccine.sideEffects && (
-            <div className="col-span-3 space-y-1">
+            <div className="col-span-2 space-y-1">
               <h3 className="flex items-center gap-1 text-sm font-medium text-gray-500">
                 <AlertCircle className="h-4 w-4" /> Side Effects
               </h3>
@@ -285,6 +477,15 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
               </p>
             </div>
           )}
+
+          <div className={`space-y-1 ${condition?.trim()  ? "" : "opacity-0"}`}>
+            <h3 className="flex items-center gap-1 text-sm font-medium text-gray-500">
+              Underlying Disease
+            </h3>
+            <p className="text-sm">
+              {condition}
+            </p>
+          </div>
 
           {/* Priority / Active */}
           <div className="flex gap-4">

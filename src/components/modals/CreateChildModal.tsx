@@ -19,18 +19,11 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
     relationshipType: "CHA_ME",
   })
 
-  const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setAvatarFile(e.target.files[0])
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,9 +41,6 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
       fd.append("height", formData.height)
       fd.append("weight", formData.weight)
       fd.append("relationshipType", formData.relationshipType)
-      if (avatarFile) {
-        fd.append("avatar", avatarFile)
-      }
       await axios.post(`/manage/children/create/${Number(formData.parentId)}`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -58,7 +48,7 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
       onClose()
     } catch (error) {
       console.error("Error creating child:", error)
-      const errorMsg = error instanceof Error? error.message : "Failed to create child"
+      const errorMsg = error instanceof Error ? error.message : "Failed to create child"
       toast.error(errorMsg)
     } finally {
       setIsSubmitting(false)
@@ -73,17 +63,39 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
       onClose={onClose}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Parent ID */}
-        <div className="space-y-2">
-          <Label htmlFor="parentId">Parent ID</Label>
-          <Input
-            id="parentId"
-            name="parentId"
-            type="number"
-            value={formData.parentId}
-            onChange={handleChange}
-            required
-          />
+        <div className="flex gap-2">
+          {/* Parent ID */}
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="parentId">Parent ID</Label>
+            <Input
+              id="parentId"
+              name="parentId"
+              type="number"
+              value={formData.parentId}
+              onChange={handleChange}
+              required
+              className="w-full"
+            />
+          </div>
+          {/* Relationship Type */}
+          <div className="space-y-2">
+            <Label htmlFor="relationshipType">Relationship Type</Label>
+            <select
+              id="relationshipType"
+              name="relationshipType"
+              value={formData.relationshipType}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, relationshipType: e.target.value }))
+              }
+              className="w-full rounded-md border border-gray-300 p-2"
+              required
+            >
+              <option value="CHA_ME">Cha/Mẹ</option>
+              <option value="ONG_BA">Ông/Bà</option>
+              <option value="ANH_CHI">Anh/Chị</option>
+              <option value="CHU_THIEM">Chú/Thím</option>
+            </select>
+          </div>
         </div>
         {/* Full Name */}
         <div className="space-y-2">
@@ -103,6 +115,7 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
             id="dob"
             name="dob"
             type="date"
+            max={new Date().toISOString().split('T')[0]}
             value={formData.dob}
             onChange={handleChange}
             required
@@ -127,8 +140,10 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
             <option value="Other">Other</option>
           </select>
         </div>
-        {/* Height */}
-        <div className="space-y-2">
+
+        <div className="flex gap-2">
+          {/* Height */}
+        <div className="flex-1 space-y-2">
           <Label htmlFor="height">Height (cm)</Label>
           <Input
             id="height"
@@ -140,7 +155,7 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
           />
         </div>
         {/* Weight */}
-        <div className="space-y-2">
+        <div className="flex-1 space-y-2">
           <Label htmlFor="weight">Weight (kg)</Label>
           <Input
             id="weight"
@@ -151,36 +166,8 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
             required
           />
         </div>
-        {/* Relationship Type */}
-        <div className="space-y-2">
-          <Label htmlFor="relationshipType">Relationship Type</Label>
-          <select
-            id="relationshipType"
-            name="relationshipType"
-            value={formData.relationshipType}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, relationshipType: e.target.value }))
-            }
-            className="w-full rounded-md border border-gray-300 p-2"
-            required
-          >
-            <option value="CHA_ME">Cha/Mẹ</option>
-            <option value="ONG_BA">Ông/Bà</option>
-            <option value="ANH_CHI">Anh/Chị</option>
-            <option value="CHU_THIEM">Chú/Thím</option>
-          </select>
         </div>
-        {/* Avatar */}
-        <div className="space-y-2">
-          <Label htmlFor="avatar">Avatar</Label>
-          <Input
-            id="avatar"
-            name="avatar"
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-          />
-        </div>
+
         <div className="flex justify-end space-x-2 pt-4">
           <Button type="button" variant="outline" onClick={onClose}>
             Cancel
