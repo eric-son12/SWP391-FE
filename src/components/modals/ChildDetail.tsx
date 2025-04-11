@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Calendar, Edit, Trash2, User } from "lucide-react"
+import { Calendar, Edit, Plus, Trash2, User } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -62,6 +62,9 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
     conditionName: string,
     note: string
   } | null>(null)
+
+  const [addingDisease, setAddingDisease] = useState(false)
+  const [newDisease, setNewDisease] = useState({ conditionName: "", note: "" })
 
   const getUnderlyingDisease = useCallback(async () => {
     if (!user) return;
@@ -135,6 +138,28 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
     setEditedDisease(null)
   }
 
+  const handleAddDisease = async () => {
+    if (!user) return
+    try {
+      const token = localStorage.getItem("token")
+      const body = {
+        conditionName: newDisease.conditionName,
+        note: newDisease.note
+      }
+      const res = await axios.post(`/underlying-conditions/user/${user.childId}`, body, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const addedDisease: UnderlyingDisease = res.data.condition || res.data;
+      setUnderlyingDisease((prev) => [...prev, addedDisease])
+      toast.success("Underlying disease added successfully!")
+      setAddingDisease(false)
+      setNewDisease({ conditionName: "", note: "" })
+    } catch (error) {
+      console.error("Failed to add underlying disease", error)
+      toast.error("Failed to add underlying disease")
+    }
+  }
+
   const handleSaveDisease = async (conditionId: number) => {
     if (!user) return
     try {
@@ -175,7 +200,7 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
       toast.error("Failed to delete underlying disease")
     }
   }
-  
+
   const columns: ColumnDef<UnderlyingDisease>[] = useMemo(
     () => [
       {
@@ -336,27 +361,56 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
 
           <Separator />
 
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-gray-500">Underlying Disease</h3>
+            {!addingDisease && (
+              <Button size="sm" onClick={() => setAddingDisease(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add New
+              </Button>
+            )}
+          </div>
           {underlyingDisease.length > 0 && (
             <>
+              {addingDisease && (
+                <div className="flex gap-2 items-center mb-4">
+                  <EditInput
+                    value={newDisease.conditionName}
+                    onChange={(e) => setNewDisease(prev => ({ ...prev, conditionName: e.target.value }))}
+                    placeholder="Condition Name"
+                  />
+                  <EditInput
+                    value={newDisease.note}
+                    onChange={(e) => setNewDisease(prev => ({ ...prev, note: e.target.value }))}
+                    placeholder="Note"
+                  />
+                  <Button variant="outline" size="sm" onClick={handleAddDisease}>
+                    Save
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    setAddingDisease(false)
+                    setNewDisease({ conditionName: "", note: "" })
+                  }}>
+                    Cancel
+                  </Button>
+                </div>
+              )}
               <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-500">Underlying Disease</h3>
                 {loading ? (
                   <div className="flex h-40 items-center justify-center">
                     <p>Loading users...</p>
                   </div>
                 ) : (
-                  <DataTable
-                    columns={columns}
-                    data={underlyingDisease}
-                  />
+                  <DataTable columns={columns} data={underlyingDisease} />
                 )}
               </div>
-
               <Separator />
             </>
           )}
 
-          <Tabs>
+          <Tabs
+            defaultValue="Relatice"
+          >
             <TabsList className="w-full grid grid-cols-2">
               <TabsTrigger value={"Relatice"}>Personal Information</TabsTrigger>
               <TabsTrigger value={"Vaccinations"}>History</TabsTrigger>

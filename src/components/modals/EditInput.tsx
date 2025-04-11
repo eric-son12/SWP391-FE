@@ -7,12 +7,14 @@ export function EditInput({
     onFocus,
     autoFocus,
     type = "text",
+    placeholder
   }: {
     value: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onFocus?: () => void
     autoFocus?: boolean
     type?: string
+    placeholder?: string
   }) {
     const inputRef = useRef<HTMLInputElement>(null)
     useEffect(() => {
@@ -25,6 +27,7 @@ export function EditInput({
         ref={inputRef}
         type={type}
         value={value}
+        placeholder={placeholder}
         onChange={onChange}
         onFocus={onFocus}
         className="border p-1"
