@@ -102,8 +102,6 @@ export function CreatePatientModal({ onClose }: CreatePatientModalProps) {
       children: [...prev.children, childData],
     }))
 
-    console.log("Child added:", childData) // Log child inf
-
     setChildData({
       childName: "",
       childBod: "",

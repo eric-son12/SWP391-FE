@@ -58,7 +58,6 @@ export function productActions(set: StoreSet, get: StoreGet): ProductActions {
           headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` },
         });
 
-        console.log("createVaccine: ", response);
         if (response.status === 200) {
           await axios.post(`/underlying-conditions/product/${response?.data.id}`, {
             condition: formData.get('condition')

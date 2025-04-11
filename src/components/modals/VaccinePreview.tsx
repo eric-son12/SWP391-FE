@@ -11,6 +11,7 @@ import { Vaccine, VaccineBatch } from "@/types/vaccine"
 import { Validate } from "@/utils/validate"
 import axios from "@/utils/axiosConfig"
 import { toast } from "sonner"
+import { Input } from "@/components/ui/input"
 
 function ImageCarousel({ images }: { images: string[] }) {
   const [current, setCurrent] = useState(0)
@@ -170,7 +171,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       cell: ({ row }) => {
         if (editingBatchId === row.original.id) {
           return (
-            <input
+            <Input
               type="text"
               value={editedBatch?.batchNumber ?? row.original.batchNumber}
               onChange={(e) =>
@@ -197,7 +198,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       cell: ({ row }) => {
         if (editingBatchId === row.original.id) {
           return (
-            <input
+            <Input
               type="number"
               value={editedBatch?.quantity ?? row.original.quantity}
               onChange={(e) =>
@@ -224,7 +225,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       cell: ({ row }) => {
         if (editingBatchId === row.original.id) {
           return (
-            <input
+            <Input
               type="date"
               value={editedBatch?.expirationDate ?? row.original.expirationDate}
               onChange={(e) =>

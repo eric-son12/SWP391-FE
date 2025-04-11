@@ -142,7 +142,6 @@ export function VaccineModal({ onClose, vaccine }: VaccineModalProps) {
     }
   };
 
-  // Cleanup generated preview URLs to avoid memory leaks
   useEffect(() => {
     return () => {
       previews.forEach((url) => URL.revokeObjectURL(url));
