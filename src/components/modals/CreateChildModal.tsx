@@ -12,7 +12,7 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState({
     parentId: "",
     fullname: "",
-    dob: "",
+    bod: "",
     gender: "",
     height: "",
     weight: "",
@@ -36,7 +36,7 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
       }
       const fd = new FormData()
       fd.append("fullname", formData.fullname)
-      fd.append("dob", formData.dob)
+      fd.append("bod", formData.bod)
       fd.append("gender", formData.gender)
       fd.append("height", formData.height)
       fd.append("weight", formData.weight)
@@ -110,13 +110,13 @@ export function CreateChildModal({ onClose }: { onClose: () => void }) {
         </div>
         {/* Date of Birth */}
         <div className="space-y-2">
-          <Label htmlFor="dob">Date of Birth</Label>
+          <Label htmlFor="bod">Date of Birth</Label>
           <Input
-            id="dob"
-            name="dob"
+            id="bod"
+            name="bod"
             type="date"
             max={new Date().toISOString().split('T')[0]}
-            value={formData.dob}
+            value={formData.bod}
             onChange={handleChange}
             required
           />
