@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Calendar, Edit, Trash2, User } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -11,8 +11,7 @@ import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "../ui/textarea"
+import { EditInput } from "./EditInput"
 
 interface UserDetailsModalProps {
   isOpen: boolean
@@ -57,6 +56,8 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
   const [history, setHistory] = useState<VaccinationHistory[]>([])
   const [underlyingDisease, setUnderlyingDisease] = useState<UnderlyingDisease[]>([])
   const [editingDiseaseId, setEditingDiseaseId] = useState<number | null>(null)
+  const [focusedField, setFocusedField] = useState<"conditionName" | "note" | null>(null)
+
   const [editedDisease, setEditedDisease] = useState<{
     conditionName: string,
     note: string
@@ -175,92 +176,100 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
     }
   }
   
-  const columns: ColumnDef<UnderlyingDisease>[] = [
-    {
-      accessorKey: "id",
-      header: "ID",
-    },
-    {
-      accessorKey: "conditionName",
-      header: "Name",
-      cell: ({ row }) => {
-        if (editingDiseaseId === row.original.id) {
-          return (
-            <input
-              type="text"
-              value={editedDisease?.conditionName ?? row.original.conditionName}
-              onChange={(e) =>
-                setEditedDisease((prev) =>
-                  prev
-                    ? { ...prev, conditionName: e.target.value }
-                    : { conditionName: e.target.value, note: row.original.note }
-                )
-              }
-              className="border p-1"
-            />
-          )
-        }
-        return row.original.conditionName
+  const columns: ColumnDef<UnderlyingDisease>[] = useMemo(
+    () => [
+      {
+        accessorKey: "id",
+        header: "ID",
       },
-    },
-    {
-      accessorKey: "note",
-      header: "Note",
-      cell: ({ row }) => {
-        if (editingDiseaseId === row.original.id) {
-          return (
-            <Textarea
-              value={editedDisease?.note ?? row.original.note}
-              onChange={(e) =>
-                setEditedDisease((prev) =>
-                  prev
-                    ? { ...prev, note: e.target.value }
-                    : { conditionName: row.original.conditionName, note: e.target.value }
-                )
-              }
-              className="border p-1"
-            />
-          )
-        }
-        const note = row.getValue("note") as string
-        return note || "-"
+      {
+        accessorKey: "conditionName",
+        header: "Name",
+        cell: ({ row }) => {
+          const disease = row.original
+          if (editingDiseaseId === disease.id) {
+            return (
+              <EditInput
+                value={editedDisease?.conditionName ?? disease.conditionName}
+                autoFocus={focusedField === "conditionName"}
+                onChange={(e) =>
+                  setEditedDisease((prev) =>
+                    prev
+                      ? { ...prev, conditionName: e.target.value }
+                      : { conditionName: e.target.value, note: disease.note }
+                  )
+                }
+                onFocus={() => setFocusedField("conditionName")}
+              />
+            )
+          }
+          return disease.conditionName
+        },
       },
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => {
-        const disease = row.original
-        if (editingDiseaseId === disease.id) {
+      {
+        accessorKey: "note",
+        header: "Note",
+        cell: ({ row }) => {
+          const disease = row.original
+          if (editingDiseaseId === disease.id) {
+            return (
+              <EditInput
+                value={editedDisease?.note ?? disease.note}
+                autoFocus={focusedField === "note"}
+                onChange={(e) =>
+                  setEditedDisease((prev) =>
+                    prev
+                      ? { ...prev, note: e.target.value }
+                      : { conditionName: disease.conditionName, note: e.target.value }
+                  )
+                }
+                onFocus={() => setFocusedField("note")}
+              />
+            )
+          }
+          return disease.note || "-"
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          const disease = row.original
+          if (editingDiseaseId === disease.id) {
+            return (
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleSaveDisease(disease.id)}>
+                  Save
+                </Button>
+                <Button variant="outline" size="sm" onClick={cancelEditDisease}>
+                  Cancel
+                </Button>
+              </div>
+            )
+          }
           return (
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => handleSaveDisease(disease.id)}>
-                Save
+              <Button variant="outline" size="sm" onClick={() => startEditDisease(disease)}>
+                <Edit className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="sm" onClick={() => cancelEditDisease()}>
-                Cancel
+              <Button variant="outline" size="sm" className="text-red-500" onClick={() => handleDeleteDisease(disease.id)}>
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           )
-        }
-        return (
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => startEditDisease(disease)}>
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-red-500"
-              onClick={() => handleDeleteDisease(disease.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        )
+        },
       },
-    },
-  ]
+    ],
+    [
+      editingDiseaseId,
+      editedDisease,
+      focusedField,       // IMPORTANT so it re-checks which column to autoFocus
+      startEditDisease,
+      cancelEditDisease,
+      handleSaveDisease,
+      handleDeleteDisease,
+    ]
+  )
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

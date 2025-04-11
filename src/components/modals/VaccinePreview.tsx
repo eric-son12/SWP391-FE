@@ -12,6 +12,7 @@ import { Validate } from "@/utils/validate"
 import axios from "@/utils/axiosConfig"
 import { toast } from "sonner"
 import { Input } from "@/components/ui/input"
+import { EditInput } from "./EditInput"
 
 function ImageCarousel({ images }: { images: string[] }) {
   const [current, setCurrent] = useState(0)
@@ -64,6 +65,8 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
   const [showFullSchedule, setShowFullSchedule] = useState(false)
   const [batchList, setBatchList] = useState<VaccineBatch[]>([])
   const [editingBatchId, setEditingBatchId] = useState<number | null>(null)
+  const [focusedField, setFocusedField] = useState<"batchNumber" | "expirationDate" | "quantity" | null>(null)
+
   const [editedBatch, setEditedBatch] = useState<{
     batchNumber: string
     expirationDate: string
@@ -71,6 +74,8 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
   } | null>(null)
 
   const [condition, setCondition] = useState<string | null>(null)
+  const [editingCondition, setEditingCondition] = useState(false);
+  const [editedCondition, setEditedCondition] = useState<string>("");
 
   const vaccineId = vaccine.id
   const categoryName = vaccine.categoryName || "No Category"
@@ -104,6 +109,27 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       getVaccineCondition()
     ])
   }, [vaccine.id, fetchBatches, getVaccineCondition])
+
+  useEffect(() => {
+    if (condition !== null) {
+      setEditedCondition(condition);
+    }
+  }, [condition]);
+
+  const handleSaveCondition = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(`/underlying-conditions/product/${vaccine.id}`, { condition: editedCondition }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCondition(editedCondition);
+      toast.success("Underlying disease updated successfully!");
+      setEditingCondition(false);
+    } catch (error) {
+      console.error("Failed to update underlying disease", error);
+      toast.error("Failed to update underlying disease");
+    }
+  };
 
   const startEdit = (batch: VaccineBatch) => {
     setEditingBatchId(batch.id)
@@ -171,7 +197,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       cell: ({ row }) => {
         if (editingBatchId === row.original.id) {
           return (
-            <Input
+            <EditInput
               type="text"
               value={editedBatch?.batchNumber ?? row.original.batchNumber}
               onChange={(e) =>
@@ -179,13 +205,14 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
                   prev
                     ? { ...prev, batchNumber: e.target.value }
                     : {
-                        batchNumber: e.target.value,
-                        expirationDate: row.original.expirationDate,
-                        quantity: row.original.quantity
-                      }
+                      batchNumber: e.target.value,
+                      expirationDate: row.original.expirationDate,
+                      quantity: row.original.quantity
+                    }
                 )
               }
-              className="border p-1"
+              autoFocus={focusedField === "batchNumber"}
+              onFocus={() => setFocusedField("batchNumber")}
             />
           )
         }
@@ -198,21 +225,22 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       cell: ({ row }) => {
         if (editingBatchId === row.original.id) {
           return (
-            <Input
+            <EditInput
               type="number"
-              value={editedBatch?.quantity ?? row.original.quantity}
+              value={String(editedBatch?.quantity ?? row.original.quantity)}
               onChange={(e) =>
                 setEditedBatch((prev) =>
                   prev
                     ? { ...prev, quantity: parseInt(e.target.value, 10) }
                     : {
-                        batchNumber: row.original.batchNumber,
-                        expirationDate: row.original.expirationDate,
-                        quantity: parseInt(e.target.value, 10)
-                      }
+                      batchNumber: row.original.batchNumber,
+                      expirationDate: row.original.expirationDate,
+                      quantity: parseInt(e.target.value, 10)
+                    }
                 )
               }
-              className="border p-1 w-20"
+              autoFocus={focusedField === "quantity"}
+              onFocus={() => setFocusedField("quantity")}
             />
           )
         }
@@ -225,7 +253,7 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
       cell: ({ row }) => {
         if (editingBatchId === row.original.id) {
           return (
-            <Input
+            <EditInput
               type="date"
               value={editedBatch?.expirationDate ?? row.original.expirationDate}
               onChange={(e) =>
@@ -233,13 +261,14 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
                   prev
                     ? { ...prev, expirationDate: e.target.value }
                     : {
-                        batchNumber: row.original.batchNumber,
-                        expirationDate: e.target.value,
-                        quantity: row.original.quantity
-                      }
+                      batchNumber: row.original.batchNumber,
+                      expirationDate: e.target.value,
+                      quantity: row.original.quantity
+                    }
                 )
               }
-              className="border p-1"
+              autoFocus={focusedField === "expirationDate"}
+              onFocus={() => setFocusedField("expirationDate")}
             />
           )
         }
@@ -358,6 +387,42 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
           </div>
         )}
 
+        <div className={`space-y-1`}>
+          <h3 className="flex items-center gap-1 text-sm font-medium text-gray-500">
+            Underlying Disease
+            {!editingCondition && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setEditingCondition(true);
+                  setEditedCondition(condition || "");
+                }}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            )}
+          </h3>
+          {editingCondition ? (
+            <div className="flex gap-2 items-center">
+              {/* Use your preferred Input component; here I'm using a simple input */}
+              <Input
+                value={editedCondition}
+                onChange={(e) => setEditedCondition(e.target.value)}
+                className="border p-1"
+              />
+              <Button variant="outline" size="sm" onClick={handleSaveCondition}>
+                Save
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setEditingCondition(false)}>
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <p className="text-sm">{condition || "-"}</p>
+          )}
+        </div>
+
         <Separator />
 
         {Array.isArray(vaccine.imageList) && vaccine.imageList.length > 0 && (
@@ -372,9 +437,9 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-gray-500">Batch List</h3>
           <DataTable
-              columns={columns}
-              data={batchList}
-            />
+            columns={columns}
+            data={batchList}
+          />
         </div>
 
         <Separator />
@@ -478,15 +543,6 @@ export function VaccinePreview({ vaccine, onClose }: VaccinePreviewProps) {
               </p>
             </div>
           )}
-
-          <div className={`space-y-1 ${condition?.trim()  ? "" : "opacity-0"}`}>
-            <h3 className="flex items-center gap-1 text-sm font-medium text-gray-500">
-              Underlying Disease
-            </h3>
-            <p className="text-sm">
-              {condition}
-            </p>
-          </div>
 
           {/* Priority / Active */}
           <div className="flex gap-4">
