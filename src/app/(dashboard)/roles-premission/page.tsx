@@ -5,7 +5,7 @@ import { RoleUser } from "@/types/enums";
 import { useStore } from "@/store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CreatePermissionModal } from "@/components/modals/CreatePermissionModal";
@@ -15,7 +15,6 @@ import type { Role, Permission } from "@/types/management";
 export default function RolesPage() {
   const { user } = useStore.getState().profile;
   const { fetchRoles, fetchPermissions, deleteRole, deletePermission } = useStore.getState();
-  const { toast } = useToast();
 
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -35,56 +34,36 @@ export default function RolesPage() {
       setRoles(rolesData);
       setPermissions(permissionsData);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load roles and permissions",
-        variant: "destructive",
-      });
+      console.error('Error:', error)
+      toast.error("Failed to load roles and permissions");
     } finally {
       setLoading(false);
     }
-  }, [fetchRoles, fetchPermissions, toast]);
+  }, [fetchRoles, fetchPermissions]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  const handleEditRole = (roleId: number) => {
-    // Implement editing logic here if needed.
-  };
-
   const handleDeleteRole = async (roleName: string) => {
     try {
       await deleteRole(roleName);
-      toast({
-        title: "Success",
-        description: "Role deleted successfully",
-      });
-      // After deletion, refetch data
+      toast.success("Role deleted successfully");
       await loadData();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete role",
-        variant: "destructive",
-      });
+      console.error('Error:', error)
+      toast.error("Failed to delete role");
     }
   };
 
   const handleDeletePermission = async (roleName: string) => {
     try {
       await deletePermission(roleName);
-      toast({
-        title: "Success",
-        description: "Permission deleted successfully",
-      });
+      toast.success("Permission deleted successfully");
       await loadData();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete role",
-        variant: "destructive",
-      });
+      console.error('Error:', error)
+      toast.error("Failed to delete role");
     }
   };
 
@@ -105,7 +84,7 @@ export default function RolesPage() {
       <div className="flex h-[calc(100vh-16rem)] flex-col items-center justify-center">
         <h1 className="text-2xl font-bold">Access Denied</h1>
         <p className="text-muted-foreground">
-          You don't have permission to access this page.
+          You don&apos;t have permission to access this page.
         </p>
       </div>
     );

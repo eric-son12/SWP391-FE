@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { StaffMember } from "@/types/staff"
-import { useToast } from "@/hooks/use-toast";
 
 interface StaffDetailsModalProps {
   isOpen: boolean
@@ -17,7 +16,7 @@ interface StaffDetailsModalProps {
 }
 
 export function StaffDetailsModal({ isOpen, onClose, staff }: StaffDetailsModalProps) {
-  const { toast } = useToast()
+  
 
   if (!staff) return null
 
@@ -26,27 +25,6 @@ export function StaffDetailsModal({ isOpen, onClose, staff }: StaffDetailsModalP
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    })
-  }
-
-  const handleResetPassword = () => {
-    toast({
-      title: "Password Reset Link Sent",
-      description: `A password reset link has been sent to ${staff.email}`,
-    })
-  }
-
-  const handleToggleStatus = () => {
-    toast({
-      title: "Status Updated",
-      description: `Staff member has been ${staff.enabled ? 'deactivated' : 'activated'}`,
-    })
-  }
-
-  const handleToggleLock = () => {
-    toast({
-      title: "Account Updated",
-      description: `Account has been ${staff.accountNonLocked ? 'locked' : 'unlocked'}`,
     })
   }
 

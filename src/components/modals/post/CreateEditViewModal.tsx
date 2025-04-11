@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { ModalWrapper } from "@/components/ui/modal-wrapper"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,7 +22,7 @@ export function CreateEditPostModal({
   onSubmit,
   post,
 }: CreateEditPostModalProps) {
-  const { toast } = useToast()
+  
   const isUpdateMode = Boolean(post)
 
   const [title, setTitle] = useState("")
@@ -85,17 +85,13 @@ export function CreateEditPostModal({
       }
 
       await onSubmit(fd, post?.id)
-      toast({
-        title: "Success",
-        description: isUpdateMode ? "Post updated successfully" : "Post created successfully",
-      })
+
+      const message = isUpdateMode? "Post updated successfully" : "Post created successfully"
+      toast.success(message)
       onClose()
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit post",
-        variant: "destructive",
-      })
+      console.error("Error:", error)
+      toast.error("Failed to submit post")
     } finally {
       setIsSubmitting(false)
     }

@@ -20,7 +20,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { ChevronsUpDown, Trash2, Edit2 } from "lucide-react"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import axios from "@/utils/axiosConfig"
 import { useStore } from "@/store"
 import { Patient } from "@/models/user"
@@ -29,6 +29,7 @@ import { format } from "date-fns"
 import { DateTimePicker } from "../DateTimePicker"
 import { Vaccine } from "@/types/vaccine"
 import { Validate } from "@/utils/validate"
+import { Portal } from "@radix-ui/react-select"
 
 interface ChildSelection {
   childId: number
@@ -67,6 +68,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
   const [tempChildVaccines, setTempChildVaccines] = useState<Vaccine[]>([])
   const [childPopoverOpen, setChildPopoverOpen] = useState(false)
   const [vaccinePopoverOpen, setVaccinePopoverOpen] = useState(false)
+  const [suggestedVaccines, setSuggestedVaccines] = useState<Vaccine[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("") // parent search
   const [childSearch, setChildSearch] = useState("")
@@ -79,7 +81,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
     return (
       allUsers?.filter(
         (user) =>
-          user.id.toString().includes(searchTerm) || 
+          user.id.toString().includes(searchTerm) ||
           user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
       ) || []
@@ -105,7 +107,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
   const filteredVaccines = useMemo(() => {
     const results = allVaccines?.filter((v) => {
       if (tempChildVaccines.some((tv) => tv.id === v.id)) return false
-      
+
       const matchName =
         v.title.toLowerCase().includes(vaccineSearch.toLowerCase()) ||
         String(v.id).includes(vaccineSearch)
@@ -114,6 +116,22 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
     return results
   }, [allVaccines, vaccineSearch, tempChildVaccines])
+
+  const handleSelectChild = async (childId: number) => {
+    if (!childId) return;
+
+    try {
+      const response = await axios.get(`/order/vaccine/suggestion/staff`, {
+        params: {
+          childId: childId,
+        },
+      });
+      ;
+      setSuggestedVaccines(response.data.result || []);
+    } catch (err) {
+      console.error("Lỗi getSuccessVaccine:", err);
+    }
+  };
 
   useEffect(() => {
     if (!selectedParentId) {
@@ -151,23 +169,19 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
         setTempChildVaccines([])
       } catch (error) {
         console.error("Error fetching user details", error)
-        toast({
-          title: "Error",
-          description: "Failed to load user details",
-          variant: "destructive",
-        })
+        toast.error("Failed to load user details")
       }
     }
 
     fetchUser()
-  }, [selectedParentId, toast])
+  }, [selectedParentId])
 
   const addVaccineToChild = (vaccine: Vaccine) => {
     setVaccinePopoverOpen(false)
 
     setTempChildVaccines((prev) => {
       if (prev.find((x) => x.id === vaccine.id)) {
-        return prev 
+        return prev
       }
       return [...prev, vaccine]
     })
@@ -179,18 +193,14 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
   const handleConfirmChild = () => {
     if (!tempChildId) {
-      toast({
-        title: "Select a child",
+      toast("Select a child", {
         description: "Please pick a child first",
-        variant: "destructive",
       })
       return
     }
     if (tempChildVaccines.length === 0) {
-      toast({
-        title: "No vaccines",
+      toast("No vaccines", {
         description: "Please select at least one vaccine for this child",
-        variant: "destructive",
       })
       return
     }
@@ -237,10 +247,8 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
 
   const handleOpenConfirm = () => {
     if (!canCreate) {
-      toast({
-        title: "Cannot create order",
-        description: "Please select parent, date, and at least one child with vaccines",
-        variant: "destructive",
+      toast("Cannot create order", {
+        description: "Please select parent, date, and at least one child with vaccines"
       })
       return
     }
@@ -273,16 +281,12 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
         params: { parentId: selectedParent?.id },
       })
 
-      toast({ title: "Success", description: "Order created successfully" })
+      toast.success("Order created successfully")
       setShowConfirmDialog(false)
       onClose()
     } catch (err) {
       console.error(err)
-      toast({
-        title: "Error",
-        description: "Failed to create order",
-        variant: "destructive",
-      })
+      toast.error("Failed to create order")
     }
   }
 
@@ -323,8 +327,8 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                 <CommandGroup className="h-auto overflow-y-auto">
                   {filteredUsers.map((user) => (
                     <CommandItem
-                      key={`${user.id} ${user.username} ${user.fullname} ${user.phone}`}
-                      value={user.id.toString()}
+                      key={`${user.id}`}
+                      value={`${user.id} ${user.username} ${user.fullname} ${user.phone}`}
                       onSelect={() => {
                         setSelectedParentId(user.id)
                         setParentPopoverOpen(false) // auto close
@@ -402,6 +406,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                             onSelect={() => {
                               setTempChildId(child.childId)
                               setTempChildName(child.fullname)
+                              handleSelectChild(child.childId)
                               setChildPopoverOpen(false)
                             }}
                           >
@@ -428,7 +433,12 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[calc(60svw-4rem)]">
+                  <Portal>
+                  <PopoverContent 
+                    side="top" 
+                    sideOffset={8}
+                    className="w-[calc(60svw-4rem)] max-h-64 overflow-auto"
+                  >
                     <Command>
                       <CommandInput
                         placeholder="Search vaccine..."
@@ -437,13 +447,28 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       />
                       <CommandList className="flex max-h-[250px] w-full z-[9999] overflow-y-scroll">
                         <CommandEmpty>No vaccine found.</CommandEmpty>
-                        <CommandGroup className="h-auto z-[9999] w-[calc(60svw-6rem)]">
+                        {suggestedVaccines.length > 0 && (
+                          <CommandGroup heading="Suggest">
+                            {suggestedVaccines.map((v) => (
+                              <CommandItem
+                                key={v.id}
+                                value={`${v.title} ${v.id}`}
+                                onSelect={() => addVaccineToChild(v)}
+                                className="flex w-full items-center justify-between"
+                              >
+                                <p>{v.title}</p>
+                                <span>{Validate.formatPrice(v.price)}</span>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        )}
+                        <CommandGroup heading="Vaccine">
                           {filteredVaccines.map((v) => (
                             <CommandItem
                               key={v.id}
                               value={`${v.title} ${v.id}`}
                               onSelect={() => addVaccineToChild(v)}
-                              className="flex items-center justify-between"
+                              className="flex w-full items-center justify-between"
                             >
                               <p>{v.title}</p>
                               {Validate.formatPrice(v.price)}
@@ -453,6 +478,7 @@ export function RegisterVaccinationModal({ open, onClose }: RegisterVaccinationM
                       </CommandList>
                     </Command>
                   </PopoverContent>
+                  </Portal>
                 </Popover>
               </div>
 

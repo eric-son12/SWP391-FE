@@ -15,6 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ReactionDialog } from "./ReactionDialog"
+import { Notification } from "@/types/notification"
 
 export function Header() {
   const router = useRouter()
@@ -40,7 +41,7 @@ export function Header() {
     router.push("/")
   }
 
-  const handleNotificationClick = async (notification: any) => {
+  const handleNotificationClick = async (notification: Notification) => {
     markAsRead(notification.id)
 
     const match = notification.message.match(/Mã OrderDetail:\s?(\d+)/)

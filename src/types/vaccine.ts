@@ -1,4 +1,5 @@
 export interface Vaccine {
+  imageList: string[] | boolean
   id: number,
   title: string,
   description: string,
@@ -22,11 +23,21 @@ export interface Vaccine {
 }
 
 export interface VaccineOrder {
-  date: string 
+  date: string | number[]
   id: number
   name: string
   price: number
   status: string
+}
+
+export interface VaccineBatch {
+  batchNumber: string
+  expirationDate: string
+  id: number
+  isActive: true
+  quantity: number
+  reservedQuantity: number
+  sku: string
 }
 
 export enum VaccineStatus {

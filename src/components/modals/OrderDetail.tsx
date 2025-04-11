@@ -15,42 +15,37 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { Order } from "@/types/order"
 import { useEffect, useState } from "react"
 import axios from "@/utils/axiosConfig"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { DateTimePicker } from "@/components/DateTimePicker"
 import { format } from "date-fns"
-import { VaccineStatus } from "@/types/vaccine"
+import { VaccineOrder, VaccineStatus } from "@/types/vaccine"
 
 interface OrderDetailsModalProps {
   order: Order | null
   onClose: () => void
+  onVaccineStatusChange?: (newStatus: VaccineStatus) => void
 }
 
-export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
-  if (!order) return null
+export function OrderDetailsModal({ order, onClose, onVaccineStatusChange }: OrderDetailsModalProps) {
   const [orderDetail, setOrderDetail] = useState<Order>()
 
   useEffect(() => {
     const loadOrders = async () => {
       try {
+        if (!order) return
         const token = localStorage.getItem("token")
         const response = await axios.get(`/order/order/${order.orderId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         })
-        const data: Order = response.data.result
-        setOrderDetail(data)
+        setOrderDetail(response.data.result)
       } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load orders",
-          variant: "destructive",
-        })
+        console.error("Error loading order details:", error)
+        toast.error("Failed to load orders")
       }
     }
 
     loadOrders()
-  }, [toast, order.orderId])
+  }, [order, order?.orderId])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -82,27 +77,38 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     }
   }
 
-  const displayDateTime = (dateString: string) => {
-    const date = new Date(dateString)
-    return format(date, "yyyy-MM-dd HH:mm")
-  }
-
+  const displayDateTime = (dateInput: string | number[]) => {
+    let date: Date;
+  
+    if (typeof dateInput === "string") {
+      date = new Date(dateInput);
+    } else if (Array.isArray(dateInput)) {
+      const [year, month, day, hour, minute, second, nano] = dateInput;
+      const ms = typeof nano === "number" ? Math.floor(nano / 1000000) : 0;
+      date = new Date(year, month - 1, day, hour, minute, second);
+    } else {
+      return 'Invalid Date';
+    }
+  
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+    return format(date, 'yyyy-MM-dd HH:mm');
+  };
+  
   const updateVaccineStatus = async (id: string, newStatus: VaccineStatus) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(`/order/${id}/status`, null, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            orderDetailId: id,
-            status: newStatus,
-          },
-        });
-      toast({
-        title: "Success",
-        description: "Status updated successfully",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          orderDetailId: id,
+          status: newStatus,
+        },
       });
+      toast.success("Status updated successfully");
       setOrderDetail((prev) => {
         if (!prev) return prev;
         return {
@@ -115,57 +121,66 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           })),
         };
       });
+
+      onVaccineStatusChange?.(newStatus)
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update status",
-        variant: "destructive",
-      });
+      console.error("Error updating status:", error)
+      toast.error("Failed to update status");
     }
   };
-  
-  const VaccinationDateCell = ({ item }: { item: any }) => {
+
+  const VaccinationDateCell = ({ item }: { item: VaccineOrder }) => {
     const [editing, setEditing] = useState(false)
-    const [tempDate, setTempDate] = useState<Date | undefined>(
-      item.date ? new Date(item.date) : undefined
-    )
-  
+    const [tempDate, setTempDate] = useState<Date | undefined>()
+
+    useEffect(() => {
+      if (Array.isArray(item.date)) {
+        const [year, month, day, hour, minute, second, nano] = item.date
+        setTempDate(
+          new Date(
+            year,
+            (month || 1) - 1,
+            day || 1,
+            hour || 0,
+            minute || 0,
+            second || 0,
+            nano ? Math.floor(nano / 1000000) : 0
+          )
+        )
+      }
+      else if (typeof item.date === "string" && item.date !== "") {
+        setTempDate(new Date(item.date))
+      } else {
+        setTempDate(undefined)
+      }
+    }, [item.date])
+
     const handleSetDate = async (newDate: Date | undefined) => {
       if (!newDate) return
       try {
         const token = localStorage.getItem("token")
-  
         const formattedDate = format(newDate, "yyyy-MM-dd'T'HH:mm:ss")
-  
+        
         await axios.put(
           "/order/update-vaccination-date-mail",
           null,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
             params: {
               orderDetailId: item.id,
               vaccinationDate: formattedDate,
             },
           }
         )
-  
-        item.date = formattedDate
-  
-        toast({
-          title: "Success",
-          description: "Vaccination date updated successfully",
-        })
+
+        setTempDate(newDate)
+        toast.success("Vaccination date updated successfully")
       } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to update vaccination date",
-          variant: "destructive",
-        })
+        console.error("Error updating vaccination date:", error)
+        toast.error("Failed to update vaccination date")
       }
     }
-  
+
     if (!item.date && !editing) {
       return (
         <div className="flex items-center gap-2">
@@ -175,18 +190,18 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
         </div>
       )
     }
-  
+
     if (!editing) {
       return (
         <div className="flex items-center gap-2">
           <span>{displayDateTime(item.date)}</span>
-          <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
+          {!["DA_TIEM", "DA_HUY"].includes(item.status) && <button className="text-blue-500 underline" onClick={() => setEditing(true)}>
             Edit
-          </button>
+          </button>}
         </div>
       )
     }
-  
+
     return (
       <DateTimePicker
         date={tempDate}
@@ -199,12 +214,12 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
       />
     )
   }
-  
+
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] min-w-[60svw] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{`Order Details - ${order.orderId}`}</DialogTitle>
+          <DialogTitle>{`Order Details - ${order?.orderId}`}</DialogTitle>
           <DialogDescription>
             View detailed information about this order.
           </DialogDescription>
@@ -214,9 +229,9 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-gray-500" />
-              <span className="text-sm text-gray-500">Ordered on {formatDate(order.orderDate)}</span>
+              <span className="text-sm text-gray-500">Ordered on {order?.orderDate ? formatDate(order.orderDate) : ''}</span>
             </div>
-            {getStatusBadge(order.status)}
+            {order?.status ? getStatusBadge(order.status) : null}
           </div>
 
           <Separator />
@@ -228,19 +243,19 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                 <p className="text-xs text-gray-500">Payment Method</p>
                 <div className="flex items-center gap-1">
                   <CreditCard className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">{order.paymentType}</span>
+                  <span className="text-sm">{order?.paymentType}</span>
                 </div>
               </div>
               {/* <div className="space-y-1">
                 <p className="text-xs text-gray-500">Order Date</p>
                 <p className="flex items-center gap-1">
                   <CalendarDays className="h-4 w-4 text-gray-500"/>
-                  <span className="text-sm">{order.orderDate}</span>
+                  <span className="text-sm">{order?.orderDate}</span>
                 </p>
               </div> */}
               <div className="space-y-1">
                 <p className="text-xs text-gray-500">Total Amount</p>
-                <p className="text-sm font-medium">{formatPrice(order.totalPrice)}</p>
+                <p className="text-sm font-medium">{formatPrice(order?.totalPrice ?? 0)}</p>
               </div>
             </div>
           </div>
@@ -270,11 +285,21 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
 
                           <TableBody>
                             {child.vaccines.map((vaccine, idx) => {
-                            
                               return (<TableRow key={idx}>
-                                  <TableCell className="font-medium">{vaccine.name}</TableCell>
-                                  <TableCell>{formatPrice(vaccine.price)}</TableCell>
-                                  <TableCell>
+                                <TableCell className="font-medium">{vaccine.name}</TableCell>
+                                <TableCell>{formatPrice(vaccine.price)}</TableCell>
+                                <TableCell>
+                                  {["DA_TIEM", "DA_HUY"].includes(vaccine.status as VaccineStatus) ? (
+                                    vaccine.status === "DA_TIEM" ? (
+                                      <Badge className="bg-green-100 text-green-800">
+                                        Đã tiêm
+                                      </Badge>
+                                    ) : (
+                                      <Badge className="bg-red-100 text-red-800">
+                                        Đã huỷ
+                                      </Badge>
+                                    )
+                                  ) : (
                                     <Select
                                       value={vaccine.status}
                                       onValueChange={(newStatus: VaccineStatus) =>
@@ -285,21 +310,21 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                                         <SelectValue placeholder="Select status" />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        {
-                                          Object.entries(VaccineStatus).map(([key, value]) => (
-                                            <SelectItem key={key} value={key}>
-                                              {value}
-                                            </SelectItem>
-                                          ))
-                                        }
+                                        {Object.entries(VaccineStatus).map(([key, value]) => (
+                                          <SelectItem key={key} value={key}>
+                                            {value}
+                                          </SelectItem>
+                                        ))}
                                       </SelectContent>
                                     </Select>
-                                  </TableCell>
-                                  <TableCell>
-                                    <VaccinationDateCell item={vaccine} />
-                                  </TableCell>
-                                </TableRow>
-                              )}
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <VaccinationDateCell item={vaccine} />
+                                </TableCell>
+                              </TableRow>
+                              )
+                            }
                             )}
                           </TableBody>
                         </Table>

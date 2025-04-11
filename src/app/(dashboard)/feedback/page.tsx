@@ -7,13 +7,12 @@ import type { Feedback } from "@/types/feedback"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { FeedbackPreview } from "@/components/modals/FeedbackPreview"
 import axios from "@/utils/axiosConfig";
 import { Badge } from "@/components/ui/badge"
 
 export default function FeedbackPage() {
-  const { toast } = useToast()
 
   const [feedback, setFeedback] = useState<Feedback[]>([])
   const [loading, setLoading] = useState(true)
@@ -25,19 +24,15 @@ export default function FeedbackPage() {
         const response = await axios.get('/feedback/sorted/desc')
         setFeedback(response.data.result)
       } catch (error: unknown) {
-        const msg = error?.response?.data?.message || error?.message;
-        toast({
-          title: "Error",
-          description: msg ||"Failed to delete category",
-          variant: "destructive",
-        })
+        const msg = error instanceof Error ? error.message : 'An unknown error occurred';
+        toast.error(msg ||"Failed to delete category")
       } finally {
         setLoading(false)
       }
     }
   
     loadFeedback()
-  }, [toast])
+  }, [])
 
   const handleViewFeedback = (feedbackId: number) => {
     const selected = feedback.find((f) => f.id === feedbackId)
