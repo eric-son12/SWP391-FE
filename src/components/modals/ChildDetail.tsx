@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Calendar, Edit, Plus, Trash2, User } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -370,31 +370,32 @@ export function ChildDetailsModal({ isOpen, onClose, user }: UserDetailsModalPro
               </Button>
             )}
           </div>
+
+          {addingDisease && (
+            <div className="flex gap-2 items-center mb-4">
+              <EditInput
+                value={newDisease.conditionName}
+                onChange={(e) => setNewDisease(prev => ({ ...prev, conditionName: e.target.value }))}
+                placeholder="Condition Name"
+              />
+              <EditInput
+                value={newDisease.note}
+                onChange={(e) => setNewDisease(prev => ({ ...prev, note: e.target.value }))}
+                placeholder="Note"
+              />
+              <Button variant="outline" size="sm" onClick={handleAddDisease}>
+                Save
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => {
+                setAddingDisease(false)
+                setNewDisease({ conditionName: "", note: "" })
+              }}>
+                Cancel
+              </Button>
+            </div>
+          )}
           {underlyingDisease.length > 0 && (
             <>
-              {addingDisease && (
-                <div className="flex gap-2 items-center mb-4">
-                  <EditInput
-                    value={newDisease.conditionName}
-                    onChange={(e) => setNewDisease(prev => ({ ...prev, conditionName: e.target.value }))}
-                    placeholder="Condition Name"
-                  />
-                  <EditInput
-                    value={newDisease.note}
-                    onChange={(e) => setNewDisease(prev => ({ ...prev, note: e.target.value }))}
-                    placeholder="Note"
-                  />
-                  <Button variant="outline" size="sm" onClick={handleAddDisease}>
-                    Save
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => {
-                    setAddingDisease(false)
-                    setNewDisease({ conditionName: "", note: "" })
-                  }}>
-                    Cancel
-                  </Button>
-                </div>
-              )}
               <div className="space-y-2">
                 {loading ? (
                   <div className="flex h-40 items-center justify-center">
